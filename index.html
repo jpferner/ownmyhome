@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Real Estate Website</title>
+    <link rel="stylesheet" type="text/css" href="styles/main.css" />
+    <link rel="stylesheet" type="text/css" href="styles/normalize.css" />
+  </head>
+  <body>
+    <header>
+      <div class="container">
+        <div id="branding">
+          <h1><span class="highlight">Real</span> Estate</h1>
+        </div>
+        <nav>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="properties.html">Properties</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <section id="showcase">
+      <div class="container">
+        <h1>Welcome to our Real Estate Website</h1>
+        <p>Find your dream property with us</p>
+      </div>
+    </section>
+
+    <section id="services">
+      <div class="container">
+        <div class="box">
+          <a href="properties.html"
+            ><img src="images/3bedhouse.jpg" alt="Property Image"
+          /></a>
+          <h3>Properties for Sale</h3>
+          <p>Find your dream home with our selection of properties for sale</p>
+        </div>
+        <div class="box">
+          <a href="properties.html"
+            ><img src="images/2bedapt.jpg" alt="Property Image"
+          /></a>
+          <h3>Properties for Rent</h3>
+          <p>
+            Find your perfect rental with our selection of properties for rent
+          </p>
+        </div>
+        <div class="box">
+          <a href="properties.html"
+            ><img src="images/commercial.jpg" alt="Property Image"
+          /></a>
+          <h3>Commercial Properties</h3>
+          <p>
+            Find your ideal commercial property with our selection of commercial
+            properties
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <p>Real Estate Website, Copyright &copy; 2023</p>
+    </footer>
+
+    <script>
+      var currentPage = location.pathname;
+      var links = document.querySelectorAll("header nav a");
+      links.forEach(function (link) {
+        if (link.pathname === currentPage) {
+          link.classList.add("active");
+        }
+      });
+    </script>
+  </body>
+</html>
