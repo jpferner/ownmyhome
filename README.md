@@ -3,4 +3,5 @@
 <ul>
   <li>David Hollock</li>
   <li>Mark Karels</li>
+  <li>Connor McNabb</li>
 </ul>
