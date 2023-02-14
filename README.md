@@ -5,4 +5,5 @@
   <li>Mark Karels</li>
   <li>Connor McNabb</li>
   <li>Andrew Court</li>
+  <li>Jake Ferner</li>
 </ul>
