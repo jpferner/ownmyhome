@@ -16,7 +16,7 @@
        </ul>
     <li>Mark Karels</li>
        <ul>
-          <li>Put your components here</li>
+          <li>Checklist</li>
        </ul>
     <li>Connor McNabb </li>
        <ul>
