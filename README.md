@@ -34,4 +34,12 @@
 <br>
 
 <h2> How to build/run this project </h2>
-<p> Directions to follow. </p>
+<h3>This web application runs in python with Flask.</h3> 
+<h4>The version we recommend using is 3.10.10</h4>
+<h4>To build and run this project:</h4>
+<ol>
+<li> Download the release repo</li>
+<li> Set up a virtual environment with this link [[https://docs.python.org/3/library/venv.html]]</li>
+<li>Use the requirements file to install required packages/libraries with pip</li>
+<li>Run app.py to start the application.</li>
+</ol>
