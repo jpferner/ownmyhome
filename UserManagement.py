@@ -2,7 +2,7 @@ class UserManagement:
     """A class representing the User"""
     email: str
     first_name: str
-    last_ame: str
+    last_name: str
 
     def __init__(self, email: str, first_name: str, last_name: str, password: str):
         self.email = email
