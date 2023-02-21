@@ -24,7 +24,7 @@
        </ul>
     <li>Andrew Court </li>
        <ul>
-          <li>Put your components here</li>
+          <li>UserManagement</li>
        </ul>
     <li>Jake Ferner </li>
        <ul>
