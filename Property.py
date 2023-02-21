@@ -1,4 +1,4 @@
-class PropertySearch:
+class Property:
     propnumber: int
     street: str
     city: str
@@ -25,7 +25,7 @@ class PropertySearch:
 
         # Sample Property search
         SampleProperty = [
-            PropertySearch(1, "325 Walnut Drive", "Wilmington", "NC", 28409, "New Hanover", 325000, 2018, 3, 2),
-            PropertySearch(2, "836 Hamilton Road", "Wilmington", "NC", 28412, "New Hanover", 159000, 1996, 2, 2),
-            PropertySearch(1, "225 Princess Ave", "Wilmington", "NC", 28413, "New Hanover", 825000, 2018, 7, 4),
+            Property(1, "325 Walnut Drive", "Wilmington", "NC", 28409, "New Hanover", 325000, 2018, 3, 2),
+            Property(2, "836 Hamilton Road", "Wilmington", "NC", 28412, "New Hanover", 159000, 1996, 2, 2),
+            Property(1, "225 Princess Ave", "Wilmington", "NC", 28413, "New Hanover", 825000, 2018, 7, 4),
         ]
