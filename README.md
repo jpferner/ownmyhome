@@ -20,7 +20,7 @@
        </ul>
     <li>Connor McNabb </li>
        <ul>
-          <li>Put your components here</li>
+          <li>Calculators</li>
        </ul>
     <li>Andrew Court </li>
        <ul>
