@@ -3,7 +3,7 @@ class CheckList:
     steps: list
     user_steps: list
 
-    def __int__(self, user: int, steps: list, user_steps):
+    def __init__(self, user: int, steps: list, user_steps):
         self.user_ID = user
         self.steps = steps
         self.user_steps = user_steps
