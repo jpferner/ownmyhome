@@ -10,7 +10,7 @@ class Property:
     numBeds: int
     numBaths: int
 
-    def __int__(self, propNumber: int, street: str, city: str, state: str, zipcode: int, county: str, price: int,
+    def __init__(self, propNumber: int, street: str, city: str, state: str, zipcode: int, county: str, price: int,
                 yearBuilt: int, numBeds: int, numBaths: int, ):
         self.propnumber = propNumber
         self.street = street
