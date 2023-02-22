@@ -2,6 +2,7 @@ class CheckList:
     user_ID: int
     steps: list
     user_steps: list
+
     def __int__(self, user: int, steps: list, user_steps):
         self.user_ID = user
         self.steps = steps
