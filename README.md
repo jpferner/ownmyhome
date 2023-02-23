@@ -28,7 +28,7 @@
        </ul>
     <li>Jake Ferner </li>
        <ul>
-          <li>Put your components here</li>
+          <li>Calendar</li>
        </ul>
 </ul>
 <br>
