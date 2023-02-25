@@ -1,0 +1,49 @@
+{% include 'header.html' %}
+<head>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles/account-creation.css') }}"
+    />
+</head>
+<section id="showcase">
+  <div class="container">
+    <h1>Welcome to our Real Estate Website</h1>
+    <p>Find your dream property with us</p>
+  </div>
+</section>
+
+<section id="services">
+    <div id="sign-up-form">
+        <h1>Sign Up</h1>
+        <h5>Create a free account!<br>Already have one? <a href="login.html">Login</a></h5>
+
+        <form name="create-account" action="#" method="post">
+            <label for="firstname">First Name</label><br>
+            <input type="text" name="firstname" id="firstname" autofocus required><br>
+
+            <label for="lastname">Last Name</label><br>
+            <input type="text" name="lastname" id="lastname" autofocus required><br>
+
+            <label for="email">Email</label><br>
+            <input type="email" name="email" id="email" autofocus required><br>
+
+            <label for="confirm-email">Confirm Email</label><br>
+            <input type="email" name="confirm-email" id="confirm-email" autofocus required><br>
+
+            <label for="password">Password</label><br>
+            <input type="password" name="password" id="password" autofocus required><br>
+
+            <label for="confirm-password">Confirm Password</label><br>
+            <input type="password" name="confirm-password" id="confirm-password" autofocus required><br>
+
+            <input type="submit" name="sign-up" id="button" value="Create Account ">
+        </form>
+
+
+        <p>By clicking the Create Account button, you agree to our <br>
+            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+        </p>
+    </div>
+</section>
+{% include 'footer.html' %}

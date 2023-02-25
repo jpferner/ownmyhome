@@ -38,6 +38,15 @@ def calendar():
         return redirect(url_for('index'))
     return render_template('calendar.html')
 
+# Inserted by Andrew C.
+@app.route('/account-creation', methods=['GET', 'POST'])
+def account_creation():
+    if request.method == 'POST':
+        return redirect(url_for('index'))
+    return render_template('account-creation.html')
+
+######## -------- #########
+
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
