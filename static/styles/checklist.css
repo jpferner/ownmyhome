@@ -19,6 +19,7 @@
   color: #fff;
   width: 50%;
   font-size: 24px;
+  margin-bottom: 15px;
 }
 
 .completed-header{
@@ -29,11 +30,13 @@
   color: #fff;
   width: 50%;
   font-size: 24px;
+  margin-bottom: 15px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-bottom: 20px;
 }
 
 thead th {
@@ -41,6 +44,7 @@ thead th {
   padding: 10px;
   color: #fff;
   border: 1px solid #ccc;
+  background-color: #333;
 }
 
 tbody td {
@@ -131,9 +135,55 @@ td li:last-child {
 
   tbody td {
     border-bottom: none;
+    position: relative;
+    padding-left: 50%;
   }
 
-  tbody tr:nth-child(even) {
+  td li {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 0;
+    border: none;
+  }
+
+  td li:nth-child(odd) {
     background-color: #f2f2f2;
   }
+
+  .step {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 50%;
+    text-align: left;
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    text-align: center;
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  .complete-btn,
+  .undo-btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    margin-left: 0;
+  }
 }
+
