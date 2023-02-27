@@ -1,66 +1,66 @@
 {% include 'header.html' %}
 
 <section>
-  <div class="container">
-    <h1>Welcome to the home buyer's checklist</h1>
-    <p>Every step of the home buying process is at your fingertips</p>
-  </div>
+    <div class="container">
+        <h1>Welcome to the home buyer's checklist</h1>
+        <p>Every step of the home buying process is at your fingertips</p>
+    </div>
 </section>
 
 <aside>
-  <div class="container">
-    {% block content %}
-    <h1 class="checklist-header">Checklist</h1>
-    <table>
-    <thead>
-      <tr>
-        <th>Step</th>
-        <th>Item</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="todo-list">
-      {% for item in checklist_items if item.status == 'Incomplete' %}
-        <tr data-id="{{ item.order_no }}">
-          <td>Step {{ item.order_no }}</td>
-          <td>{{ item.detail }}</td>
-          <td class="status">{{ item.status }}</td>
-          <td>
-            <button class="complete-btn" data-id="{{ item.order_no }}">Complete</button>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+    <div class="container">
+        {% block content %}
+        <h1 class="checklist-header">Checklist</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>Step</th>
+                <th>Item</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="todo-list">
+            {% for item in checklist_items if item.status == 'Incomplete' %}
+            <tr data-id="{{ item.order_no }}">
+                <td>Step {{ item.order_no }}</td>
+                <td>{{ item.detail }}</td>
+                <td class="status">{{ item.status }}</td>
+                <td>
+                    <button class="complete-btn" data-id="{{ item.order_no }}">Complete</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
 
-  <table>
-    <thead>
-      <tr>
-        <th>Step</th>
-        <th>Item</th>
-        <th>Status</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="completed-list">
-      {% for item in checklist_items if item.completed %}
-        <tr data-id="{{ item.order_no }}">
-          <td>Step {{ item.order_no }}</td>
-          <td>{{ item.detail }}</td>
-          <td class="status">Completed</td>
-          <td>
-            <button class="undo-btn" data-id="{{ item.order_no }}">Undo</button>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% endblock %}
-  </div>
+        <table>
+            <thead>
+            <tr>
+                <th>Step</th>
+                <th>Item</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody id="completed-list">
+            {% for item in checklist_items if item.completed %}
+            <tr data-id="{{ item.order_no }}">
+                <td>Step {{ item.order_no }}</td>
+                <td>{{ item.detail }}</td>
+                <td class="status">{{ item.status }}</td>
+                <td>
+                    <button class="undo-btn" data-id="{{ item.order_no }}">Undo</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    </div>
 </aside>
 
 {% include 'footer.html' %}
 
-<link rel="stylesheet" href="../static/styles/checklist.css">
+<link href="../static/styles/checklist.css" rel="stylesheet">
 <script src="../static/scripts/checklist.js"></script>
