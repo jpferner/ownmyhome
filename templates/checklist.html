@@ -1,12 +1,50 @@
 {% include 'header.html' %}
-<section id="showcase">
+<section>
   <div class="container">
-    <h1>Welcome to our Real Estate Website</h1>
-    <p>Find your dream property with us</p>
+    <h1>Welcome to the home buyer's checklist</h1>
+    <p>Every step of the home buying process is at your fingertips</p>
   </div>
 </section>
-
-<section id="services">
-  <h1>CHECKLIST PAGE</h1>
-</section>
+<aside>
+  <div class="container">
+    <h1 class="checklist-header">Checklist</h1>
+    <table>
+      <thead>
+        <tr>
+          <th class="todo-header">To-Do</th>
+          <th class="completed-header">Completed</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <ul id="todo-list">
+              <li>
+                <span class="step">Step 1:</span>
+                <span class="item">Mock checklist item 1</span>
+                <button class="complete-btn">Complete</button>
+              </li>
+              <li>
+                <span class="step">Step 2:</span>
+                <span class="item">Mock checklist item 2</span>
+                <button class="complete-btn">Complete</button>
+              </li>
+            </ul>
+          </td>
+          <td>
+            <ul id="completed-list">
+              <li>
+                <span class="step">Step 3:</span>
+                <span class="item">Mock checklist item 3</span>
+                <button class="undo-btn">Undo</button>
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</aside>
 {% include 'footer.html' %}
+<link rel="stylesheet" href="../static/styles/checklist.css">
+<script src="../static/scripts/checklist.js"></script>
