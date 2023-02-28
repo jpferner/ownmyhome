@@ -38,4 +38,3 @@ checklist_items = [ChecklistItems(1, 'Incomplete',
                                   ' Check out our calculator tab to find out more.')
                    ]
 sorted_checklist_items = sorted(checklist_items, key=lambda x: x.order_no)
-
