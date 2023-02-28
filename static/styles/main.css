@@ -128,42 +128,47 @@ header nav a:hover {
 }
 
 /* Showcase styles */
-#showcase {
+section {
   background-color: goldenrod;
   color: white;
   text-align: center;
   padding: 100px;
 }
 
-#showcase h1 {
+section h1 {
   margin-bottom: 20px;
 }
 
-#showcase p {
+section p {
   font-size: 18px;
 }
 
 /* Services styles */
-#services {
+aside {
   background-color: #ecf0f1;
   color: black;
   text-align: center;
   padding: 100px;
 }
 
-#services .box {
+aside .box {
   width: 30%;
   display: inline-block;
   margin: 10px;
   text-align: center;
 }
 
+<<<<<<< HEAD
 #services .box img {
   max-width: 1200px;
+=======
+aside .box img {
+  max-width: 1200 px;
+>>>>>>> release
   width: 75%;
 }
 
-#services .box h3 {
+aside .box h3 {
   margin-top: 20px;
 }
 
