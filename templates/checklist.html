@@ -1,12 +1,66 @@
 {% include 'header.html' %}
-<section id="showcase">
-  <div class="container">
-    <h1>Welcome to our Real Estate Website</h1>
-    <p>Find your dream property with us</p>
-  </div>
+
+<section>
+    <div class="container">
+        <h1>Welcome to the home buyer's checklist</h1>
+        <p>Every step of the home buying process is at your fingertips</p>
+    </div>
 </section>
 
-<section id="services">
-  <h1>CHECKLIST PAGE</h1>
-</section>
+<aside>
+    <div class="container">
+        {% block content %}
+        <h1 class="todo-header">To-Do</h1>
+        <table>
+            <thead>
+            <tr>
+                <th class="step">Step</th>
+                <th class="item">Item</th>
+                <th class="status">Status</th>
+                <th class="action">Action</th>
+            </tr>
+            </thead>
+            <tbody id="todo-list">
+            {% for item in checklist_items if item.status == 'Incomplete' %}
+            <tr data-id="{{ item.order_no }}">
+                <td>Step {{ item.order_no }}</td>
+                <td>{{ item.detail }}</td>
+                <td class="status">{{ item.status }}</td>
+                <td>
+                    <button class="complete-btn" data-id="{{ item.order_no }}">Complete</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h1 class="completed-header">Completed</h1>
+        <table>
+            <thead>
+            <tr>
+                <th class="step">Step</th>
+                <th class="item">Item</th>
+                <th class="status">Status</th>
+                <th class="action">Action</th>
+            </tr>
+            </thead>
+            <tbody id="completed-list">
+            {% for item in checklist_items if item.completed %}
+            <tr data-id="{{ item.order_no }}">
+                <td>Step {{ item.order_no }}</td>
+                <td>{{ item.detail }}</td>
+                <td class="status">{{ item.status }}</td>
+                <td>
+                    <button class="undo-btn" data-id="{{ item.order_no }}">Undo</button>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endblock %}
+    </div>
+</aside>
+
 {% include 'footer.html' %}
+
+<link href="../static/styles/checklist.css" rel="stylesheet">
+<script src="../static/scripts/checklist.js"></script>

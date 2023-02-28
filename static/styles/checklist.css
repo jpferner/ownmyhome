@@ -1,0 +1,184 @@
+aside .container {
+  margin: 0 auto;
+  max-width: 960px;
+  display: flex; /* use flexbox for layout */
+  flex-direction: column; /* stack the child elements vertically */
+  align-items: center; /* align items to center horizontally */
+}
+
+
+.checklist {
+  padding: 25px 0;
+}
+
+.checklist-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.todo-header{
+  background-color: goldenrod;
+  border: 2px solid black;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5), 0 -2px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 1px 0 #000;
+  color: #fff;
+  width: 100%;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.completed-header{
+  background-color: #4CAF50;
+  border: 2px solid black;
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.5), 0 -2px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 1px 0 #000;
+  color: #fff;
+  width: 100%;
+  font-size: 24px;
+  margin-bottom: 15px;
+}
+
+.todo-table,
+.completed-table {
+  width: calc(50% - 8px);
+  border-collapse: collapse;
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+
+thead th {
+  text-align: center;
+  padding: 10px;
+  color: #fff;
+  border: 1px solid #ccc;
+  background-color: #333;
+}
+
+tbody td {
+  vertical-align: top;
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+thead th.step {
+  width: 20%;
+}
+
+thead th.item {
+  width: 60%;
+}
+
+thead th.status {
+  width: 10%;
+}
+
+thead th.action {
+  width: 10%;
+}
+
+td li:last-child {
+  margin-bottom: 0;
+}
+
+.complete-btn,
+.undo-btn {
+  cursor: pointer;
+  border: none;
+  padding: 5px 10px;
+  font-size: 14px;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+  flex-shrink: 0;
+  margin-left: 10px;
+}
+
+.complete-btn {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.undo-btn {
+  background-color: goldenrod;
+  color: white;
+}
+
+.complete-btn:hover,
+.undo-btn:hover {
+  background-color: #333;
+}
+
+@media screen and (max-width: 767px) {
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  thead,
+  tbody,
+  tr,
+  td,
+  th {
+    display: block;
+  }
+
+  thead th {
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+  }
+
+  tbody td {
+    border-bottom: none;
+    position: relative;
+    padding-left: 50%;
+  }
+
+  td li {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    width: 50%;
+    padding: 10px;
+    margin-bottom: 0;
+    border: none;
+  }
+
+  td li:nth-child(odd) {
+    background-color: #f2f2f2;
+  }
+
+  .step {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 50%;
+    text-align: left;
+    font-weight: bold;
+    margin-right: 10px;
+    flex-shrink: 0;
+  }
+
+  .item {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    text-align: center;
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  .complete-btn,
+  .undo-btn {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    margin-left: 0;
+  }
+}
+
