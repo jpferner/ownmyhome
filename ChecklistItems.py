@@ -23,19 +23,19 @@ class ChecklistItems:
 
 checklist_items = [ChecklistItems(1, 'Incomplete',
                                   'Do you know what your current credit score is? Check out our services tab above' 
-                                  'to see what options are available to you.'),
+                                  ' to see what options are available to you.'),
                    ChecklistItems(2, 'Incomplete',
                                   'Do you have your home picked out? Check out our properties tab to see what homes' 
-                                  'are available within your search parameters'),
+                                  ' are available within your search parameters'),
                    ChecklistItems(3, 'Incomplete',
                                   'Do you know what type of financing is available to you?'
-                                  'Check out our services tab above to see what options are available to you.'),
+                                  ' Check out our services tab above to see what options are available to you.'),
                    ChecklistItems(4, 'Incomplete',
                                   'Do you know how much home you can afford?'
-                                  'Check out our calculator tab to find out the right price for you'),
+                                  ' Check out our calculator tab to find out the right price for you'),
                    ChecklistItems(5, 'Incomplete',
                                   'Do you understand your current debt to income ratio and what that means,'
-                                  'Check out our calculator tab to find out more.')
+                                  ' Check out our calculator tab to find out more.')
                    ]
 sorted_checklist_items = sorted(checklist_items, key=lambda x: x.order_no)
 
