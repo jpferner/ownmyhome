@@ -10,14 +10,14 @@
 <aside>
     <div class="container">
         {% block content %}
-        <h1 class="checklist-header">Checklist</h1>
+        <h1 class="todo-header">To-Do</h1>
         <table>
             <thead>
             <tr>
-                <th>Step</th>
-                <th>Item</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th class="step">Step</th>
+                <th class="item">Item</th>
+                <th class="status">Status</th>
+                <th class="action">Action</th>
             </tr>
             </thead>
             <tbody id="todo-list">
@@ -33,14 +33,14 @@
             {% endfor %}
             </tbody>
         </table>
-
+        <h1 class="completed-header">Completed</h1>
         <table>
             <thead>
             <tr>
-                <th>Step</th>
-                <th>Item</th>
-                <th>Status</th>
-                <th>Action</th>
+                <th class="step">Step</th>
+                <th class="item">Item</th>
+                <th class="status">Status</th>
+                <th class="action">Action</th>
             </tr>
             </thead>
             <tbody id="completed-list">

@@ -21,7 +21,7 @@ def properties():
 def checklist():
     if request.method == 'POST':
         return redirect(url_for('index'))
-    return render_template('checklist.html', checklist_items=ChecklistItems.checklist_items)
+    return render_template('checklist.html', checklist_items=ChecklistItems.sorted_checklist_items)
 
 
 @app.route('/complete-item', methods=['POST'])
