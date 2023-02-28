@@ -9,7 +9,6 @@ app = Flask(__name__)
 def home():
     return render_template("index.html")
 
-
 @app.route('/properties', methods=['GET', 'POST'])
 def properties():
     if request.method == 'POST':
@@ -57,6 +56,12 @@ def login():
     if request.method == 'POST':
         return redirect(url_for('index'))
     return render_template('login.html')
+
+@app.route('/account-creation', methods=['GET', 'POST'])
+def account_creation():
+    if request.method == 'POST':
+        return redirect(url_for('index'))
+    return render_template('account-creation.html')
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
