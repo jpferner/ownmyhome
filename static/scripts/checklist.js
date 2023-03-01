@@ -23,6 +23,23 @@ function toggleStatus(event) {
       row.querySelector('button').textContent = 'Complete';
       row.querySelector('button').setAttribute('data-completed', 'false');
       document.getElementById('todo-list').appendChild(row);
+      // Sort the tables by step number
+      const todoList = document.getElementById('todo-list');
+      const completedList = document.getElementById('completed-list');
+      const sortedTodo = Array.from(todoList.children).sort((a, b) => {
+        const aStep = parseInt(a.querySelector('td').textContent.slice(5));
+        const bStep = parseInt(b.querySelector('td').textContent.slice(5));
+        return aStep - bStep;
+      });
+      const sortedCompleted = Array.from(completedList.children).sort((a, b) => {
+        const aStep = parseInt(a.querySelector('td').textContent.slice(5));
+        const bStep = parseInt(b.querySelector('td').textContent.slice(5));
+        return aStep - bStep;
+      });
+      todoList.innerHTML = '';
+      sortedTodo.forEach(item => todoList.appendChild(item));
+      completedList.innerHTML = '';
+      sortedCompleted.forEach(item => completedList.appendChild(item));
     } else {
       // Move item from todo to completed table
       const row = event.target.parentElement.parentElement;
@@ -31,32 +48,52 @@ function toggleStatus(event) {
       row.querySelector('button').textContent = 'Undo';
       row.querySelector('button').setAttribute('data-completed', 'true');
       document.getElementById('completed-list').appendChild(row);
+      // Sort the tables by step number
+      const todoList = document.getElementById('todo-list');
+      const completedList = document.getElementById('completed-list');
+      const sortedTodo = Array.from(todoList.children).sort((a, b) => {
+        const aStep = parseInt(a.querySelector('td').textContent.slice(5));
+        const bStep = parseInt(b.querySelector('td').textContent.slice(5));
+        return aStep - bStep;
+      });
+      const sortedCompleted = Array.from(completedList.children).sort((a, b) => {
+        const aStep = parseInt(a.querySelector('td').textContent.slice(5));
+        const bStep = parseInt(b.querySelector('td').textContent.slice(5));
+        return aStep - bStep;
+      });
+      todoList.innerHTML = '';
+      sortedTodo.forEach(item => todoList.appendChild(item));
+      completedList.innerHTML = '';
+      sortedCompleted.forEach(item => completedList.appendChild(item));
     }
   });
 }
 
 // Update the To-Do and Completed tables
 function updateChecklists() {
-    var todoList = document.getElementById('todo-list');
-    var completedList = document.getElementById('completed-list');
-    fetch('/get_checklists').then(response => {
-        if (response.ok) {
-            response.json().then(data => {
-                // Clear existing table rows
-                todoList.innerHTML = '';
-                completedList.innerHTML = '';
-                // Add updated table rows
-                data.todo.forEach(item => {
-                    var row = createTableRow(item);
-                    todoList.appendChild(row);
-                });
-                data.completed.forEach(item => {
-                    var row = createTableRow(item);
-                    completedList.appendChild(row);
-                });
-            });
-        }
-    });
+  var todoList = document.getElementById('todo-list');
+  var completedList = document.getElementById('completed-list');
+  fetch('/get_checklists').then(response => {
+    if (response.ok) {
+      response.json().then(data => {
+        // Sort the todo and completed tables by step number
+        const sortedTodo = data.todo.sort((a, b) => a.order_no - b.order_no);
+        const sortedCompleted = data.completed.sort((a, b) => a.order_no - b.order_no);
+        // Clear existing table rows
+        todoList.innerHTML = '';
+        completedList.innerHTML = '';
+        // Add updated table rows
+        sortedTodo.forEach(item => {
+          var row = createTableRow(item);
+          todoList.appendChild(row);
+        });
+        sortedCompleted.forEach(item => {
+          var row = createTableRow(item);
+          completedList.appendChild(row);
+        });
+      });
+    }
+  });
 }
 
 // Helper function to create a table row from a checklist item
