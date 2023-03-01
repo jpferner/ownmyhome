@@ -6,7 +6,6 @@
         <p>Every step of the home buying process is at your fingertips</p>
     </div>
 </section>
-
 <aside>
     <div class="container">
         {% block content %}
@@ -21,13 +20,13 @@
             </tr>
             </thead>
             <tbody id="todo-list">
-            {% for item in checklist_items if item.status == 'Incomplete' %}
+            {% for item in todo_table %}
             <tr data-id="{{ item.order_no }}">
                 <td>Step {{ item.order_no }}</td>
                 <td>{{ item.detail }}</td>
-                <td class="status">{{ item.status }}</td>
+                <td class="status">Incomplete</td>
                 <td>
-                    <button class="complete-btn" data-id="{{ item.order_no }}">Complete</button>
+                    <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="false">Complete</button>
                 </td>
             </tr>
             {% endfor %}
@@ -44,13 +43,13 @@
             </tr>
             </thead>
             <tbody id="completed-list">
-            {% for item in checklist_items if item.completed %}
+            {% for item in completed_table %}
             <tr data-id="{{ item.order_no }}">
                 <td>Step {{ item.order_no }}</td>
                 <td>{{ item.detail }}</td>
-                <td class="status">{{ item.status }}</td>
+                <td class="status">Completed</td>
                 <td>
-                    <button class="undo-btn" data-id="{{ item.order_no }}">Undo</button>
+                    <button class="undo-btn" data-id="{{ item.order_no }}" data-completed="true">Undo</button>
                 </td>
             </tr>
             {% endfor %}
@@ -59,7 +58,6 @@
         {% endblock %}
     </div>
 </aside>
-
 {% include 'footer.html' %}
 
 <link href="../static/styles/checklist.css" rel="stylesheet">

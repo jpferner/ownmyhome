@@ -19,30 +19,55 @@ def properties():
 
 @app.route('/checklist', methods=['GET', 'POST'])
 def checklist():
+    todo_table = []
+    completed_table = []
+
+    for item in ChecklistItems.checklist_items:
+        if item.status:
+            completed_table.append(item)
+        else:
+            todo_table.append(item)
+
+    todo_table = sorted(todo_table, key=lambda x: x.order_no)
+    completed_table = sorted(completed_table, key=lambda y: y.order_no)
+
     if request.method == 'POST':
-        return redirect(url_for('index'))
-    return render_template('checklist.html', checklist_items=ChecklistItems.sorted_checklist_items)
+        data = request.get_json()
+        item_id = int(data['id'])
+
+        for item in ChecklistItems.checklist_items:
+            if item.order_no == item_id:
+                item.toggle_status()
+                return jsonify({'success': True})
+
+        return jsonify({'success': False})
+
+    return render_template('checklist.html', todo_table=todo_table, completed_table=completed_table)
 
 
 @app.route('/complete-item', methods=['POST'])
 def complete_item():
     data = request.get_json()
-    item_id = data['id']
+    item_id = int(data['id'])
+
     for item in ChecklistItems.checklist_items:
-        if item.order_no == int(item_id):
-            item.mark_completed()
+        if item.order_no == item_id:
+            item.toggle_status()
             return jsonify({'success': True})
+
     return jsonify({'success': False})
 
 
 @app.route('/undo-item', methods=['POST'])
 def undo_item():
     data = request.get_json()
-    item_id = data['id']
+    item_id = int(data['id'])
+
     for item in ChecklistItems.checklist_items:
         if item.order_no == item_id:
-            item.completed = False
+            item.toggle_status()
             return jsonify({'success': True})
+
     return jsonify({'success': False})
 
 
