@@ -45,32 +45,6 @@ def checklist():
     return render_template('checklist.html', todo_table=todo_table, completed_table=completed_table)
 
 
-@app.route('/complete-item', methods=['POST'])
-def complete_item():
-    data = request.get_json()
-    item_id = int(data['id'])
-
-    for item in ChecklistItems.checklist_items:
-        if item.order_no == item_id:
-            item.toggle_status()
-            return jsonify({'success': True})
-
-    return jsonify({'success': False})
-
-
-@app.route('/undo-item', methods=['POST'])
-def undo_item():
-    data = request.get_json()
-    item_id = int(data['id'])
-
-    for item in ChecklistItems.checklist_items:
-        if item.order_no == item_id:
-            item.toggle_status()
-            return jsonify({'success': True})
-
-    return jsonify({'success': False})
-
-
 @app.route('/calendar', methods=['GET', 'POST'])
 def calendar():
     if request.method == 'POST':
