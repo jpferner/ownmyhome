@@ -1,0 +1,10 @@
+.calculator1 {
+    width: 25%;
+    margin: 0 auto;
+}
+label {
+    display: table-cell;
+}
+input {
+    display: table-cell;
+}

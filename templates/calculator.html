@@ -6,19 +6,23 @@
   </div>
 </section>
 
-<form>
-    <label for="testVal1">Test Val1</label>
-    <input type="number" id="testVal1" name="testVal1"><br><br>
-    <label for="testVal2">Test Val2</label>
-    <input type="number" id="testVal2" name="testVal2"><br><br>
-    <label for="testVal3">Test Val3</label>
-    <input type="number" id="testVal3" name="testVal3"><br><br>
-    <label for="testVal4">Test Val4</label>
-    <input type="number" id="testVal4" name="testVal4"><br><br>
-    <input type="submit" value="Submit">
-</form>
+<div>
+    <form class="calculator1">
+        <label for="HomeVal">Home Value:</label>
+        <input type="number" id="HomeVal" name="HomeVal" placeholder="100" required><br><br>
+        <label for="DownPay">Down Payment:</label>
+        <input type="number" id="DownPay" name="DownPay" placeholder="200" required><br><br>
+        <label for="LoanAmt">Loan Amount:</label>
+        <input type="number" id="LoanAmt" name="LoanAmt" placeholder="300" required><br><br>
+        <label for="IntrestRate">Intrest Rate:</label>
+        <input type="number" id="IntrestRate" name="IntrestRate" placeholder="400" required><br><br>
+        <input type="submit" value="Calculate">
+    </form>
+</div>
 
 <aside>
   <h1>CALCULATOR PAGE</h1>
 </aside>
 {% include 'footer.html' %}
+
+<link href="../static/styles/calculator.css" rel="stylesheet">
