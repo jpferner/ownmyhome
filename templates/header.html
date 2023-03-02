@@ -30,10 +30,35 @@
             <li><a href="{{ url_for('calendar') }}">Calendar</a></li>
             <li><a href="{{ url_for('services') }}">Services</a></li>
             <li><a href="{{ url_for('login') }}">Login</a></li>
-            <li><a href="{{ url_for('account_creation') }}">Sign Up</a></li>
+            <li><a href="{{ url_for('sign_up') }}">Sign Up</a></li>
           </ul>
         </nav>
       </div>
     </header>
+
+    <main>
+        <!-- Display messages from backend server for user at sign up -->
+        <!-- Page will reset if error message are flashed (for now) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    {% if category == 'error' %}
+                        <div role="alert">
+                            {{ message }}
+                            <!-- Button to close out the error message -->
+                            <button type="button" data-dismiss="alert"></button>
+                        </div>
+                    {% else %}
+                        <!-- message for successful submission -->
+                        <div role="alert">
+                            {{ message }}
+                            <!-- Button to close out the success message -->
+                            <button data-dismiss="alert"></button>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </main>
   </body>
 </html>
