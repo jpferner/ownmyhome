@@ -158,8 +158,13 @@ aside .box {
   text-align: center;
 }
 
+<<<<<<< HEAD
+#services .box img {
+  max-width: 1200px;
+=======
 aside .box img {
   max-width: 1200 px;
+>>>>>>> release
   width: 75%;
 }
 
