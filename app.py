@@ -1,13 +1,21 @@
 from flask import Flask, render_template, request, url_for, redirect, jsonify, flash
+from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from password_strength import PasswordPolicy
 from password_strength import PasswordStats
 import ChecklistItems
+
 
 app = Flask(__name__)
 app.config.update(
     TESTING=True,
     SECRET_KEY='8*bb2(n^)jk'
 )
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
 
 policy = PasswordPolicy.from_names(
     length=8,  # min length for password is 8 characters
@@ -136,3 +144,6 @@ def index():
 
 if __name__ == '__main__':
     app.run()
+
+
+import models
