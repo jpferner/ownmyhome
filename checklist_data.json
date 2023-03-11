@@ -1,0 +1,27 @@
+[
+  {
+    "order_no": 1,
+    "status": true,
+    "detail": "Do you know what your current credit score is? Check out our services tab above to see what options are available to you."
+  },
+  {
+    "order_no": 2,
+    "status": true,
+    "detail": "Do you have your home picked out? Check out our properties tab to see what homes are available within your search parameters"
+  },
+  {
+    "order_no": 3,
+    "status": false,
+    "detail": "Do you know what type of financing is available to you? Check out our services tab above to see what options are available to you."
+  },
+  {
+    "order_no": 4,
+    "status": false,
+    "detail": "Do you know how much home you can afford? Check out our calculator tab to find out the right price for you"
+  },
+  {
+    "order_no": 5,
+    "status": false,
+    "detail": "Do you understand your current debt to income ratio and what that means, Check out our calculator tab to find out more."
+  }
+]

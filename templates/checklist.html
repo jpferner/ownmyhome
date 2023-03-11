@@ -24,9 +24,9 @@
             <tr data-id="{{ item.order_no }}">
                 <td>Step {{ item.order_no }}</td>
                 <td>{{ item.detail }}</td>
-                <td class="status">Incomplete</td>
+                <td class="status">{% if item.status %}Completed{% else %}Incomplete{% endif %}</td>
                 <td>
-                    <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="false">Complete</button>
+                    <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="{% if item.status %}true{% else %}false{% endif %}">{{ item.button_text }}</button>
                 </td>
             </tr>
             {% endfor %}

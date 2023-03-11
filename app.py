@@ -2,7 +2,9 @@ from flask import Flask, render_template, request, url_for, redirect, jsonify, f
 from password_strength import PasswordPolicy
 from password_strength import PasswordStats
 import ChecklistItems
+import data_manager
 
+checklist_items = data_manager.load_checklist_data()
 app = Flask(__name__)
 app.config.update(
     TESTING=True,
@@ -15,6 +17,19 @@ policy = PasswordPolicy.from_names(
     numbers=1,  # requires minimum 1 digit
     strength=0.50  # password score of at least 0.5; good, strong passwords start at 0.66
 )
+
+todo_table = []
+completed_table = []
+
+# populate the todo_table and completed_table lists from the checklist_items list
+for item in ChecklistItems.checklist_items:
+    if item.status:
+        completed_table.append(item)
+    else:
+        todo_table.append(item)
+
+todo_table = sorted(todo_table, key=lambda x: x.order_no)
+completed_table = sorted(completed_table, key=lambda y: y.order_no)
 
 
 @app.route("/")
@@ -31,28 +46,24 @@ def properties():
 
 @app.route('/checklist', methods=['GET', 'POST'])
 def checklist():
-    todo_table = []
-    completed_table = []
-
-    for item in ChecklistItems.checklist_items:
-        if item.status:
-            completed_table.append(item)
-        else:
-            todo_table.append(item)
-
-    todo_table = sorted(todo_table, key=lambda x: x.order_no)
-    completed_table = sorted(completed_table, key=lambda y: y.order_no)
+    checklist_items = data_manager.load_checklist_data()
 
     if request.method == 'POST':
         data = request.get_json()
         item_id = int(data['id'])
 
-        for item in ChecklistItems.checklist_items:
+        for item in checklist_items:
             if item.order_no == item_id:
                 item.toggle_status()
+                data_manager.save_checklist_data(checklist_items)
                 return jsonify({'success': True})
 
         return jsonify({'success': False})
+
+    todo_table = [item for item in checklist_items if not item.status]
+    completed_table = [item for item in checklist_items if item.status]
+    todo_table = sorted(todo_table, key=lambda x: x.order_no)
+    completed_table = sorted(completed_table, key=lambda y: y.order_no)
 
     return render_template('checklist.html', todo_table=todo_table, completed_table=completed_table)
 

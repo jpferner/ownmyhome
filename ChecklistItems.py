@@ -1,3 +1,6 @@
+import json
+
+
 class ChecklistItems:
     def __init__(self, order_no: int, status: bool, detail: str):
         self.button_text = 'Complete'
@@ -16,32 +19,29 @@ class ChecklistItems:
         if self.status:
             self.button_text = 'Undo'
         else:
-            pass
+            self.button_text = 'Complete'
+        self.save()  # save the updated status to the checklist_data.json file
 
     @classmethod
-    def get_completed(cls, checklists):
-        return [c for c in checklists if c.status]
+    def from_dict(cls, data):
+        return cls(data['order_no'], data['status'], data['detail'])
 
-    def __str__(self):
-        return f"Step {self.order_no}: {self.detail} ({'Completed' if self.status else 'Incomplete'})"
+    def to_dict(self):
+        return {'order_no': self.order_no, 'status': self.status, 'detail': self.detail}
+
+    @classmethod
+    def load(cls):
+        with open('checklist_data.json', 'r') as f:
+            data = json.load(f)
+        return [cls.from_dict(item_data) for item_data in data]
+
+    def save(self):
+        data = self.to_dict()
+        with open('checklist_data.json', 'w') as f:
+            json.dump(data, f)
 
 
-checklist_items = [ChecklistItems(1, True,
-                                  'Do you know what your current credit score is? Check out our services tab above' 
-                                  ' to see what options are available to you.'),
-                   ChecklistItems(2, True,
-                                  'Do you have your home picked out? Check out our properties tab to see what homes' 
-                                  ' are available within your search parameters'),
-                   ChecklistItems(3, False,
-                                  'Do you know what type of financing is available to you?'
-                                  ' Check out our services tab above to see what options are available to you.'),
-                   ChecklistItems(4, False,
-                                  'Do you know how much home you can afford?'
-                                  ' Check out our calculator tab to find out the right price for you'),
-                   ChecklistItems(5, False,
-                                  'Do you understand your current debt to income ratio and what that means,'
-                                  ' Check out our calculator tab to find out more.')
-                   ]
+checklist_items = ChecklistItems.load()
 todo_table = []
 completed_table = []
 for i in checklist_items:
