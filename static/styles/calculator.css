@@ -1,10 +1,35 @@
 .calculator1 {
-    width: 25%;
-    margin: 0 auto;
+    width: 20%;
+    margin-left: 20%;
+    background-color: white;
+}
+h1 {
+    color: black;
+}
+.info {
+    display: table-row;
+    border: 1px black;
 }
 label {
+    text-align: left;
     display: table-cell;
+    width: 200px;
+    color: black;
 }
 input {
     display: table-cell;
+    color: black;
+    width: 200px;
+    border-width: 1px;
+}
+select {
+    color: black;
+    width: 200px;
+    border-width: 1px;
+}
+.calculateButton {
+    background-color: goldenrod;
+    border-width: 1px;
+    padding: 9px 16px;
+
 }
