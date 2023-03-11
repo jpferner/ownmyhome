@@ -8,6 +8,9 @@
 
 <aside>
   <h1>PROPERTIES PAGE</h1>
-  <p>placing this text here. I am working tutorial to implement database. Commit is packages installed</p>
+  <h3>Sample property coming from database</h3>
+  {% for prop in property %}
+    <div><p>{{ Property.street }}</p></div>
+  {% endfor %}
 </aside>
 {% include 'footer.html' %}
