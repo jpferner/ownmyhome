@@ -21,7 +21,7 @@
             </thead>
             <tbody id="todo-list">
             {% for item in todo_table %}
-            <tr data-id="{{ item.order_no }}">
+            <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
                 <td>Step {{ item.order_no }}</td>
                 <td>{{ item.detail }}</td>
                 <td class="status">{% if item.status %}Completed{% else %}Incomplete{% endif %}</td>
@@ -44,7 +44,7 @@
             </thead>
             <tbody id="completed-list">
             {% for item in completed_table %}
-            <tr data-id="{{ item.order_no }}">
+            <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
                 <td>Step {{ item.order_no }}</td>
                 <td>{{ item.detail }}</td>
                 <td class="status">Completed</td>

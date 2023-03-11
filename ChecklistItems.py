@@ -31,24 +31,29 @@ class ChecklistItems:
 
     @classmethod
     def load(cls):
-        with open('checklist_data.json', 'r') as f:
-            data = json.load(f)
-        return [cls.from_dict(item_data) for item_data in data]
+        try:
+            with open('checklist_data.json', 'r') as f:
+                data = json.load(f)
+                return [cls.from_dict(item_data) for item_data in data]
+        except FileNotFoundError:
+            return []
 
     def save(self):
         data = self.to_dict()
         with open('checklist_data.json', 'w') as f:
             json.dump(data, f)
 
+    @classmethod
+    def update_item(cls, order_no, new_status):
+        checklist_items = cls.load()
+        for item in checklist_items:
+            if item.order_no == order_no:
+                item.status = new_status
+                item.toggle_status()
+                break
+        cls.save_items(checklist_items)
 
-checklist_items = ChecklistItems.load()
-todo_table = []
-completed_table = []
-for i in checklist_items:
-    if i.status:
-        completed_table.append(i)
-    else:
-        todo_table.append(i)
-
-todo_table = sorted(todo_table, key=lambda x: x.order_no)
-completed_table = sorted(completed_table, key=lambda y: y.order_no)
+    @classmethod
+    def save_items(cls, data):
+        with open('checklist_data.json', 'w') as f:
+            json.dump([item.to_dict() for item in data], f)

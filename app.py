@@ -1,10 +1,8 @@
 from flask import Flask, render_template, request, url_for, redirect, jsonify, flash
 from password_strength import PasswordPolicy
 from password_strength import PasswordStats
-import ChecklistItems
 import data_manager
 
-checklist_items = data_manager.load_checklist_data()
 app = Flask(__name__)
 app.config.update(
     TESTING=True,
@@ -18,18 +16,8 @@ policy = PasswordPolicy.from_names(
     strength=0.50  # password score of at least 0.5; good, strong passwords start at 0.66
 )
 
-todo_table = []
-completed_table = []
-
-# populate the todo_table and completed_table lists from the checklist_items list
-for item in ChecklistItems.checklist_items:
-    if item.status:
-        completed_table.append(item)
-    else:
-        todo_table.append(item)
-
-todo_table = sorted(todo_table, key=lambda x: x.order_no)
-completed_table = sorted(completed_table, key=lambda y: y.order_no)
+# Load checklist data from file
+checklist_items = data_manager.load_checklist_data()
 
 
 @app.route("/")
@@ -46,7 +34,7 @@ def properties():
 
 @app.route('/checklist', methods=['GET', 'POST'])
 def checklist():
-    checklist_items = data_manager.load_checklist_data()
+    global checklist_items
 
     if request.method == 'POST':
         data = request.get_json()
@@ -115,7 +103,7 @@ def sign_up():
 
         else:  # all form fields are valid
             flash('Account created!', category='success')
-            #time.sleep(1)  # give 1 second for flash message to show
+            # time.sleep(1)  # give 1 second for flash message to show
 
             print(stats.strength())  # show in command line how strong password is
             return render_template('index.html')  # take user to homepage
