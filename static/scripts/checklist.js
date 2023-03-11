@@ -1,73 +1,100 @@
-function sortTableRows(table) {
-    // Get all rows in the table body
-    const rows = Array.from(table.tBodies[0].rows);
-
-    // Sort rows by their step number
-    rows.sort((row1, row2) => {
-        const step1 = parseInt(row1.cells[0].textContent.match(/\d+/).toString());
-        const step2 = parseInt(row2.cells[0].textContent.match(/\d+/).toString());
-        return step1 - step2;
-    });
-
-    // Reinsert rows in sorted order
-    rows.forEach(row => table.tBodies[0].appendChild(row));
+// Add event listeners to "Complete" and "Undo" buttons
+const buttons = document.querySelectorAll('.complete-btn, .undo-btn');
+for (let i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener('click', toggleStatus);
 }
 
-const todoList = document.getElementById('todo-list');
-const completedList = document.getElementById('completed-list');
-const completeButtons = document.querySelectorAll('.complete-btn');
+// Send AJAX request to toggle item status
+function toggleStatus(event) {
+    const id = event.target.getAttribute('data-id');
+    const completed = event.target.getAttribute('data-completed') === 'true';
+    fetch(`/toggle_status/${id}`, {
+        method: 'POST',
+        body: JSON.stringify({completed: !completed}),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }).then(() => {
+        if (completed) {
+            // Move item from completed to todo table
+            const row = event.target.parentElement.parentElement;
+            row.querySelector('.status').textContent = 'Incomplete';
+            row.querySelector('button').className = 'complete-btn';
+            row.querySelector('button').textContent = 'Complete';
+            row.querySelector('button').setAttribute('data-completed', 'false');
+            document.getElementById('todo-list').appendChild(row);
+        } else {// Move item from todo to completed table
+            const row = event.target.parentElement.parentElement;
+            row.querySelector('.status').textContent = 'Completed';
+            row.querySelector('button').className = 'undo-btn';
+            row.querySelector('button').textContent = 'Undo';
+            row.querySelector('button').setAttribute('data-completed', 'true');
+            document.getElementById('completed-list').appendChild(row);
+        }
+        // Sort the tables by step number
+        const todoList = document.getElementById('todo-list');
+        const completedList = document.getElementById('completed-list');
+        const sortedTodo = Array.from(todoList.children).sort((a, b) => {
+            const aStep = parseInt(a.querySelector('td').textContent.slice(5));
+            const bStep = parseInt(b.querySelector('td').textContent.slice(5));
+            return aStep - bStep;
+        });
+        const sortedCompleted = Array.from(completedList.children).sort((a, b) => {
+            const aStep = parseInt(a.querySelector('td').textContent.slice(5));
+            const bStep = parseInt(b.querySelector('td').textContent.slice(5));
+            return aStep - bStep;
+        });
+        todoList.innerHTML = '';
+        sortedTodo.forEach(item => todoList.appendChild(item));
+        completedList.innerHTML = '';
+        sortedCompleted.forEach(item => completedList.appendChild(item));
+    });
+}
 
-completeButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        const row = button.parentNode.parentNode;
-        const id = row.getAttribute('data-id');
-        const statusCell = row.querySelector('.status');
-        statusCell.textContent = 'Completed';
-        todoList.removeChild(row);
-        completedList.appendChild(row);
-        sortTableRows(completedList.parentNode);
-        const undoButton = document.createElement('button');
-        undoButton.textContent = 'Undo';
-        undoButton.setAttribute('data-id', id);
-        undoButton.classList.add('undo-btn');
-        const actionCell = button.parentNode;
-        actionCell.appendChild(undoButton);
-        button.remove();
-        undoButton.addEventListener('click', () => {
-            const row = undoButton.parentNode.parentNode;
-            const id = row.getAttribute('data-id');
-            const statusCell = row.querySelector('.status');
-            statusCell.textContent = 'Incomplete';
-            completedList.removeChild(row);
-            todoList.appendChild(row);
-            sortTableRows(todoList.parentNode);
-            undoButton.remove();
-            const completeButton = document.createElement('button');
-            completeButton.textContent = 'Complete';
-            completeButton.setAttribute('data-id', id);
-            completeButton.classList.add('complete-btn');
-            actionCell.appendChild(completeButton);
-            completeButton.addEventListener('click', () => {
-                const row = completeButton.parentNode.parentNode;
-                completedList.appendChild(row);
-                sortTableRows(completedList.parentNode);
-                const undoButton = document.createElement('button');
-                undoButton.textContent = 'Undo';
-                undoButton.setAttribute('data-id', id);
-                undoButton.classList.add('undo-btn');
-                actionCell.appendChild(undoButton);
-                completeButton.remove();
-                undoButton.addEventListener('click', () => {
-                    const row = undoButton.parentNode.parentNode;
-                    const statusCell = row.querySelector('.status');
-                    statusCell.textContent = 'Incomplete';
-                    completedList.removeChild(row);
+// Update the To-Do and Completed tables
+function updateChecklists() {
+    const todoList = document.getElementById('todo-list');
+    const completedList = document.getElementById('completed-list');
+    fetch('/get_checklists').then(response => {
+        if (response.ok) {
+            response.json().then(data => {
+                // Sort the todo and completed tables by step number
+                const sortedTodo = data.sort((a, b) => a.order - b.order);
+                const sortedCompleted = data.completed.sort((a, b) => a.order - b.order);
+                // Clear existing table rows
+                todoList.innerHTML = '';
+                completedList.innerHTML = '';
+                // Add updated table rows
+                sortedTodo.forEach(item => {
+                    const row = createTableRow(item);
                     todoList.appendChild(row);
-                    sortTableRows(todoList.parentNode);
-                    undoButton.remove();
-                    actionCell.appendChild(completeButton);
+                });
+                sortedCompleted.forEach(item => {
+                    const row = createTableRow(item);
+                    completedList.appendChild(row);
                 });
             });
-        });
+        }
     });
-});
+}
+
+// Helper function to create a table row from a checklist item
+function createTableRow(item) {
+    const row = document.createElement('tr');
+    row.setAttribute('data-id', item.order);
+    row.innerHTML = `
+        <td>Step ${item.order}</td>
+        <td>${item.detail}</td>
+        <td class="status">${item.status ? 'Completed' : 'Incomplete'}</td>
+        <td>
+            <button class="${item.status ? 'undo-btn' : 'complete-btn'}" data-id="${item.order}" data-completed="${item.status}">
+                ${item.status ? 'Undo' : 'Complete'}
+            </button>
+        </td>
+    `;
+    row.querySelector('button').addEventListener('click', toggleStatus);
+    return row;
+}
+
+// Initialize the To-Do and Completed tables
+updateChecklists();

@@ -1,40 +1,59 @@
+import json
+
+
 class ChecklistItems:
-    def __init__(self, order_no: int, status: str, detail: str):
+    def __init__(self, order_no: int, status: bool, detail: str):
+        self.button_text = 'Complete'
         self.order_no = order_no
         self.status = status
         self.detail = detail
 
-    def update_status(self, new_status: str):
+    def update_status(self, new_status: bool):
         self.status = new_status
 
     def update_detail(self, new_detail: str):
         self.detail = new_detail
 
-    def mark_completed(self):
-        self.status = 'Completed'
+    def toggle_status(self):
+        self.status = not self.status
+        if self.status:
+            self.button_text = 'Undo'
+        else:
+            self.button_text = 'Complete'
+        self.save()  # save the updated status to the checklist_data.json file
 
     @classmethod
-    def get_completed(cls, checklists):
-        return [c for c in checklists if c.status == 'Completed']
+    def from_dict(cls, data):
+        return cls(data['order_no'], data['status'], data['detail'])
 
-    def __str__(self):
-        return f"Step {self.order_no}: {self.detail} ({self.status})"
+    def to_dict(self):
+        return {'order_no': self.order_no, 'status': self.status, 'detail': self.detail}
 
+    @classmethod
+    def load(cls):
+        try:
+            with open('checklist_data.json', 'r') as f:
+                data = json.load(f)
+                return [cls.from_dict(item_data) for item_data in data]
+        except FileNotFoundError:
+            return []
 
-checklist_items = [ChecklistItems(1, 'Incomplete',
-                                  'Do you know what your current credit score is? Check out our services tab above' 
-                                  ' to see what options are available to you.'),
-                   ChecklistItems(2, 'Incomplete',
-                                  'Do you have your home picked out? Check out our properties tab to see what homes' 
-                                  ' are available within your search parameters'),
-                   ChecklistItems(3, 'Incomplete',
-                                  'Do you know what type of financing is available to you?'
-                                  ' Check out our services tab above to see what options are available to you.'),
-                   ChecklistItems(4, 'Incomplete',
-                                  'Do you know how much home you can afford?'
-                                  ' Check out our calculator tab to find out the right price for you'),
-                   ChecklistItems(5, 'Incomplete',
-                                  'Do you understand your current debt to income ratio and what that means,'
-                                  ' Check out our calculator tab to find out more.')
-                   ]
-sorted_checklist_items = sorted(checklist_items, key=lambda x: x.order_no)
+    def save(self):
+        data = self.to_dict()
+        with open('checklist_data.json', 'w') as f:
+            json.dump(data, f)
+
+    @classmethod
+    def update_item(cls, order_no, new_status):
+        checklist_items = cls.load()
+        for item in checklist_items:
+            if item.order_no == order_no:
+                item.status = new_status
+                item.toggle_status()
+                break
+        cls.save_items(checklist_items)
+
+    @classmethod
+    def save_items(cls, data):
+        with open('checklist_data.json', 'w') as f:
+            json.dump([item.to_dict() for item in data], f)

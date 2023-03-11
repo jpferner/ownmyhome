@@ -4,7 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from password_strength import PasswordPolicy
 from password_strength import PasswordStats
-import ChecklistItems
+import data_manager
 
 
 app = Flask(__name__)
@@ -24,6 +24,9 @@ policy = PasswordPolicy.from_names(
     strength=0.50  # password score of at least 0.5; good, strong passwords start at 0.66
 )
 
+# Load checklist data from file
+checklist_items = data_manager.load_checklist_data()
+
 
 @app.route("/")
 def home():
@@ -39,31 +42,26 @@ def properties():
 
 @app.route('/checklist', methods=['GET', 'POST'])
 def checklist():
+    global checklist_items
+
     if request.method == 'POST':
-        return redirect(url_for('index'))
-    return render_template('checklist.html', checklist_items=ChecklistItems.sorted_checklist_items)
+        data = request.get_json()
+        item_id = int(data['id'])
 
+        for item in checklist_items:
+            if item.order_no == item_id:
+                item.toggle_status()
+                data_manager.save_checklist_data(checklist_items)
+                return jsonify({'success': True})
 
-@app.route('/complete-item', methods=['POST'])
-def complete_item():
-    data = request.get_json()
-    item_id = data['id']
-    for item in ChecklistItems.checklist_items:
-        if item.order_no == int(item_id):
-            item.mark_completed()
-            return jsonify({'success': True})
-    return jsonify({'success': False})
+        return jsonify({'success': False})
 
+    todo_table = [item for item in checklist_items if not item.status]
+    completed_table = [item for item in checklist_items if item.status]
+    todo_table = sorted(todo_table, key=lambda x: x.order_no)
+    completed_table = sorted(completed_table, key=lambda y: y.order_no)
 
-@app.route('/undo-item', methods=['POST'])
-def undo_item():
-    data = request.get_json()
-    item_id = data['id']
-    for item in ChecklistItems.checklist_items:
-        if item.order_no == item_id:
-            item.completed = False
-            return jsonify({'success': True})
-    return jsonify({'success': False})
+    return render_template('checklist.html', todo_table=todo_table, completed_table=completed_table)
 
 
 @app.route('/calendar', methods=['GET', 'POST'])
@@ -113,7 +111,7 @@ def sign_up():
 
         else:  # all form fields are valid
             flash('Account created!', category='success')
-            #time.sleep(1)  # give 1 second for flash message to show
+            # time.sleep(1)  # give 1 second for flash message to show
 
             print(stats.strength())  # show in command line how strong password is
             return render_template('index.html')  # take user to homepage
