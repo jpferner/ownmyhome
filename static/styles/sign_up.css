@@ -1,16 +1,25 @@
 form label{
     display: inline-block;
-    width: 175px;
+    width: 45%;
     text-align: left;
 }
 
 #sign-up-form {
     background-color: gray;
     color: black;
+    width: 25%;
+    margin: auto;
 }
 
 #sign-up-form input {
-    margin-bottom: 8px;
+    margin-bottom: .5em;
 }
 
+@media screen and (max-width: 1724px) {
+    #sign-up-form{width: 40%}
+}
+
+@media screen and (max-width: 1160px) {
+    #sign-up-form{width:62%}
+}
 
