@@ -108,7 +108,7 @@ def sign_up():
             flash('Account created!', category='success')
             # time.sleep(1)  # give 1 second for flash message to show
 
-            print(stats.strength())  # show in command line how strong password is
+            # print(stats.strength())  # show in command line how strong password is
             return render_template('index.html')  # take user to homepage
 
     return render_template('sign_up.html')
