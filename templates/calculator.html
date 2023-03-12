@@ -6,49 +6,49 @@
   </div>
 </section>
 <aside>
-<fieldset>
-    <table class="calculator1">
-        <tr class="info">
-            <td><label for="HomeVal">Home Value:</label></td>
-            <td><input type="number" id="HomeVal" name="HomeVal" placeholder="100" required><br></td>
-        </tr>
-        <tr class="info">
-            <td><label for="DownPay">Down Payment:</label></td>
-            <td><input type="number" id="DownPay" name="DownPay" placeholder="200" required><br></td>
-        </tr>
-        <tr class="info">
-            <td><label for="LoanAmt">Loan Amount:</label></td>
-            <td><input type="number" id="LoanAmt" name="LoanAmt" placeholder="300" required><br></td>
-        </tr>
-        <tr class="info">
-            <td><label for="InterestRate">Interest Rate:</label></td>
-            <td><input type="number" id="InterestRate" name="InterestRate" placeholder="400" required><br></td>
-        </tr>
-        <tr class="info">
-            <td><label for="LoanTerm">Loan Term:</label></td>
-            <td><input type="number" id="LoanTerm" name="LoanTerm" placeholder="500" required><br></td>
-        </tr>
-        <tr class="info">
-            <td><label for="StartDate">Start Date:</label></td>
-            <td><input type="date" id="StartDate" name="StartDate"><br></td>
-        </tr>
-        <tr class="info">
-            <td><label for="PropTax">Property Tax:</label></td>
-            <td><input type="number" id="PropTax" name="PropTax" placeholder="700" required><br></td>
-        </tr>
-        <tr class="info">
-            <td><label for="LoanType">Loan Type</label></td>
-            <td><select id="LoanType">
-                <option value="Conventional">Conventional</option>
-                <option value="loan2">loan2</option>
-                <option value="loan3">loan3</option>
-            </select></td>
-        </tr>
-    </table>
-    <p class="calculateButton">
-        <input type="submit" value="Calculate">
-    </p>
-</fieldset>
+    <form method="POST">
+        <table class="calculator1">
+            <tr class="info">
+                <td><label for="HomeVal">Home Value:</label></td>
+                <td><input type="number" id="HomeVal" name="HomeVal" placeholder="500000" required><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="DownPay">Down Payment:</label></td>
+                <td><input type="number" id="DownPay" name="DownPay" placeholder="80000" required><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="LoanAmt">Loan Amount:</label></td>
+                <td><input type="number" id="LoanAmt" name="LoanAmt" placeholder="350000" required><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="InterestRate">Interest Rate:</label></td>
+                <td><input type="number" id="InterestRate" name="InterestRate" placeholder="6.5" required><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="LoanTerm">Loan Term:</label></td>
+                <td><input type="number" id="LoanTerm" name="LoanTerm" placeholder="30" required><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="StartDate">Start Date:</label></td>
+                <td><input type="date" id="StartDate" name="StartDate"><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="PropTax">Property Tax:</label></td>
+                <td><input type="number" id="PropTax" name="PropTax" placeholder="5.0" required><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="LoanType">Loan Type</label></td>
+                <td><select name="LoanType" id="LoanType">
+                    <option value="Conventional">Conventional</option>
+                    <option value="loan2">loan2</option>
+                    <option value="loan3">loan3</option>
+                </select></td>
+            </tr>
+        </table>
+        <p>
+        <button class="calculateButton" type="submit">Calculate</button>
+        </p>
+    </form>
 </aside>
 
 {% include 'footer.html' %}

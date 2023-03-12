@@ -120,7 +120,22 @@ def sign_up():
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
     if request.method == 'POST':
-        return redirect(url_for('index'))
+        data = request.form
+
+        homeVal = request.form.get('HomeVal')
+        downPay = request.form.get('DownPay')
+        loanAmt = request.form.get('DownPay')
+        interestRate = request.form.get('InterestRate')
+        loanTerm = request.form.get('LoanTerm')
+        startDate = request.form.get('StartDate')
+        propTax = request.form.get('PropTax')
+        loanType = request.form.get('LoanType')
+
+        # Checks to see if info is found via console
+        print(data)
+
+
+        return redirect(url_for('calculator'))
     return render_template('calculator.html')
 
 

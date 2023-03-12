@@ -1,18 +1,17 @@
 .calculator1 {
+    background-color: #cccccc;
     width: 25%;
     border: 1px solid black;
-    margin-left: 25%;
+    margin: auto;
     text-align: left;
 }
 .info {
+    border: 1px solid black;
 }
 td {
     padding: 2%;
     width: 170px;
 }
-fieldset{
-    padding: 2%;
-}
 .calculateButton {
-    margin-right: 26%;
+    border: 1px solid;
 }
