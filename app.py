@@ -13,7 +13,7 @@ policy = PasswordPolicy.from_names(
     length=8,  # min length for password is 8 characters
     uppercase=1,  # requires minimum 1 uppercase letter
     numbers=1,  # requires minimum 1 digit
-    strength=0.50  # password score of at least 0.5; good, strong passwords start at 0.66
+    strength=0.3  # password score of at least 0.5; good, strong passwords start at 0.66
 )
 
 # Load checklist data from file
@@ -85,6 +85,9 @@ def sign_up():
         data = request.form
         print(data)
 
+        # show in command line how strong password is
+        print(stats.strength())
+
         # set up requirements for each field on the sign-up page
         # category = 'error'
         if len(firstName) < 2:
@@ -95,7 +98,7 @@ def sign_up():
             flash('Email must be greater than 3 characters.', category='error')
         elif email1 != email2:
             flash('Email addresses do not match.', category='error')
-        elif stats.strength() < 0.50:
+        elif stats.strength() < 0.30:
             flash('Password is not strong enough.', category='error')
             print(stats.strength())
         elif password1 != password2:
