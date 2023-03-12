@@ -15,4 +15,11 @@ form label{
     margin-bottom: .5em;
 }
 
+@media screen and (max-width: 1724px) {
+    #sign-up-form{width: 40%}
+}
+
+@media screen and (max-width: 1160px) {
+    #sign-up-form{width:62%}
+}
 

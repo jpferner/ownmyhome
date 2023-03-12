@@ -73,6 +73,10 @@ def login():
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
+
+        # data object to capture the form data
+        data = request.form
+
         firstName = request.form.get('firstName')
         lastName = request.form.get('lastName')
         email1 = request.form.get('email')
@@ -82,7 +86,6 @@ def sign_up():
         stats = PasswordStats(password1)  # gives password strength stats on backend
 
         # show the data on the backend (in terminal) that user entered
-        data = request.form
         print(data)
 
         # show in command line how strong password is
