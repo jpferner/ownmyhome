@@ -124,7 +124,7 @@ def calculator():
 
         homeVal = request.form.get('HomeVal')
         downPay = request.form.get('DownPay')
-        loanAmt = request.form.get('DownPay')
+        loanAmt = request.form.get('LoanAmt')
         interestRate = request.form.get('InterestRate')
         loanTerm = request.form.get('LoanTerm')
         startDate = request.form.get('StartDate')
@@ -133,9 +133,11 @@ def calculator():
 
         # Checks to see if info is found via console
         print(data)
-
-
-        return redirect(url_for('calculator'))
+        if int(homeVal) > 0:
+            return render_template('calculator.html', HomeVal=homeVal, DownPay=downPay,
+                                   LoanAmt=loanAmt, InterestRate=interestRate, LoanTerm=loanTerm,
+                                   StartDate=startDate, PropTax=propTax, LoanType=loanType,
+                                   MortTotal=homeVal)
     return render_template('calculator.html')
 
 
