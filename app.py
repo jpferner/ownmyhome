@@ -43,7 +43,7 @@ def home():
 def properties():
     if request.method == 'POST':
         return redirect(url_for('index'))
-    # props = Property.query.all()
+    #props = Property.query.all()
     return render_template('properties.html')
 
 
