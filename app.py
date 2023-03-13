@@ -22,7 +22,7 @@ policy = PasswordPolicy.from_names(
     length=8,  # min length for password is 8 characters
     uppercase=1,  # requires minimum 1 uppercase letter
     numbers=1,  # requires minimum 1 digit
-    strength=0.50  # password score of at least 0.5; good, strong passwords start at 0.66
+    strength=0.3  # password score of at least 0.5; good, strong passwords start at 0.66
 )
 
 # Load checklist data from file
@@ -88,6 +88,10 @@ def login():
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     if request.method == 'POST':
+
+        # data object to capture the form data
+        data = request.form
+
         firstName = request.form.get('firstName')
         lastName = request.form.get('lastName')
         email1 = request.form.get('email')
@@ -97,8 +101,10 @@ def sign_up():
         stats = PasswordStats(password1)  # gives password strength stats on backend
 
         # show the data on the backend (in terminal) that user entered
-        data = request.form
         print(data)
+
+        # show in command line how strong password is
+        print(stats.strength())
 
         # set up requirements for each field on the sign-up page
         # category = 'error'
@@ -110,7 +116,7 @@ def sign_up():
             flash('Email must be greater than 3 characters.', category='error')
         elif email1 != email2:
             flash('Email addresses do not match.', category='error')
-        elif stats.strength() < 0.50:
+        elif stats.strength() < 0.30:
             flash('Password is not strong enough.', category='error')
             print(stats.strength())
         elif password1 != password2:
@@ -120,7 +126,7 @@ def sign_up():
             flash('Account created!', category='success')
             # time.sleep(1)  # give 1 second for flash message to show
 
-            print(stats.strength())  # show in command line how strong password is
+            # print(stats.strength())  # show in command line how strong password is
             return render_template('index.html')  # take user to homepage
 
     return render_template('sign_up.html')
@@ -129,7 +135,24 @@ def sign_up():
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
     if request.method == 'POST':
-        return redirect(url_for('index'))
+        data = request.form
+
+        homeVal = request.form.get('HomeVal')
+        downPay = request.form.get('DownPay')
+        loanAmt = request.form.get('LoanAmt')
+        interestRate = request.form.get('InterestRate')
+        loanTerm = request.form.get('LoanTerm')
+        startDate = request.form.get('StartDate')
+        propTax = request.form.get('PropTax')
+        loanType = request.form.get('LoanType')
+
+        # Checks to see if info is found via console
+        print(data)
+        if int(homeVal) > 0:
+            return render_template('calculator.html', HomeVal=homeVal, DownPay=downPay,
+                                   LoanAmt=loanAmt, InterestRate=interestRate, LoanTerm=loanTerm,
+                                   StartDate=startDate, PropTax=propTax, LoanType=loanType,
+                                   MortTotal=homeVal)
     return render_template('calculator.html')
 
 
