@@ -1,13 +1,22 @@
 from flask import Flask, render_template, request, url_for, redirect, jsonify, flash
+from config import Config
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from password_strength import PasswordPolicy
 from password_strength import PasswordStats
 import data_manager
 
+
+
 app = Flask(__name__)
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 app.config.update(
     TESTING=True,
     SECRET_KEY='8*bb2(n^)jk'
 )
+
 
 policy = PasswordPolicy.from_names(
     length=8,  # min length for password is 8 characters
@@ -19,6 +28,10 @@ policy = PasswordPolicy.from_names(
 # Load checklist data from file
 checklist_items = data_manager.load_checklist_data()
 
+# database import needs to be at the bottom to prevent a circular error. Please do not move.
+from models import *
+
+
 
 @app.route("/")
 def home():
@@ -26,9 +39,11 @@ def home():
 
 
 @app.route('/properties', methods=['GET', 'POST'])
+
 def properties():
     if request.method == 'POST':
         return redirect(url_for('index'))
+    #props = Property.query.all()
     return render_template('properties.html')
 
 
@@ -157,3 +172,4 @@ def index():
 
 if __name__ == '__main__':
     app.run()
+

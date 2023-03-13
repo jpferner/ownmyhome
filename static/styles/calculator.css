@@ -15,3 +15,19 @@ td {
 .calculateButton {
     border: 1px solid;
 }
+
+@media screen and (max-width: 1800px) {
+    .calculator1{width: 30%}
+}
+
+@media screen and (max-width: 1525px) {
+    .calculator1{width:35%}
+}
+
+@media screen and (max-width: 1325px) {
+    .calculator1{width:42%}
+}
+
+@media screen and (max-width: 1150px) {
+    .calculator1{width:50%}
+}
