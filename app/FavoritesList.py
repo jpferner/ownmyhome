@@ -13,7 +13,7 @@ class FavoritesList:
         self.favorites.append(favorite)
 
     def remove_favorite(self, favorite: Property):
-        self.favorites.remove(self.favorites.index(favorite))
+        self.favorites.remove(favorite)
 
 
 sample_property = [

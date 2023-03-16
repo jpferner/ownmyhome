@@ -1,5 +1,6 @@
 from app import db
 
+
 class Property(db.Model):
     propId = db.Column(db.Integer, primary_key=True)
     street = db.Column(db.String(100))

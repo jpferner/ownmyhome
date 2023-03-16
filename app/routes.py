@@ -3,7 +3,7 @@ from password_strength import PasswordStats
 
 from app import app
 from app import data_manager
-from app.models import Property
+# from app.models import Property
 
 # Load checklist data from file
 checklist_items = data_manager.load_checklist_data()
@@ -33,8 +33,8 @@ def properties():
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
-    props = Property.query.all()
-    return render_template('properties.html', propery=props)
+    # props = Property.query.all()
+    return render_template('properties.html')
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
