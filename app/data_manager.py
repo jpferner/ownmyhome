@@ -1,5 +1,5 @@
 import json
-from ChecklistItems import ChecklistItems
+from app.ChecklistItems import ChecklistItems
 
 
 def save_checklist_data(data):
