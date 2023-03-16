@@ -1,48 +1,13 @@
-"""
-This module contains the main Flask application for the website. It defines the routes and handlers for various pages
-of the website, as well as any necessary data processing logic.
-
-It also imports the necessary modules and libraries, including the configuration module, SQLAlchemy for database access,
-and data_manager for saving and loading checklist data.
-
-Authors: Mark Karels, David Hollock, Jake Ferner, Connor McNabb, Andrew Court
-"""
-
-from flask import Flask, render_template, request, url_for, redirect, jsonify, flash
-from config import Config
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-from password_strength import PasswordPolicy
+from flask import render_template, flash, redirect, url_for, request, jsonify
 from password_strength import PasswordStats
-import data_manager
 
-app = Flask(__name__)
-
-# Load configuration from object
-app.config.from_object(Config)
-
-# Initialize database
-db = SQLAlchemy(app)
-
-# Initialize migration
-migrate = Migrate(app, db)
-
-# Set testing mode and secret key
-app.config.update(
-    TESTING=True,
-    SECRET_KEY='8*bb2(n^)jk'
-)
-
-# Define password policy
-policy = PasswordPolicy.from_names(
-    length=8,  # minimum length for password is 8 characters
-    uppercase=1,  # requires minimum 1 uppercase letter
-    numbers=1,  # requires minimum 1 digit
-    strength=0.3  # password score of at least 0.3; good, strong passwords start at 0.66
-)
+from app import app
+from app import data_manager
+from app.models import Property
 
 # Load checklist data from file
 checklist_items = data_manager.load_checklist_data()
+
 
 # Import the database models; this needs to be at the bottom to prevent a circular error
 # from models import *
@@ -68,8 +33,8 @@ def properties():
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
-    # props = Property.query.all()
-    return render_template('properties.html')
+    props = Property.query.all()
+    return render_template('properties.html', propery=props)
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
@@ -251,7 +216,3 @@ def index():
     if request.method == 'POST':
         return redirect(url_for('index'))
     return render_template('index.html')
-
-
-if __name__ == '__main__':
-    app.run()

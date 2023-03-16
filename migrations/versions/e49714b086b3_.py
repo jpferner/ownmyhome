@@ -1,8 +1,8 @@
-"""First try property table
+"""empty message
 
-Revision ID: bd46ab26c980
+Revision ID: e49714b086b3
 Revises: 
-Create Date: 2023-03-10 15:47:40.244323
+Create Date: 2023-03-16 09:40:50.313171
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'bd46ab26c980'
+revision = 'e49714b086b3'
 down_revision = None
 branch_labels = None
 depends_on = None

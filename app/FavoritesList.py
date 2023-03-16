@@ -1,6 +1,7 @@
 
 from typing import List
-import Property
+
+from app.models import Property
 
 
 class FavoritesList:
