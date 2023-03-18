@@ -1,8 +1,8 @@
 from flask import render_template, flash, redirect, url_for, request
-from password_strength import PasswordStats
 
 from app import app
 from app.models import *
+from app.forms import SignUpForm  # used for sign_up() view
 
 
 # Define routes
@@ -75,63 +75,17 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html')
 
-
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
-    """
-    Renders the sign_up.html template and handles POST requests.
-    If the form data is valid, the function will flash a success message and render the index.html template.
-    If the form data is invalid, the function will flash an error message and remain on the sign_up.html template.
+    signup_form = SignUpForm()
 
-    Returns:
-    - If the request is a GET request: the rendered sign_up.html template.
-    - If the request is a POST request: either the rendered index.html template or the rendered sign_up.html template
-      with error messages, depending on the validity of the form data.
-    """
-    if request.method == 'POST':
+    # Validate the Sign-Up form
+    if signup_form.validate_on_submit():
+        flash('Account created!', category='success')
+        return redirect(url_for('sign_up'))
+        # return redirect(url_for())
 
-        # data object to capture the form data
-        data = request.form
-
-        firstName = request.form.get('firstName')
-        lastName = request.form.get('lastName')
-        email1 = request.form.get('email')
-        email2 = request.form.get('confirm-email')
-        password1 = request.form.get('password')
-        password2 = request.form.get('confirm-password')
-        stats = PasswordStats(password1)  # gives password strength stats on backend
-
-        # show the data on the backend (in terminal) that user entered
-        print(data)
-
-        # show in command line how strong password is
-        print(stats.strength())
-
-        # set up requirements for each field on the sign-up page
-        # category = 'error'
-        if len(firstName) < 2:
-            flash('First name must be greater than 1 character.', category='error')
-        elif len(lastName) < 2:
-            flash('Last name must be greater than 1 character.', category='error')
-        elif len(email1) < 4:
-            flash('Email must be greater than 3 characters.', category='error')
-        elif email1 != email2:
-            flash('Email addresses do not match.', category='error')
-        elif stats.strength() < 0.30:
-            flash('Password is not strong enough.', category='error')
-            print(stats.strength())
-        elif password1 != password2:
-            flash('Passwords do not match.', category='error')
-
-        else:  # all form fields are valid
-            flash('Account created!', category='success')
-            # time.sleep(1)  # give 1 second for flash message to show
-
-            # print(stats.strength())  # show in command line how strong password is
-            return render_template('index.html')  # take user to homepage
-
-    return render_template('sign_up.html')
-
+    return render_template('sign_up.html', form=signup_form)
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():

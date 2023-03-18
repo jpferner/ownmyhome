@@ -31,17 +31,7 @@ app.config.update(
     SECRET_KEY='8*bb2(n^)jk'
 )
 
-# Define password policy
-policy = PasswordPolicy.from_names(
-    length=8,  # minimum length for password is 8 characters
-    uppercase=1,  # requires minimum 1 uppercase letter
-    numbers=1,  # requires minimum 1 digit
-    strength=0.3  # password score of at least 0.3; good, strong passwords start at 0.66
-)
-
 from app import routes, models
-
-
 
 if __name__ == '__main__':
     app.run()
