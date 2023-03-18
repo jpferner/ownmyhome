@@ -14,3 +14,12 @@ class Property(db.Model):
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
+
+
+class ChecklistItems(db.Model):
+    order_no = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.Boolean, default=False)
+    detail = db.Column(db.String(255))
+
+    def __repr__(self):
+        return '<ChecklistItems {}>'.format(self.detail)

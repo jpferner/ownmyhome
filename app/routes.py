@@ -1,16 +1,8 @@
-from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask import render_template, flash, redirect, url_for, request
 from password_strength import PasswordStats
 
 from app import app
-from app import data_manager
-# from app.models import Property
-
-# Load checklist data from file
-checklist_items = data_manager.load_checklist_data()
-
-
-# Import the database models; this needs to be at the bottom to prevent a circular error
-# from models import *
+from app.models import *
 
 
 # Define routes
@@ -21,7 +13,11 @@ def home():
 
     Returns: The rendered home page HTML.
     """
-    return render_template("index.html")
+    test = ChecklistItems.query.all()
+
+    if request.method == 'POST':
+        return redirect(url_for('index'))
+    return render_template("index.html", test=test)
 
 
 @app.route('/properties', methods=['GET', 'POST'])
@@ -33,8 +29,8 @@ def properties():
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
-    # props = Property.query.all()
-    return render_template('properties.html')
+    props = Property.query.all()
+    return render_template('properties.html', props=props)
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
@@ -44,29 +40,10 @@ def checklist():
 
     Returns: The rendered checklist page HTML.
     """
-    global checklist_items
-
+    items = ChecklistItems.query.all()
     if request.method == 'POST':
-        # If a POST request is received, toggle the status of the corresponding checklist item and save the updated data
-        data = request.get_json()
-        item_id = int(data['id'])
-
-        for item in checklist_items:
-            if item.order_no == item_id:
-                item.toggle_status()
-                data_manager.save_checklist_data(checklist_items)
-                return jsonify({'success': True})
-
-        return jsonify({'success': False})
-
-    # If a GET request is received, retrieve the list of checklist items and separate them into completed and incomplete
-    # items, then render the checklist page HTML with these lists as template variables.
-    todo_table = [item for item in checklist_items if not item.status]
-    completed_table = [item for item in checklist_items if item.status]
-    todo_table = sorted(todo_table, key=lambda x: x.order_no)
-    completed_table = sorted(completed_table, key=lambda y: y.order_no)
-
-    return render_template('checklist.html', todo_table=todo_table, completed_table=completed_table)
+        return redirect(url_for('index'))
+    return render_template('checklist.html', items=items)
 
 
 @app.route('/calendar', methods=['GET', 'POST'])

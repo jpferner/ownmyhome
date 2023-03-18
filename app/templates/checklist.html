@@ -20,15 +20,17 @@
             </tr>
             </thead>
             <tbody id="todo-list">
-            {% for item in todo_table %}
-            <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
-                <td>Step {{ item.order_no }}</td>
-                <td>{{ item.detail }}</td>
-                <td class="status">{% if item.status %}Completed{% else %}Incomplete{% endif %}</td>
-                <td>
-                    <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="{% if item.status %}true{% else %}false{% endif %}">{{ item.button_text }}</button>
-                </td>
-            </tr>
+            {% for item in items %}
+                {% if not item.status %}
+                    <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
+                        <td>Step {{ item.order_no }}</td>
+                        <td>{{ item.detail }}</td>
+                        <td class="status">{% if item.status %}Completed{% else %}Incomplete{% endif %}</td>
+                        <td>
+                            <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="{% if item.status %}true{% else %}false{% endif %}">{{ item.button_text }}</button>
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
@@ -43,15 +45,17 @@
             </tr>
             </thead>
             <tbody id="completed-list">
-            {% for item in completed_table %}
-            <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
-                <td>Step {{ item.order_no }}</td>
-                <td>{{ item.detail }}</td>
-                <td class="status">Completed</td>
-                <td>
-                    <button class="undo-btn" data-id="{{ item.order_no }}" data-completed="true">Undo</button>
-                </td>
-            </tr>
+            {% for item in items %}
+                {% if item.status %}
+                    <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
+                        <td>Step {{ item.order_no }}</td>
+                        <td>{{ item.detail }}</td>
+                        <td class="status">Completed</td>
+                        <td>
+                            <button class="undo-btn" data-id="{{ item.order_no }}" data-completed="true">Undo</button>
+                        </td>
+                    </tr>
+                {% endif %}
             {% endfor %}
             </tbody>
         </table>
