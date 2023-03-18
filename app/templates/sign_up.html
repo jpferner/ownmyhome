@@ -14,40 +14,79 @@
   </div>
 </section>
 
+<!-- Displays success message at top of screen if user sign up information is valid -->
+{% for category, message in get_flashed_messages(with_categories=true) %}
+    <p class="{{ category }}" style="background-color: #4CAF50; font-weight: bold;
+color: white">{{ message }}</p>
+{% endfor %}
+
 <aside id="signup">
     <div id="sign-up-form">
         <h1>Sign Up</h1>
         <h5>Create a free account!<br>Already have one? <a href="{{ url_for('login') }}">Login</a></h5>
 
-        <form name="create-account" method="POST">
-            <label for="firstName">First Name</label>
-            <input type="text" name="firstName" id="firstName" autofocus required><br>
+        <form method="POST">
+            {{ form.hidden_tag() }}  <!-- creates CSRF token -->
 
-            <label for="lastName">Last Name</label>
-            <input type="text" name="lastName" id="lastName" autofocus required><br>
+            <p>
+                {{ form.first_name.label }}
+                {{ form.first_name() }}  <!-- input box for label above -->
+            </p>
 
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" autofocus required><br>
 
-            <label for="confirm-email">Confirm Email</label>
-            <input type="email" name="confirm-email" id="confirm-email" autofocus required><br>
+            <p>
+                {{ form.last_name.label }}
+                {{ form.last_name() }}
+            </p>
 
-            <label for="password">Password</label>
-            <!-- using pattern keyword is regex for front-end password requirement -->
-            <input type="password" name="password" id="password" autofocus required
-                   pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" title="Must contain at least one number
-            and one uppercase and lowercase letter, and at least 8 or more characters"><br>
+            <p>
+                {{ form.email.label }}
+                {{ form.email() }}
+            </p>
 
-            <label for="confirm-password">Confirm Password</label>
-            <input type="password" name="confirm-password" id="confirm-password" autofocus required><br>
+            <!-- Error message for Confirm Email field -->
+            {% if form.confirm_email.errors %}
+                <span class="errors" style="background-color: red" >
+                    {% for error in form.confirm_email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </span>
+            {% endif %}
 
-            <button type="submit">Create Account</button>
+            <p>
+                {{ form.confirm_email.label }}
+            {{ form.confirm_email() }}
+            </p>
+
+            <p>
+                {{ form.password.label }}
+            {{ form.password() }}
+            </p>
+
+            <!-- Error message for Confirm Password field -->
+            {% if form.confirm_password.errors %}
+                <span class="errors" style="background-color: red" >
+                    {% for error in form.confirm_password.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </span>
+            {% endif %}
+
+            <p>
+                {{ form.confirm_password.label }}
+                {{ form.confirm_password() }}
+            </p>
+
+            <p>
+                {{ form.accept_tos.label }}
+                {{ form.accept_tos() }}
+            </p>
+
+            <p>
+                {{ form.create_account() }}
+            </p>
+
         </form>
-
-        <p>By clicking the Create Account button, you agree to our <br>
-            <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
-        </p>
     </div>
-
 </aside>
 {% include 'footer.html' %}
