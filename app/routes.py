@@ -1,9 +1,10 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 
-
 from app import app
 from app import data_manager
-from app.forms import SignUpForm  # used for sign_up() view
+from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
+from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+
 # from app.models import Property
 
 # Load checklist data from file
@@ -95,9 +96,13 @@ def login():
     - If the request is a GET request: the rendered login.html template.
     - If the request is a POST request: a redirect to the index page.
     """
-    if request.method == 'POST':
-        return redirect(url_for('index'))
-    return render_template('login.html')
+
+    # if request.method == 'POST':
+    #     return redirect(url_for('index'))
+
+    form = LoginForm()
+    return render_template('login.html', form=form)
+
 
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
@@ -105,11 +110,12 @@ def sign_up():
 
     # Validate the Sign-Up form
     if signup_form.validate_on_submit():
-        flash('Account created!', category='success')
-        return redirect(url_for('sign_up'))
+        flash('Account created! Please use your credentials to log in.', category='success')
+        return redirect(url_for('login'))
         # return redirect(url_for())
 
     return render_template('sign_up.html', form=signup_form)
+
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():

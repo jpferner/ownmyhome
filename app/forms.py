@@ -38,4 +38,14 @@ class SignUpForm(FlaskForm):
 
     create_account = SubmitField("Create Account")
 
+
+class LoginForm(FlaskForm):
+    email = StringField("Email:",
+                        validators=[InputRequired(), Email(granular_message=True)])
+
+    # did not set password validators for login page; will flash message if invalid password
+    password = PasswordField("Password:", validators=[InputRequired()])
+
+    submit = SubmitField('Submit')
+
     # IF NEEDED...Custom Form Validation Methods - Will run automatically with WTForms

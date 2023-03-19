@@ -14,11 +14,12 @@
   </div>
 </section>
 
-<!-- Displays success message at top of screen if user sign up information is valid -->
-{% for category, message in get_flashed_messages(with_categories=true) %}
-    <p class="{{ category }}" style="background-color: #4CAF50; font-weight: bold;
-color: white">{{ message }}</p>
-{% endfor %}
+<!-- Code below is commented out because success message will only flash on login.html page -->
+{#<!-- Displays success message at top of screen if user sign up information is valid -->#}
+{#{% for category, message in get_flashed_messages(with_categories=true) %}#}
+{#    <p class="{{ category }}" style="background-color: #4CAF50; font-weight: bold;#}
+{#color: white">{{ message }}</p>#}
+{#{% endfor %}#}
 
 <aside id="signup">
     <div id="sign-up-form">
