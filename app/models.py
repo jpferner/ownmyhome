@@ -16,14 +16,19 @@ class Property(db.Model):
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
 
-class Users(db.Model, UserMixin):
+class Users(db.Model):
+# class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)  # no user can have an email that's already in db
     password_hash = db.Column(db.String(150))  # hashed password
 
-    # Below is the pashword hashing for safe storage of passwords in the database
+    # Create a string representation - putting user's first name on screen if desired
+    def __repr__(self):
+        return '<Name %r>' % self.first_name
+
+    # Below is the password hashing for safe storage of passwords in the database
     @property
     def password(self):
         raise AttributeError('Password is not a readable attribute!')

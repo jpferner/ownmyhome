@@ -89,5 +89,11 @@
 
         </form>
     </div>
+
+    <!-- Display the users in the databases on the sign-up form -->
+    {% for current_user in current_users %}
+        {{ current_user.id }}. {{ current_user.first_name }} {{ current_user.last_name }}
+        - {{ current_user.email }} <br>
+    {% endfor %}
 </aside>
 {% include 'footer.html' %}

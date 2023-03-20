@@ -1,11 +1,10 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
-
 from app import app
 from app import data_manager
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash  # used to hash user's password at sign up
-
+from app.models import *
 # from app.models import Property
 
 # Load checklist data from file
@@ -107,6 +106,7 @@ def login():
 
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    name = None
     signup_form = SignUpForm()
 
     # Validate the Sign-Up form
@@ -116,11 +116,28 @@ def sign_up():
         hashed_password = generate_password_hash(signup_form.password_hash.data, "sha256")
         print(f"After hashing password: {hashed_password}")
 
+        user = Users.query.filter_by(email=signup_form.email.data).first()
+        if user is None: # add new user to database
+            user = Users(first_name = signup_form.first_name.data, last_name = signup_form.last_name.data,
+                         email = signup_form.email.data, password_hash = signup_form.password_hash.data)
+            db.session.add(user)
+            db.session.commit()
+        name = signup_form.first_name.data
+
+        # # Clear the form if needed
+        # signup_form.first_name.data = ''
+        # signup_form.last_name.data = ''
+        # signup_form.email.data = ''
+        # signup_form.password_hash.data = ''
+
         flash('Account created! Please use your credentials to log in.', category='success')
-        return redirect(url_for('login'))
+        # return redirect(url_for('login'))
         # return redirect(url_for())
 
-    return render_template('sign_up.html', form=signup_form)
+    current_users = Users.query.order_by(Users.id)  # query current db of Users
+
+    return render_template('sign_up.html', form=signup_form, name=name,
+                           current_users = current_users)
 
 
 @app.route('/calculator', methods=['GET', 'POST'])

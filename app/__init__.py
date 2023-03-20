@@ -26,10 +26,10 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # Set testing mode and secret key
-app.config.update(
-    TESTING=True,
-    SECRET_KEY='8*bb2(n^)jk'
-)
+# app.config.update(
+#     TESTING=True,
+#     SECRET_KEY='8*bb2(n^)jk'
+# )
 
 from app import routes, models
 
