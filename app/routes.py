@@ -4,6 +4,7 @@ from app import app
 from app import data_manager
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash  # used to hash user's password at sign up
 
 # from app.models import Property
 
@@ -110,6 +111,11 @@ def sign_up():
 
     # Validate the Sign-Up form
     if signup_form.validate_on_submit():
+        print(f"Plaintext Password: {signup_form.password_hash.data}")
+        # hash the new user's password
+        hashed_password = generate_password_hash(signup_form.password_hash.data, "sha256")
+        print(f"After hashing password: {hashed_password}")
+
         flash('Account created! Please use your credentials to log in.', category='success')
         return redirect(url_for('login'))
         # return redirect(url_for())

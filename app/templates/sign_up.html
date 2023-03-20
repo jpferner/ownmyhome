@@ -60,22 +60,22 @@
             </p>
 
             <p>
-                {{ form.password.label }}
-            {{ form.password() }}
+                {{ form.password_hash.label }}
+            {{ form.password_hash() }}
             </p>
 
             <!-- Error message for Confirm Password field -->
-            {% if form.confirm_password.errors %}
+            {% if form.confirm_password_hash.errors %}
                 <span class="errors" style="background-color: red" >
-                    {% for error in form.confirm_password.errors %}
+                    {% for error in form.confirm_password_hash.errors %}
                         {{ error }}
                     {% endfor %}
                 </span>
             {% endif %}
 
             <p>
-                {{ form.confirm_password.label }}
-                {{ form.confirm_password() }}
+                {{ form.confirm_password_hash.label }}
+                {{ form.confirm_password_hash() }}
             </p>
 
             <p>
