@@ -5,7 +5,7 @@ from app import app
 from app import data_manager
 from app.forms import SignUpForm  # used for sign_up() view
 # from app.models import Property
-
+from app.models import Property
 # Load checklist data from file
 checklist_items = data_manager.load_checklist_data()
 
@@ -34,8 +34,8 @@ def properties():
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
-    # props = Property.query.all()
-    return render_template('properties.html')
+    props = Property.query.all()
+    return render_template('properties.html', props=props)
 
 
 @app.route('/checklist', methods=['GET', 'POST'])

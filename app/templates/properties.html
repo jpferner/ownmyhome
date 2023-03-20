@@ -9,8 +9,8 @@
 <aside>
   <h1>PROPERTIES PAGE</h1>
 
-{#  {% for prop in property %}#}
-{#    <div><p>{{ Property.street }}</p></div>#}
-{#  {% endfor %}#}
+  {% for p in props %}
+    <p>{{ p }}</p>
+  {% endfor %}
 </aside>
 {% include 'footer.html' %}
