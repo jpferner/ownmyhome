@@ -4,6 +4,7 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app
 from app import data_manager
 from app.forms import SignUpForm  # used for sign_up() view
+from datetime import date
 # from app.models import Property
 
 # Load checklist data from file
@@ -140,7 +141,10 @@ def calculator():
                                    LoanAmt=loanAmt, InterestRate=interestRate, LoanTerm=loanTerm,
                                    StartDate=startDate, PropTax=propTax, LoanType=loanType,
                                    MortTotal=homeVal)
-    return render_template('calculator.html')
+    return render_template('calculator.html', HomeVal=500000, DownPay=80000,
+                           LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
+                           StartDate=date.today(), PropTax=5.0,
+                           MortTotal=8)
 
 
 @app.route('/services', methods=['GET', 'POST'])
