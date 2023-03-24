@@ -12,7 +12,7 @@ from flask import Flask, render_template, request, url_for, redirect, jsonify, f
 from config import Config
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
-from password_strength import PasswordPolicy
+from flask_login import LoginManager
 
 app = Flask(__name__)
 
@@ -25,11 +25,18 @@ db = SQLAlchemy(app)
 # Initialize migration
 migrate = Migrate(app, db)
 
-# Set testing mode and secret key
-# app.config.update(
-#     TESTING=True,
-#     SECRET_KEY='8*bb2(n^)jk'
-# )
+# Specify a user loader for Flask-Login
+# Used to tell Flask-Login how to find a specific user from the ID stored in their session cookie
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'routes.login'
+
+from app.models import Users
+
+@login_manager.user_loader
+def load_user(user_id):  # id is the primary key for our user in models.py
+    return Users.query.get(int(user_id))
+
 
 from app import routes, models
 

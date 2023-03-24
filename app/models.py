@@ -16,8 +16,7 @@ class Property(db.Model):
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
 
-class Users(db.Model):
-# class Users(db.Model, UserMixin):
+class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))

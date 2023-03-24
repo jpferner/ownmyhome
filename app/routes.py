@@ -2,9 +2,9 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app
 from app import data_manager
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
-from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
-from werkzeug.security import generate_password_hash  # used to hash user's password at sign up
+from flask_login import UserMixin, login_user, login_required, logout_user, current_user
 from app.models import *
+
 # from app.models import Property
 
 # Load checklist data from file
@@ -86,22 +86,29 @@ def calendar():
     return render_template('calendar.html')
 
 
+# the Login Page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """
-    Renders the login.html template and handles POST requests.
-    POST requests are not currently used and will simply redirect the user to the index page.
-
-    Returns:
-    - If the request is a GET request: the rendered login.html template.
-    - If the request is a POST request: a redirect to the index page.
-    """
-
     # if request.method == 'POST':
     #     return redirect(url_for('index'))
 
-    form = LoginForm()
-    return render_template('login.html', form=form)
+    login_form = LoginForm()
+
+    if login_form.validate_on_submit():
+        user = Users.query.filter_by(email=login_form.email.data).first()
+        if user:
+            # Check the hashed password
+            if check_password_hash(user.password_hash, login_form.password_hash.data):
+                login_user(user)  # logs in the user and creates session
+                flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
+                return redirect(url_for('home'))
+            else:
+                flash("Invalid Email and/or Password. Please try again.", category='error')
+
+        else:  # user is not found and doesn't exist in database
+            flash("User does not exit. Try again. ", category='error')
+
+    return render_template('login.html', form=login_form)
 
 
 @app.route('/sign-up', methods=['GET', 'POST'])
@@ -117,14 +124,19 @@ def sign_up():
         print(f"After hashing password: {hashed_password}")
 
         user = Users.query.filter_by(email=signup_form.email.data).first()
-        if user is None:  # add new user to database
-            # user = Users(first_name = signup_form.first_name.data, last_name = signup_form.last_name.data,
-            #              email = signup_form.email.data, password_hash = signup_form.password_hash.data)
+        if user is None:
+            # Create a new user and the user to the database
             user = Users(first_name=signup_form.first_name.data, last_name=signup_form.last_name.data,
                          email=signup_form.email.data, password_hash=hashed_password)
             db.session.add(user)
             db.session.commit()
-        name = signup_form.first_name.data
+
+            flash('Account created! Please use your credentials to log in.', category='success')
+            return redirect(url_for('login'))
+        else:  # redirect user to the sign-up page, so they can create a new account
+            flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            return redirect(url_for('sign_up'))
+        # name = signup_form.first_name.data
 
         # # Clear the form if needed
         # signup_form.first_name.data = ''
@@ -132,14 +144,15 @@ def sign_up():
         # signup_form.email.data = ''
         # signup_form.password_hash.data = ''
 
-        flash('Account created! Please use your credentials to log in.', category='success')
+        # TEMPORARY CODE BLOCK
+        # flash('Account created! Please use your credentials to log in.', category='success')
         # return redirect(url_for('login'))
         # return redirect(url_for())
 
     current_users = Users.query.order_by(Users.id)  # query current db of Users
 
     return render_template('sign_up.html', form=signup_form, name=name,
-                           current_users = current_users)
+                           current_users=current_users)
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
