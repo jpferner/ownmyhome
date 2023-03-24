@@ -117,9 +117,11 @@ def sign_up():
         print(f"After hashing password: {hashed_password}")
 
         user = Users.query.filter_by(email=signup_form.email.data).first()
-        if user is None: # add new user to database
-            user = Users(first_name = signup_form.first_name.data, last_name = signup_form.last_name.data,
-                         email = signup_form.email.data, password_hash = signup_form.password_hash.data)
+        if user is None:  # add new user to database
+            # user = Users(first_name = signup_form.first_name.data, last_name = signup_form.last_name.data,
+            #              email = signup_form.email.data, password_hash = signup_form.password_hash.data)
+            user = Users(first_name=signup_form.first_name.data, last_name=signup_form.last_name.data,
+                         email=signup_form.email.data, password_hash=hashed_password)
             db.session.add(user)
             db.session.commit()
         name = signup_form.first_name.data

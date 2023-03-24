@@ -1,4 +1,7 @@
 {% include 'header.html' %}
+
+<!-- Sign-Up Form HTML -->
+
 <head>
     <title>Own My Home | Sign Up</title>
     <link
@@ -56,12 +59,12 @@
 
             <p>
                 {{ form.confirm_email.label }}
-            {{ form.confirm_email() }}
+                {{ form.confirm_email() }}
             </p>
 
             <p>
                 {{ form.password_hash.label }}
-            {{ form.password_hash() }}
+                {{ form.password_hash() }}
             </p>
 
             <!-- Error message for Confirm Password field -->
