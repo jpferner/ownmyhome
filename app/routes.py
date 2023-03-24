@@ -110,7 +110,7 @@ def login():
 
     return render_template('login.html', form=login_form)
 
-
+# the Sign-Up
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
     name = None
@@ -154,6 +154,13 @@ def sign_up():
     return render_template('sign_up.html', form=signup_form, name=name,
                            current_users=current_users)
 
+# the Logout view
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required  # user must be logged in to logout
+def logout():
+    logout_user()
+    flash("You have successfully logged out!", category='logout')
+    return redirect(url_for('login'))
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():

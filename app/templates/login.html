@@ -1,4 +1,14 @@
 {% include 'header.html' %}
+
+<head>
+    <title>Own My Home | Login</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles/login.css') }}"
+    />
+</head>
+
 <section>
   <div class="container">
     <h1>Welcome to our Real Estate Website</h1>
@@ -17,6 +27,7 @@
     <div id="login-form">
         <h1>Login</h1>
         <h5>New user? <a href="{{ url_for('sign_up') }}">Create a free account!</a></h5>
+        <a href="{{ url_for('logout') }}">Logout</a>  <!-- allows the user to logout -->
 
         <!-- Displays success message at top of screen if user sign up information is valid -->
         {% for category, message in get_flashed_messages(with_categories=true) %}
