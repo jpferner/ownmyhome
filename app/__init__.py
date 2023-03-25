@@ -29,7 +29,7 @@ migrate = Migrate(app, db)
 # Used to tell Flask-Login how to find a specific user from the ID stored in their session cookie
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'routes.login'
+login_manager.login_view = 'login'
 
 from app.models import Users
 

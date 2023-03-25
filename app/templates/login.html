@@ -27,12 +27,21 @@
     <div id="login-form">
         <h1>Login</h1>
         <h5>New user? <a href="{{ url_for('sign_up') }}">Create a free account!</a></h5>
-        <a href="{{ url_for('logout') }}">Logout</a>  <!-- allows the user to logout -->
 
         <!-- Displays success message at top of screen if user sign up information is valid -->
         {% for category, message in get_flashed_messages(with_categories=true) %}
             <p class="{{ category }}">{{ message }}</p>
         {% endfor %}
+
+        <!-- Error message for Confirm Email field -->
+        {% if form.email.errors %}
+            <span class="errors" style="background-color: red; color: white" >
+                {% for error in form.email.errors %}
+                    {{ error }}
+                {% endfor %}
+            </span>
+        {% endif %}
+
 
         <form method="POST">
             {{ form.hidden_tag() }}  <!-- creates CSRF token -->

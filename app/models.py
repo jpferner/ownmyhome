@@ -27,6 +27,10 @@ class Users(db.Model, UserMixin):
     def __repr__(self):
         return '<Name %r>' % self.first_name
 
+    def is_authenticated(self):
+        """Return True if user authenticated"""
+        return self.is_authenticated()
+
     # Below is the password hashing for safe storage of passwords in the database
     @property
     def password(self):

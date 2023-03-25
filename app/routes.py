@@ -1,8 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
+from flask_login import login_user, login_required, logout_user
+
 from app import app
 from app import data_manager
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
-from flask_login import UserMixin, login_user, login_required, logout_user, current_user
 from app.models import *
 
 # from app.models import Property
@@ -40,6 +41,7 @@ def properties():
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
+# @login_required  # requires user to be logged in to access Checklist
 def checklist():
     """
     Renders the checklist page of the website, which displays a list of checklist items that can be marked as completed.
@@ -72,6 +74,7 @@ def checklist():
 
 
 @app.route('/calendar', methods=['GET', 'POST'])
+# @login_required  # requires the user to be logged in to access this page
 def calendar():
     """
     Renders the calendar.html template and handles POST requests.
@@ -106,14 +109,15 @@ def login():
                 flash("Invalid Email and/or Password. Please try again.", category='error')
 
         else:  # user is not found and doesn't exist in database
-            flash("User does not exit. Try again. ", category='error')
+            flash("Invalid Email and/or Password. Please try again.", category='error')
 
     return render_template('login.html', form=login_form)
+
 
 # the Sign-Up
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
-    name = None
+    # name = None
     signup_form = SignUpForm()
 
     # Validate the Sign-Up form
@@ -136,23 +140,11 @@ def sign_up():
         else:  # redirect user to the sign-up page, so they can create a new account
             flash('We\'re sorry. This email address already exists in our system.\n', category='error')
             return redirect(url_for('sign_up'))
-        # name = signup_form.first_name.data
 
-        # # Clear the form if needed
-        # signup_form.first_name.data = ''
-        # signup_form.last_name.data = ''
-        # signup_form.email.data = ''
-        # signup_form.password_hash.data = ''
+    # current_users = Users.query.order_by(Users.id)  # query current db of Users
 
-        # TEMPORARY CODE BLOCK
-        # flash('Account created! Please use your credentials to log in.', category='success')
-        # return redirect(url_for('login'))
-        # return redirect(url_for())
+    return render_template('sign_up.html', form=signup_form)
 
-    current_users = Users.query.order_by(Users.id)  # query current db of Users
-
-    return render_template('sign_up.html', form=signup_form, name=name,
-                           current_users=current_users)
 
 # the Logout view
 @app.route('/logout', methods=['GET', 'POST'])
@@ -161,6 +153,7 @@ def logout():
     logout_user()
     flash("You have successfully logged out!", category='logout')
     return redirect(url_for('login'))
+
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():

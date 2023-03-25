@@ -34,7 +34,7 @@ class SignUpForm(FlaskForm):
     confirm_password_hash = PasswordField("Confirm Password:",
                                           validators=[InputRequired(), EqualTo("password_hash",
                                                                                message="Passwords do not match. "
-                                                                                       "Please try"
+                                                                                       "Please try "
                                                                                        "again")])
 
     accept_tos = BooleanField("I accept the Terms of Service.", validators=[InputRequired()])
@@ -44,7 +44,7 @@ class SignUpForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField("Email:",
-                        validators=[InputRequired(), Email(granular_message=True)])
+                        validators=[InputRequired(), Email(granular_message=True, message="Invalid email format!")])
 
     # did not set password validators for login page; will flash message if invalid password
     password_hash = PasswordField("Password:", validators=[InputRequired()])
