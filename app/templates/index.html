@@ -6,6 +6,11 @@
   </div>
 </section>
 
+<!-- Displays success message at top of screen if user signs in successfully -->
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="{{ category }}">{{ message }}</p>
+        {% endfor %}
+
 <aside>
   <h1>Testing</h1>
     <h2>Next Checklist Item</h2>
