@@ -42,7 +42,13 @@ def checklist():
 
     Returns: The rendered checklist page HTML.
     """
-    if request.method == 'POST' or 'Get':
+    if request.method == 'GET':
+        # Assuming you have the current_user object or user_id available
+        user_id = Users.id  # Replace this with the correct user_id if needed
+        items = ChecklistItems.query.filter_by(user_id=user_id).all()
+        return render_template('checklist.html', items=items)
+
+    elif request.method == 'POST':
         if request.is_json:
             item_id = request.json['item_id']
             new_status = request.json['status']
@@ -54,11 +60,7 @@ def checklist():
 
             return jsonify(success=True)
 
-        else:
-            return redirect(url_for('index'))
-
-    items = ChecklistItems.query.filter_by(user_id=current_user.id).all()
-    return render_template('checklist.html', items=items)
+    return redirect(url_for('index'))
 
 
 @app.route('/calendar', methods=['GET', 'POST'])

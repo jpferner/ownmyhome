@@ -17,13 +17,20 @@ class Property(db.Model):
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
 
+
 class ChecklistItems(db.Model):
     order_no = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.Boolean, default=False)
     detail = db.Column(db.String(255))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
+    # Relationship with the Users table
+    user = db.relationship('Users', backref=db.backref('checklist_items', lazy=True))
 
     def __repr__(self):
         return '<ChecklistItems {}>'.format(self.detail)
+
+
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(150))
