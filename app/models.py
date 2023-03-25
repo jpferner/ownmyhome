@@ -1,6 +1,7 @@
 from app import db
 from flask_login import UserMixin
-from werkzeug.security import generate_password_hash,check_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 class Property(db.Model):
     propId = db.Column(db.Integer, primary_key=True)
@@ -15,6 +16,7 @@ class Property(db.Model):
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
+
 
 class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
