@@ -27,7 +27,7 @@
                         <td>{{ item.detail }}</td>
                         <td class="status">{% if item.status %}Completed{% else %}Incomplete{% endif %}</td>
                         <td>
-                            <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="{% if item.status %}true{% else %}false{% endif %}">{{ item.button_text }}</button>
+                            <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="{% if item.status %}true{% else %}false{% endif %}">Complete</button>
                         </td>
                     </tr>
                 {% endif %}

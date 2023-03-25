@@ -1,4 +1,4 @@
-from flask import render_template, flash, redirect, url_for, request
+from flask import render_template, flash, redirect, url_for, request, jsonify
 
 from app import app
 from app.models import *
@@ -40,9 +40,22 @@ def checklist():
 
     Returns: The rendered checklist page HTML.
     """
-    items = ChecklistItems.query.all()
-    if request.method == 'POST':
-        return redirect(url_for('index'))
+    if request.method == 'POST' or 'Get':
+        if request.is_json:
+            item_id = request.json['item_id']
+            new_status = request.json['status']
+
+            # Update the item status in the database
+            item = ChecklistItems.query.get(item_id)
+            item.status = new_status
+            db.session.commit()
+
+            return jsonify(success=True)
+
+        else:
+            return redirect(url_for('index'))
+
+    items = ChecklistItems.query.filter_by(user_id=current_user.id).all()
     return render_template('checklist.html', items=items)
 
 
@@ -75,8 +88,18 @@ def login():
         return redirect(url_for('index'))
     return render_template('login.html')
 
+
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    """
+        Renders the sign_up.html template and handles POST requests.
+        If the form data is valid, the function will flash a success message and render the index.html template.
+        If the form data is invalid, the function will flash an error message and remain on the sign_up.html template.
+        Returns:
+        -If the request is a GET request: the rendered sign_up.html template.
+        -If the request is a POST request: either the rendered index.html template or the rendered sign_up.html template
+          with error messages, depending on the validity of the form data.
+    """
     signup_form = SignUpForm()
 
     # Validate the Sign-Up form
@@ -86,6 +109,7 @@ def sign_up():
         # return redirect(url_for())
 
     return render_template('sign_up.html', form=signup_form)
+
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
