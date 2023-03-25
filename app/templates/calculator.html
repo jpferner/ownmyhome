@@ -27,7 +27,7 @@
             </tr>
             <tr class="info">
                 <td><label for="InterestRate">Interest Rate:</label></td>
-                <td><input type="number" id="InterestRate" name="InterestRate" placeholder="6.5" value="{{ InterestRate }}" min="0.1" max="50" required><br></td>
+                <td><input type="number" id="InterestRate" name="InterestRate" step="0.1" placeholder="6.5" value="{{ InterestRate }}" min="0.1" max="50" required><br></td>
             </tr>
             <tr class="info">
                 <td><label for="LoanTerm">Loan Term:</label></td>
@@ -51,7 +51,7 @@
             </tr>
         </table>
         <p>
-        <button class="calculateButton" type="submit">Calculate</button>
+        <button class="calculateButton">Calculate</button>
         </p>
     </form>
 </aside>
@@ -59,3 +59,4 @@
 {% include 'footer.html' %}
 
 <link href="../static/styles/calculator.css" rel="stylesheet">
+<script src="../static/scripts/calculator.js"></script>

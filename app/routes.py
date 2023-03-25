@@ -1,6 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 
-
 from app import app
 from app import data_manager
 from app.forms import SignUpForm  # used for sign_up() view
@@ -125,6 +124,9 @@ def calculator():
     if request.method == 'POST':
         data = request.form
 
+        # Checks to see if info is found via console
+        print(data)
+
         homeVal = request.form.get('HomeVal')
         downPay = request.form.get('DownPay')
         loanAmt = request.form.get('LoanAmt')
@@ -134,17 +136,16 @@ def calculator():
         propTax = request.form.get('PropTax')
         loanType = request.form.get('LoanType')
 
-        # Checks to see if info is found via console
-        print(data)
-        if int(homeVal) > 0:
-            return render_template('calculator.html', HomeVal=homeVal, DownPay=downPay,
-                                   LoanAmt=loanAmt, InterestRate=interestRate, LoanTerm=loanTerm,
-                                   StartDate=startDate, PropTax=propTax, LoanType=loanType,
-                                   MortTotal=homeVal)
+        
+
+        return render_template('calculator.html', HomeVal=homeVal, DownPay=downPay,
+                               LoanAmt=loanAmt, InterestRate=interestRate, LoanTerm=loanTerm,
+                               StartDate=startDate, PropTax=propTax, LoanType=loanType,
+                               MortTotal=homeVal)
     return render_template('calculator.html', HomeVal=500000, DownPay=80000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
                            StartDate=date.today(), PropTax=5.0,
-                           MortTotal=8)
+                           MortTotal=0)
 
 
 @app.route('/services', methods=['GET', 'POST'])
