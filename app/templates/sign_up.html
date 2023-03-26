@@ -1,4 +1,7 @@
 {% include 'header.html' %}
+
+<!-- Sign-Up Form HTML -->
+
 <head>
     <title>Own My Home | Sign Up</title>
     <link
@@ -14,16 +17,46 @@
   </div>
 </section>
 
-<!-- Displays success message at top of screen if user sign up information is valid -->
-{% for category, message in get_flashed_messages(with_categories=true) %}
-    <p class="{{ category }}" style="background-color: #4CAF50; font-weight: bold;
-color: white">{{ message }}</p>
-{% endfor %}
+<!-- Code below is commented out because success message will only flash on login.html page -->
+{#<!-- Displays success message at top of screen if user sign up information is valid -->#}
+{#{% for category, message in get_flashed_messages(with_categories=true) %}#}
+{#    <p class="{{ category }}" style="background-color: #4CAF50; font-weight: bold;#}
+{#color: white">{{ message }}</p>#}
+{#{% endfor %}#}
 
 <aside id="signup">
     <div id="sign-up-form">
+
         <h1>Sign Up</h1>
         <h5>Create a free account!<br>Already have one? <a href="{{ url_for('login') }}">Login</a></h5>
+
+        <!-- Capture and displays all the error messages at top of Sign-Up form -->
+
+        <!-- Error message for Confirm Email field -->
+            {% if form.confirm_email.errors %}
+                <span class="errors" style="background-color: red; color: white" >
+                    {% for error in form.confirm_email.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </span>
+            {% endif %}
+
+        <!-- Error message for Confirm Password field -->
+            {% if form.confirm_password_hash.errors %}
+                <span class="errors" style="background-color: red; color: white;" >
+                    {% for error in form.confirm_password_hash.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </span>
+            {% endif %}
+
+        <!-- Email already exists in database error using FLASH MESSAGES-->
+        {% for category, message in get_flashed_messages(with_categories=true) %}
+            <p class="{{ category }}" style="background-color: red;
+            color: white">{{ message }}Go to the <a href="{{ url_for('login') }}">login page</a>
+            or try using a different email address.</p>
+        {% endfor %}
+
 
         <form method="POST">
             {{ form.hidden_tag() }}  <!-- creates CSRF token -->
@@ -44,37 +77,37 @@ color: white">{{ message }}</p>
                 {{ form.email() }}
             </p>
 
-            <!-- Error message for Confirm Email field -->
-            {% if form.confirm_email.errors %}
-                <span class="errors" style="background-color: red" >
-                    {% for error in form.confirm_email.errors %}
-                        {{ error }}
-                    {% endfor %}
-                </span>
-            {% endif %}
+{#            <!-- Error message for Confirm Email field -->#}
+{#            {% if form.confirm_email.errors %}#}
+{#                <span class="errors" style="background-color: red" >#}
+{#                    {% for error in form.confirm_email.errors %}#}
+{#                        {{ error }}#}
+{#                    {% endfor %}#}
+{#                </span>#}
+{#            {% endif %}#}
 
             <p>
                 {{ form.confirm_email.label }}
-            {{ form.confirm_email() }}
+                {{ form.confirm_email() }}
             </p>
 
             <p>
-                {{ form.password.label }}
-            {{ form.password() }}
+                {{ form.password_hash.label }}
+                {{ form.password_hash() }}
             </p>
 
-            <!-- Error message for Confirm Password field -->
-            {% if form.confirm_password.errors %}
-                <span class="errors" style="background-color: red" >
-                    {% for error in form.confirm_password.errors %}
-                        {{ error }}
-                    {% endfor %}
-                </span>
-            {% endif %}
+{#            <!-- Error message for Confirm Password field -->#}
+{#            {% if form.confirm_password_hash.errors %}#}
+{#                <span class="errors" style="background-color: red" >#}
+{#                    {% for error in form.confirm_password_hash.errors %}#}
+{#                        {{ error }}#}
+{#                    {% endfor %}#}
+{#                </span>#}
+{#            {% endif %}#}
 
             <p>
-                {{ form.confirm_password.label }}
-                {{ form.confirm_password() }}
+                {{ form.confirm_password_hash.label }}
+                {{ form.confirm_password_hash() }}
             </p>
 
             <p>
@@ -88,5 +121,11 @@ color: white">{{ message }}</p>
 
         </form>
     </div>
+
+    <!-- Display the users in the databases on the sign-up form -->
+    {% for current_user in current_users %}
+        {{ current_user.id }}. {{ current_user.first_name }} {{ current_user.last_name }}
+        - {{ current_user.email }} <br>
+    {% endfor %}
 </aside>
 {% include 'footer.html' %}

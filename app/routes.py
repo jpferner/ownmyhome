@@ -1,11 +1,13 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
-
+from flask_login import login_user, login_required, logout_user
 
 from app import app
 from app import data_manager
-from app.forms import SignUpForm  # used for sign_up() view
-# from app.models import data models
+from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from app.models import *
+
+# from app.models import Property
+
 # Load checklist data from file
 checklist_items = data_manager.load_checklist_data()
 
@@ -34,13 +36,12 @@ def properties():
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
-    props = Property.query.all()
-    for p in props:
-        print(p.county, p.city, p.street)
-    return render_template('properties.html', props=props)
+    # props = Property.query.all()
+    return render_template('properties.html')
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
+# @login_required  # requires user to be logged in to access Checklist
 def checklist():
     """
     Renders the checklist page of the website, which displays a list of checklist items that can be marked as completed.
@@ -73,6 +74,7 @@ def checklist():
 
 
 @app.route('/calendar', methods=['GET', 'POST'])
+# @login_required  # requires the user to be logged in to access this page
 def calendar():
     """
     Renders the calendar.html template and handles POST requests.
@@ -87,31 +89,71 @@ def calendar():
     return render_template('calendar.html')
 
 
+# the Login Page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
-    """
-    Renders the login.html template and handles POST requests.
-    POST requests are not currently used and will simply redirect the user to the index page.
+    # if request.method == 'POST':
+    #     return redirect(url_for('index'))
 
-    Returns:
-    - If the request is a GET request: the rendered login.html template.
-    - If the request is a POST request: a redirect to the index page.
-    """
-    if request.method == 'POST':
-        return redirect(url_for('index'))
-    return render_template('login.html')
+    login_form = LoginForm()
 
+    if login_form.validate_on_submit():
+        user = Users.query.filter_by(email=login_form.email.data).first()
+        if user:
+            # Check the hashed password
+            if check_password_hash(user.password_hash, login_form.password_hash.data):
+                login_user(user)  # logs in the user and creates session
+                flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
+                return redirect(url_for('home'))
+            else:
+                flash("Invalid Email and/or Password. Please try again.", category='error')
+
+        else:  # user is not found and doesn't exist in database
+            flash("Invalid Email and/or Password. Please try again.", category='error')
+
+    return render_template('login.html', form=login_form)
+
+
+# the Sign-Up
 @app.route('/sign-up', methods=['GET', 'POST'])
 def sign_up():
+    # name = None
     signup_form = SignUpForm()
 
     # Validate the Sign-Up form
     if signup_form.validate_on_submit():
-        flash('Account created!', category='success')
-        return redirect(url_for('sign_up'))
-        # return redirect(url_for())
+        print(f"Plaintext Password: {signup_form.password_hash.data}")
+        # hash the new user's password
+        hashed_password = generate_password_hash(signup_form.password_hash.data, "sha256")
+        print(f"After hashing password: {hashed_password}")
+
+        user = Users.query.filter_by(email=signup_form.email.data).first()
+        if user is None:
+            # Create a new user and the user to the database
+            user = Users(first_name=signup_form.first_name.data, last_name=signup_form.last_name.data,
+                         email=signup_form.email.data, password_hash=hashed_password)
+            db.session.add(user)
+            db.session.commit()
+
+            flash('Account created! Please use your credentials to log in.', category='success')
+            return redirect(url_for('login'))
+        else:  # redirect user to the sign-up page, so they can create a new account
+            flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            return redirect(url_for('sign_up'))
+
+    # current_users = Users.query.order_by(Users.id)  # query current db of Users
 
     return render_template('sign_up.html', form=signup_form)
+
+
+# the Logout view
+@app.route('/logout', methods=['GET', 'POST'])
+@login_required  # user must be logged in to logout
+def logout():
+    logout_user()
+    flash("You have successfully logged out!", category='logout')
+    return redirect(url_for('login'))
+
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
@@ -173,5 +215,3 @@ def index():
     if request.method == 'POST':
         return redirect(url_for('index'))
     return render_template('index.html')
-
-
