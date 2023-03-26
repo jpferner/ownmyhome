@@ -4,21 +4,27 @@ from flask_login import login_user, login_required, logout_user, current_user
 from app import app
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from app.models import *
+from random import choice
 
 
 # Define routes
 @app.route("/")
+@app.route("/index")
 def home():
     """
     Renders the home page of the website.
 
     Returns: The rendered home page HTML.
     """
-    test = ChecklistItems.query.all()
+    test = "Hello, World!"
+    login_form = LoginForm()
 
-    if request.method == 'POST':
-        return redirect(url_for('index'))
-    return render_template("index.html", test=test)
+    first_incomplete_item = None
+    if current_user.is_authenticated:
+        first_incomplete_item = ChecklistItems.query.filter_by(user_id=current_user.id, status=False).order_by(
+            ChecklistItems.order_no).first()
+
+    return render_template('index.html', test=test, login_form=login_form, first_incomplete_item=first_incomplete_item)
 
 
 @app.route('/properties', methods=['GET', 'POST'])
