@@ -3,20 +3,7 @@ from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-class Property(db.Model):
-    propId = db.Column(db.Integer, primary_key=True)
-    street = db.Column(db.String(100))
-    city = db.Column(db.String(25), index=True)
-    state = db.Column(db.String(2))
-    zcode = db.Column(db.Integer, index=True)
-    county = db.Column(db.String(25), index=True)
-    price = db.Column(db.Integer)
-    yearBuilt = db.Column(db.Integer)
-    numBeds = db.Column(db.Integer)
-    numBaths = db.Column(db.Integer)
 
-    def __repr__(self):
-        return '<Property {}, {}>'.format(self.propId, self.street)
 
 
 class Users(db.Model, UserMixin):
@@ -48,3 +35,23 @@ class Users(db.Model, UserMixin):
 
     def set_password(self,password):
         self.password_hash = generate_password_hash(password,"sha256")
+
+class Property(db.Model):
+    propId = db.Column(db.Integer, primary_key=True)
+    street = db.Column(db.String(100))
+    city = db.Column(db.String(25), index=True)
+    state = db.Column(db.String(2))
+    zcode = db.Column(db.Integer, index=True)
+    county = db.Column(db.String(25), index=True)
+    price = db.Column(db.Integer)
+    yearBuilt = db.Column(db.Integer)
+    numBeds = db.Column(db.Integer)
+    numBaths = db.Column(db.Integer)
+    favorite = db.Column(db.Boolean,default=False)
+    # not ready yet
+    #user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='property_user_id_fk'), nullable=False)
+    #user = db.relationship('Users', backref=db.backref('properties', lazy=True))
+
+    def __repr__(self):
+        return '<Property {}, {}>'.format(self.propId, self.street)
+

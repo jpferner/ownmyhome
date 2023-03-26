@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 
 from app import app
 from app import data_manager
@@ -257,3 +257,26 @@ def update():
     db.session.commit()
     flash('dummy data added')
     return render_template('index.html')
+
+@app.route('/update_favorites', methods=['POST'])
+def update_favorites():
+    propId = request.form['propId']
+    checked = request.form['checked'] == 'true'
+    prop = Property.query.filter_by(propId=propId).first()
+    prop.favorite = checked
+    db.session.commit()
+
+    favorite_props = Property.query.filter_by(favorite=True).all()
+    props_table = render_template('props_table.html', props=Property.query.all(), favorite_props=favorite_props)
+    favorites_table = render_template('favorites_table.html', props=Property, favorite_props=favorite_props)
+    return jsonify(props=props_table, favorites=favorites_table)
+
+@app.route('/favorites_table')
+def favorites_table():
+    favorite_props = Property.query.filter_by(favorite=True).all()
+    return render_template('favorites_table.html', favorite_props=favorite_props)
+
+
+
+
+

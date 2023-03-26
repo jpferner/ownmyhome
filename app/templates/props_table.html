@@ -1,0 +1,49 @@
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Street</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Zip</th>
+    <th>County</th>
+    <th>Price</th>
+    <th>Year Built</th>
+    <th>Beds</th>
+    <th>Baths</th>
+    <th>Add To Favorites</th>
+  </tr>
+
+  {% for p in props %}
+    <tr>
+      <td>{{p.propId}}</td>
+      <td>{{p.street}}</td>
+      <td>{{p.city}}</td>
+      <td>{{p.state}}</td>
+      <td>{{p.zcode}}</td>
+      <td>{{p.county}}</td>
+      <td>${{p.price}}</td>
+      <td>{{p.yearBuilt}}</td>
+      <td>{{p.numBeds}}</td>
+      <td>{{p.numBaths }}</td>
+      <td><input type="checkbox" id="{{p.propId}}" name="favorite" value="1" {% if p.favorite %}checked{% endif %}></td>
+    </tr>
+  {% endfor %}
+</table>
+
+<script>
+$(document).ready(function() {
+  $('input[name="favorite"]').change(function() {
+    var propId = $(this).attr('id');
+    var checked = $(this).is(':checked');
+    $.ajax({
+      url: "{{ url_for('update_favorites') }}",
+      type: "POST",
+      data: {propId: propId, checked: checked.toString()},
+      success: function(response) {
+        $('#props-table').html(response.props);
+        $('#favorites').html(response.favorites);
+      }
+    });
+  });
+});
+</script>

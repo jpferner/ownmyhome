@@ -2,8 +2,49 @@
 <style>
    th, td {
     padding: 20px;
+    color: black;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  th {
+    background-color: teal;
+  }
+
+  tr:nth-child(even) {
+    background-color: gray;
   }
 </style>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+  $('input[name="favorite"]').change(function() {
+    var propId = $(this).attr('id');
+    var checked = $(this).is(':checked');
+    $.ajax({
+      url: "{{ url_for('update_favorites') }}",
+      type: "POST",
+      data: {propId: propId, checked: checked.toString()},
+      success: function(response) {
+        $('#props').html(response.props);
+        $('#favorites').html(response.favorites);
+      }
+    });
+  });
+
+  // Load the favorites table when the page is first loaded
+  $.ajax({
+    url: "{{ url_for('favorites_table') }}",
+    success: function(response) {
+      $('#favorites').html(response);
+    }
+  });
+});
+</script>
+
 
 <section>
   <div class="container">
@@ -14,36 +55,81 @@
 
 <aside>
   <h1>PROPERTIES IN WILMINGTON NC</h1>
-  <table>
-      <tr>
-        <th>Id</th>
-        <th>Street</th>
-        <th>City</th>
-        <th>State</th>
-        <th>Zip</th>
-        <th>County</th>
-        <th>Price</th>
-        <th>Year Built</th>
-        <th>Beds</th>
-        <th>Baths</th>
-        <th>Add To Favorites</th>
-      </tr>
+  <form method="POST" action="{{ url_for('update_favorites') }}">
+    <div id="props">
+      <table>
+        <tr>
+          <th>Id</th>
+          <th>Street</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Zip</th>
+          <th>County</th>
+          <th>Price</th>
+          <th>Year Built</th>
+          <th>Beds</th>
+          <th>Baths</th>
+          <th>Add To Favorites</th>
+        </tr>
 
-  {% for p in props %}
-      <tr>
-          <td>{{p.propId}}</td>
-          <td>{{p.street}}</td>
-          <td>{{p.city}}</td>
-          <td>{{p.state}}</td>
-          <td>{{p.zcode}}</td>
-          <td>{{p.county}}</td>
-          <td>${{p.price}}</td>
-          <td>{{p.yearBuilt}}</td>
-          <td>{{p.numBeds}}</td>
-          <td>{{p.numBaths }}</td>
-          <td><input type="checkbox" id="favorite" name="favorite" value="1"></td>
-      </tr>
-  {% endfor %}
-  </table>
+        {% for p in props %}
+          <tr>
+            <td>{{p.propId}}</td>
+            <td>{{p.street}}</td>
+            <td>{{p.city}}</td>
+            <td>{{p.state}}</td>
+            <td>{{p.zcode}}</td>
+            <td>{{p.county}}</td>
+            <td>${{p.price}}</td>
+            <td>{{p.yearBuilt}}</td>
+            <td>{{p.numBeds}}</td>
+            <td>{{p.numBaths }}</td>
+            <td><input type="checkbox" id="{{p.propId}}" name="favorite" value="1" {% if p.favorite %}checked{% endif %}></td>
+          </tr>
+        {% endfor %}
+      </table>
+           </div>
+  </form>
 </aside>
+
+<section>
+  <div class="container">
+    <h1>FAVORITE PROPERTIES</h1>
+    <div id="favorites">
+      <table>
+        <tr>
+          <th>Id</th>
+          <th>Street</th>
+          <th>City</th>
+          <th>State</th>
+          <th>Zip</th>
+          <th>County</th>
+          <th>Price</th>
+          <th>Year Built</th>
+          <th>Beds</th>
+          <th>Baths</th>
+        </tr>
+
+        {% for p in favorite_props %}
+          <tr>
+            <td>{{p.propId}}</td>
+            <td>{{p.street}}</td>
+            <td>{{p.city}}</td>
+            <td>{{p.state}}</td>
+            <td>{{p.zcode}}</td>
+            <td>{{p.county}}</td>
+            <td>${{p.price}}</td>
+            <td>{{p.yearBuilt}}</td>
+            <td>{{p.numBeds}}</td>
+            <td>{{p.numBaths }}</td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</section>
+
 {% include 'footer.html' %}
+
+
+
