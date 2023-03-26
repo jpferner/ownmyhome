@@ -123,7 +123,7 @@ def login():
             # Check the hashed password
             if check_password_hash(user.password_hash, login_form.password_hash.data):
                 login_user(user)  # logs in the user and creates session
-                flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
+                # flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
                 return redirect(url_for('home'))
             else:
                 flash("Invalid Email and/or Password. Please try again.", category='error')
