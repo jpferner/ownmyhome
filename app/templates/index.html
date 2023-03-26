@@ -1,17 +1,49 @@
 {% include 'header.html' %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">
+
 <section>
-  <div class="container">
-    <h1>Welcome to our Real Estate Website</h1>
-    <p>Find your dream property with us</p>
-  </div>
+    <div class="container">
+        <h1>Welcome to our Real Estate Website</h1>
+        <p>Find your dream property with us</p>
+    </div>
 </section>
 
 <!-- Displays success message at top of screen if user signs in successfully -->
-        {% for category, message in get_flashed_messages(with_categories=true) %}
-            <p class="{{ category }}">{{ message }}</p>
-        {% endfor %}
+{% for category, message in get_flashed_messages(with_categories=true) %}
+    <p class="{{ category }}">{{ message }}</p>
+{% endfor %}
 
 <aside>
-  <h1>Testing</h1>
+    <div class="aside-container">
+        <div class="aside-box">
+            {% if current_user.is_authenticated %}
+                {% if first_incomplete_item %}
+                    <span class="current-step">Step {{ first_incomplete_item.order_no }}<br> {{ first_incomplete_item.detail }}</span>
+                {% else %}
+                    <p>No incomplete items found.</p>
+                {% endif %}
+            {% else %}
+                <p>Please log in to view the checklist.</p>
+            {% endif %}
+        </div>
+        <div class="aside-box">
+            <h3>Random Property</h3>
+            {% if random_property %}
+                <p>{{ random_property.street }}</p>
+            {% else %}
+                <p>No property found.</p>
+            {% endif %}
+        </div>
+        <div class="aside-box">
+            {% if current_user.is_authenticated %}
+                <h1 class="welcome-user">Welcome, {{ current_user.first_name }}</h1>
+            {% else %}
+                <h3>Login Form</h3>
+                {% include 'login_form_partial.html' %}
+            {% endif %}
+        </div>
+    </div>
 </aside>
+
 {% include 'footer.html' %}
