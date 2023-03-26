@@ -1,12 +1,11 @@
 $(document).ready(function () {
     // Get the CSRF token from the meta tag in the header
-    var csrf_token = $('meta[name=csrf-token]').attr('content');
+    const csrf_token = $('meta[name=csrf-token]').attr('content');
 
     // When the complete button is clicked
     $('table').on('click', '.complete-btn', function () {
-        var btn = $(this);
-        var order_no = btn.data('id');
-        var completed = btn.data('completed');
+        const btn = $(this);
+        const order_no = btn.data('id');
 
         // Send a POST request to update the item status in the database
         $.ajax({
@@ -24,14 +23,14 @@ $(document).ready(function () {
                 if (response.success) {
                     // Update the button and table row
                     btn.removeClass('complete-btn').addClass('undo-btn').text('Undo');
-                    var row = btn.closest('tr');
+                    const row = btn.closest('tr');
                     row.find('.status').text('Completed');
 
                     // Find the correct position for the row in the completed list
-                    var rows = $('#completed-list tr');
-                    var inserted = false;
+                    const rows = $('#completed-list tr');
+                    let inserted = false;
                     rows.each(function () {
-                        var currentRow = $(this);
+                        const currentRow = $(this);
                         if (parseInt(currentRow.data('id')) > order_no) {
                             currentRow.before(row);
                             inserted = true;
@@ -50,9 +49,8 @@ $(document).ready(function () {
 
     // When the undo button is clicked
     $('table').on('click', '.undo-btn', function () {
-        var btn = $(this);
-        var order_no = btn.data('id');
-        var completed = btn.data('completed');
+        const btn = $(this);
+        const order_no = btn.data('id');
 
         // Send a POST request to update the item status in the database
         $.ajax({
@@ -70,14 +68,14 @@ $(document).ready(function () {
                 if (response.success) {
                     // Update the button and table row
                     btn.removeClass('undo-btn').addClass('complete-btn').text('Complete');
-                    var row = btn.closest('tr');
+                    const row = btn.closest('tr');
                     row.find('.status').text('Incomplete');
 
                     // Find the correct position for the row in the todo list
-                    var rows = $('#todo-list tr');
-                    var inserted = false;
+                    const rows = $('#todo-list tr');
+                    let inserted = false;
                     rows.each(function () {
-                        var currentRow = $(this);
+                        const currentRow = $(this);
                         if (parseInt(currentRow.data('id')) > order_no) {
                             currentRow.before(row);
                             inserted = true;

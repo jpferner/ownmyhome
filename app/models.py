@@ -1,8 +1,8 @@
+from flask_login import UserMixin
 from sqlalchemy import PrimaryKeyConstraint
+from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db
-from flask_login import UserMixin, current_user
-from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class Property(db.Model):

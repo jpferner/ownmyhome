@@ -1,8 +1,8 @@
 {% if login_form %}
-<form method="POST" action="{{ url_for('login') }}">
-  {{ login_form.csrf_token }}
-  {{ login_form.email.label }} {{ login_form.email() }}<br>
-  {{ login_form.password_hash.label }} {{ login_form.password_hash() }}<br>
-  {{ login_form.submit() }}
-</form>
+    <form method="POST" action="{{ url_for('login') }}">
+        {{ login_form.csrf_token }}
+        {{ login_form.email.label }} {{ login_form.email() }}<br>
+        {{ login_form.password_hash.label }} {{ login_form.password_hash() }}<br>
+        {{ login_form.submit() }}
+    </form>
 {% endif %}

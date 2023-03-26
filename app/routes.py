@@ -4,7 +4,6 @@ from flask_login import login_user, login_required, logout_user, current_user
 from app import app
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from app.models import *
-from random import choice
 
 
 # Define routes

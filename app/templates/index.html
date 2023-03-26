@@ -1,7 +1,4 @@
 {% include 'header.html' %}
-{% if not current_user.is_authenticated %}
-    {% include 'login_form_partial.html' %}
-{% endif %}
 
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">
 
