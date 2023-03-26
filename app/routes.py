@@ -167,26 +167,8 @@ def calculator():
     - If the request is a POST request: the rendered calculator.html template with the mortgage total displayed.
     """
     if request.method == 'POST':
-        data = request.form
 
-        # Checks to see if info is found via console
-        print(data)
-
-        homeVal = request.form.get('HomeVal')
-        downPay = request.form.get('DownPay')
-        loanAmt = request.form.get('LoanAmt')
-        interestRate = request.form.get('InterestRate')
-        loanTerm = request.form.get('LoanTerm')
-        startDate = request.form.get('StartDate')
-        propTax = request.form.get('PropTax')
-        loanType = request.form.get('LoanType')
-
-        
-
-        return render_template('calculator.html', HomeVal=homeVal, DownPay=downPay,
-                               LoanAmt=loanAmt, InterestRate=interestRate, LoanTerm=loanTerm,
-                               StartDate=startDate, PropTax=propTax, LoanType=loanType,
-                               MortTotal=homeVal)
+        return render_template('calculator.html')
     return render_template('calculator.html', HomeVal=500000, DownPay=80000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
                            StartDate=date.today(), PropTax=5.0,
