@@ -1,81 +1,4 @@
-/*@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Poppins&family=Roboto:wght@300&display=swap');
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-}
-aside{
-background:#F5F8FF;
-display:flex;
-justify-content:center;
-align-items:center;
-overflow:hidden;
-}
-.dycalendar {
-height:100%;
-width:100%;
-background:white;
-border-radius:20px;
-padding-bottom:25px;
-box-shadow: rgba(0, 0, 0, 0.2) 0px 12px 28px 0px,
- rgba(0, 0, 0, 0.1) 0px 2px 4px 0px,
- rgba(255, 255, 255, 0.05) 0px 0px 0px 1px inset;
-}
-.dycalendar table{
-margin:30px 20px 10px 10px;
-}
-.dycalendar table tr:first-child td{
- color:grey;
-}
-.dycalendar table td{
-height:55px;
-width:55px;
-border-radius:5px;
-font-size:25px;
-cursor:pointer;
-position:relative;
-top:10px;
-font-family: 'poppins', sans-serif;
-}
-.dycalendar table td:hover{
-background:rgba(192,192,192,0.3);
-transition:all .2s ease-out;
-}
-table{
-    border-spacing: 15px;
-}
-.dycalendar-month-container{font-size: 35px;}
-.dycalendar-prev-next-btn.next-btn, .prev-btn{
-    padding: 10px 25px;
-    background:none;
-    color:black;
-    border-radius:10px;
-    margin-top:-10px;
-    margin-left:10px;
-}
-.dycalendar .next-btn{
- margin-right:10px;
-}
-.dycalendar-prev-next-btn.next-btn:hover{
-    background:#F5F5F5;
-}
-.dycalendar-prev-next-btn.prev-btn:hover{
-    background:#F5F5F5;
-}
-.dycalendar .dycalendar-today-date{
-background:none;
-background:#5e94eb;
-border-radius:10px;
-color:white;
-}
-.dycalendar .dycalendar-today-date:hover{
-background:#4fa2f5;
-}
-.dycalendar-header{
-position:relative;
-top:25px;
-font-family: 'poppins', sans-serif;
-}*/
+@import url('https://fonts.googleapis.com/css2?family=Cookie&family=Poppins&family=Roboto:wght@300&display=swap');
 
 @font-face {
   font-family: 'Lato';
@@ -101,7 +24,7 @@ font-family: 'poppins', sans-serif;
   font-weight: 900;
   src: url(https://fonts.gstatic.com/s/lato/v17/S6u9w4BMUTPHh50XSwiPHA.ttf) format('truetype');
 }
-/*.txt__normal {
+.txt__normal {
   font-family: 'Lato', sans-serif;
   font-weight: 400;
 }
@@ -121,7 +44,7 @@ font-family: 'poppins', sans-serif;
 }
 .txt__awesome {
   font: normal normal normal 14px/1 FontAwesome;
-}*/
+}
 /* VARIABLES ================================================*/
 /* RESPONSIVE ================================================*/
 /* ===========================================================*/
@@ -177,7 +100,7 @@ a {
   transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   -webkit-transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
-.resetDefaultApparence {
+.resetDefaultAppearance {
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -187,7 +110,7 @@ a {
   border-width: 0;
   resize: none;
 }
-.resetDefaultApparence::-ms-expand {
+.resetDefaultApearance::-ms-expand {
   display: none;
 }
 /* STYLE ===========================================================*/

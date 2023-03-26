@@ -1,13 +1,4 @@
 let container = document.querySelector(".container");
-//
-//dycalendar.draw({
-//   target:'#dycalendar',
-//   dayformat: 'full',
-//   type: 'month',
-//   monthformat: 'full',
-//   highlighttoday: true,
-//   prevnextbutton: 'show'
-//});
 
 //global variables
 var monthEl = $(".c-main");
@@ -80,7 +71,7 @@ todayBtn.on("click", function() {
   }
 });
 
-//higlight the cel of current day
+//highlight the cel of current day
 dataCel.each(function() {
   if ($(this).data("day") === today) {
     $(this).addClass("isToday");
