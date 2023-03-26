@@ -11,7 +11,14 @@
             <p class="{{ category }}">{{ message }}</p>
         {% endfor %}
 
+
+
 <aside>
   <h1>Testing</h1>
+
+  <h3>Update Database</h3>
+    <form method="post" action="{{ url_for('update') }}">
+        <button type="submit">Update Database</button>
+    </form>
 </aside>
 {% include 'footer.html' %}
