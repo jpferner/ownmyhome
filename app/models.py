@@ -1,5 +1,7 @@
+from sqlalchemy import PrimaryKeyConstraint
+
 from app import db
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -19,13 +21,17 @@ class Property(db.Model):
 
 
 class ChecklistItems(db.Model):
-    order_no = db.Column(db.Integer, primary_key=True)
     status = db.Column(db.Boolean, default=False)
     detail = db.Column(db.String(255))
+    order_no = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
     # Relationship with the Users table
     user = db.relationship('Users', backref=db.backref('checklist_items', lazy=True))
+
+    __table_args__ = (
+        PrimaryKeyConstraint('order_no', 'user_id'),
+    )
 
     def __repr__(self):
         return '<ChecklistItems {}>'.format(self.detail)

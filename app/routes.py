@@ -1,5 +1,5 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
-from flask_login import login_user, login_required, logout_user
+from flask_login import login_user, login_required, logout_user, current_user
 
 from app import app
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
@@ -35,7 +35,7 @@ def properties():
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
-# @login_required  # requires user to be logged in to access Checklist
+@login_required
 def checklist():
     """
     Renders the checklist page of the website, which displays a list of checklist items that can be marked as completed.
@@ -43,24 +43,38 @@ def checklist():
     Returns: The rendered checklist page HTML.
     """
     if request.method == 'GET':
-        # Assuming you have the current_user object or user_id available
-        user_id = Users.id  # Replace this with the correct user_id if needed
-        items = ChecklistItems.query.filter_by(user_id=user_id).all()
+        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(ChecklistItems.order_no).all()
         return render_template('checklist.html', items=items)
 
     elif request.method == 'POST':
-        if request.is_json:
-            item_id = request.json['item_id']
-            new_status = request.json['status']
+        order_no = request.json['order_no']
+        new_status = request.json['status']
 
-            # Update the item status in the database
-            item = ChecklistItems.query.get(item_id)
-            item.status = new_status
-            db.session.commit()
+        # Update the item status in the database
+        item = ChecklistItems.query.filter_by(user_id=current_user.id, order_no=order_no).first()
+        item.status = new_status
+        db.session.commit()
 
-            return jsonify(success=True)
+        return jsonify(success=True)
 
-    return redirect(url_for('index'))
+    else:
+        return redirect(url_for('index'))
+
+
+def add_checklist_items(user_id):
+    steps = [
+        "Do you know what your current credit score is? Check out our services tab above to see what options are available to you.",
+        "Do you have your home picked out? Check out our properties tab to see what homes are available within your search parameters.",
+        "Do you know what type of financing is available to you? Check out our services tab above to see what options are available to you.",
+        "Do you know how much home you can afford? Check out our calculator tab to find out the right price for you.",
+        "Do you understand your current debt to income ratio and what that means, Check out our calculator tab to find out more."
+    ]
+
+    for i, step in enumerate(steps, start=1):
+        item = ChecklistItems(order_no=i, status=False, detail=step, user_id=user_id)
+        db.session.add(item)
+
+    db.session.commit()
 
 
 @app.route('/calendar', methods=['GET', 'POST'])
@@ -133,6 +147,9 @@ def sign_up():
                          email=signup_form.email.data, password_hash=hashed_password)
             db.session.add(user)
             db.session.commit()
+
+            # Add checklist items for the new user
+            add_checklist_items(user.id)
 
             flash('Account created! Please use your credentials to log in.', category='success')
             return redirect(url_for('login'))
