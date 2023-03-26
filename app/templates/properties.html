@@ -1,4 +1,10 @@
 {% include 'header.html' %}
+<style>
+   th, td {
+    padding: 20px;
+  }
+</style>
+
 <section>
   <div class="container">
     <h1>Welcome to our Real Estate Website</h1>
@@ -7,10 +13,37 @@
 </section>
 
 <aside>
-  <h1>PROPERTIES PAGE</h1>
+  <h1>PROPERTIES IN WILMINGTON NC</h1>
+  <table>
+      <tr>
+        <th>Id</th>
+        <th>Street</th>
+        <th>City</th>
+        <th>State</th>
+        <th>Zip</th>
+        <th>County</th>
+        <th>Price</th>
+        <th>Year Built</th>
+        <th>Beds</th>
+        <th>Baths</th>
+        <th>Add To Favorites</th>
+      </tr>
 
   {% for p in props %}
-    <p>{{ p }}</p>
+      <tr>
+          <td>{{p.propId}}</td>
+          <td>{{p.street}}</td>
+          <td>{{p.city}}</td>
+          <td>{{p.state}}</td>
+          <td>{{p.zcode}}</td>
+          <td>{{p.county}}</td>
+          <td>${{p.price}}</td>
+          <td>{{p.yearBuilt}}</td>
+          <td>{{p.numBeds}}</td>
+          <td>{{p.numBaths }}</td>
+          <td><input type="checkbox" id="favorite" name="favorite" value="1"></td>
+      </tr>
   {% endfor %}
+  </table>
 </aside>
 {% include 'footer.html' %}

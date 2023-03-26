@@ -4,8 +4,8 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from app import app
 from app import data_manager
 from app.forms import SignUpForm  # used for sign_up() view
-# from app.models import Property
-from app.models import Property
+# from app.models import data models
+from app.models import *
 # Load checklist data from file
 checklist_items = data_manager.load_checklist_data()
 
@@ -35,6 +35,8 @@ def properties():
     if request.method == 'POST':
         return redirect(url_for('index'))
     props = Property.query.all()
+    for p in props:
+        print(p.county, p.city, p.street)
     return render_template('properties.html', props=props)
 
 
@@ -171,3 +173,5 @@ def index():
     if request.method == 'POST':
         return redirect(url_for('index'))
     return render_template('index.html')
+
+
