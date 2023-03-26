@@ -190,9 +190,9 @@ def calculator():
     if request.method == 'POST':
 
         return render_template('calculator.html')
-    return render_template('calculator.html', HomeVal=500000, DownPay=80000,
+    return render_template('calculator.html', HomeVal=500000, DownPay=150000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
-                           StartDate=date.today(), PropTax=5.0,
+                           StartDate=date.today(), PropTax=2400,
                            MortTotal=0)
 
 
