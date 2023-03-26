@@ -1,0 +1,7 @@
+{% macro render_field(field, class_=None) %}
+    {% if class_ %}
+        {{ field(class_=class_) }}
+    {% else %}
+        {{ field }}
+    {% endif %}
+{% endmacro %}

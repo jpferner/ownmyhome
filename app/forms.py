@@ -1,9 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField
-from wtforms.validators import InputRequired
 from wtforms.validators import Email
-from wtforms.validators import Length
 from wtforms.validators import EqualTo
+from wtforms.validators import InputRequired
+from wtforms.validators import Length
 
 """This file is designated to the creation of Forms
     Sign-Up Form and Login Form

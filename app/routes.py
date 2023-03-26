@@ -2,29 +2,28 @@ from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 
 from app import app
-from app import data_manager
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from app.models import *
-
-# from app.models import Property
-
-# Load checklist data from file
-checklist_items = data_manager.load_checklist_data()
-
-
-# Import the database models; this needs to be at the bottom to prevent a circular error
-# from models import *
 
 
 # Define routes
 @app.route("/")
+@app.route("/index")
 def home():
     """
     Renders the home page of the website.
 
     Returns: The rendered home page HTML.
     """
-    return render_template("index.html")
+    test = "Hello, World!"
+    login_form = LoginForm()
+
+    first_incomplete_item = None
+    if current_user.is_authenticated:
+        first_incomplete_item = ChecklistItems.query.filter_by(user_id=current_user.id, status=False).order_by(
+            ChecklistItems.order_no).first()
+
+    return render_template('index.html', test=test, login_form=login_form, first_incomplete_item=first_incomplete_item)
 
 
 @app.route('/properties', methods=['GET', 'POST'])
@@ -41,36 +40,46 @@ def properties():
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
-# @login_required  # requires user to be logged in to access Checklist
+@login_required
 def checklist():
     """
     Renders the checklist page of the website, which displays a list of checklist items that can be marked as completed.
 
     Returns: The rendered checklist page HTML.
     """
-    global checklist_items
+    if request.method == 'GET':
+        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(ChecklistItems.order_no).all()
+        return render_template('checklist.html', items=items)
 
-    if request.method == 'POST':
-        # If a POST request is received, toggle the status of the corresponding checklist item and save the updated data
-        data = request.get_json()
-        item_id = int(data['id'])
+    elif request.method == 'POST':
+        order_no = request.json['order_no']
+        new_status = request.json['status']
 
-        for item in checklist_items:
-            if item.order_no == item_id:
-                item.toggle_status()
-                data_manager.save_checklist_data(checklist_items)
-                return jsonify({'success': True})
+        # Update the item status in the database
+        item = ChecklistItems.query.filter_by(user_id=current_user.id, order_no=order_no).first()
+        item.status = new_status
+        db.session.commit()
 
-        return jsonify({'success': False})
+        return jsonify(success=True)
 
-    # If a GET request is received, retrieve the list of checklist items and separate them into completed and incomplete
-    # items, then render the checklist page HTML with these lists as template variables.
-    todo_table = [item for item in checklist_items if not item.status]
-    completed_table = [item for item in checklist_items if item.status]
-    todo_table = sorted(todo_table, key=lambda x: x.order_no)
-    completed_table = sorted(completed_table, key=lambda y: y.order_no)
+    else:
+        return redirect(url_for('index'))
 
-    return render_template('checklist.html', todo_table=todo_table, completed_table=completed_table)
+
+def add_checklist_items(user_id):
+    steps = [
+        "Do you know what your current credit score is? Check out our services tab above to see what options are available to you.",
+        "Do you have your home picked out? Check out our properties tab to see what homes are available within your search parameters.",
+        "Do you know what type of financing is available to you? Check out our services tab above to see what options are available to you.",
+        "Do you know how much home you can afford? Check out our calculator tab to find out the right price for you.",
+        "Do you understand your current debt to income ratio and what that means, Check out our calculator tab to find out more."
+    ]
+
+    for i, step in enumerate(steps, start=1):
+        item = ChecklistItems(order_no=i, status=False, detail=step, user_id=user_id)
+        db.session.add(item)
+
+    db.session.commit()
 
 
 @app.route('/calendar', methods=['GET', 'POST'])
@@ -97,6 +106,15 @@ def login():
 
     login_form = LoginForm()
 
+    """
+        Renders the sign_up.html template and handles POST requests.
+        If the form data is valid, the function will flash a success message and render the index.html template.
+        If the form data is invalid, the function will flash an error message and remain on the sign_up.html template.
+        Returns:
+        -If the request is a GET request: the rendered sign_up.html template.
+        -If the request is a POST request: either the rendered index.html template or the rendered sign_up.html template
+          with error messages, depending on the validity of the form data.
+    """
     if login_form.validate_on_submit():
         user = Users.query.filter_by(email=login_form.email.data).first()
         if user:
@@ -134,6 +152,9 @@ def sign_up():
                          email=signup_form.email.data, password_hash=hashed_password)
             db.session.add(user)
             db.session.commit()
+
+            # Add checklist items for the new user
+            add_checklist_items(user.id)
 
             flash('Account created! Please use your credentials to log in.', category='success')
             return redirect(url_for('login'))
