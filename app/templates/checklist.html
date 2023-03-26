@@ -9,56 +9,64 @@
 <aside>
     <div class="container">
         {% block content %}
-        <h1 class="todo-header">To-Do</h1>
-        <table>
-            <thead>
-            <tr>
-                <th class="step">Step</th>
-                <th class="item">Item</th>
-                <th class="status">Status</th>
-                <th class="action">Action</th>
-            </tr>
-            </thead>
-            <tbody id="todo-list">
-            {% for item in todo_table %}
-            <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
-                <td>Step {{ item.order_no }}</td>
-                <td>{{ item.detail }}</td>
-                <td class="status">{% if item.status %}Completed{% else %}Incomplete{% endif %}</td>
-                <td>
-                    <button class="complete-btn" data-id="{{ item.order_no }}" data-completed="{% if item.status %}true{% else %}false{% endif %}">{{ item.button_text }}</button>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        <h1 class="completed-header">Completed</h1>
-        <table>
-            <thead>
-            <tr>
-                <th class="step">Step</th>
-                <th class="item">Item</th>
-                <th class="status">Status</th>
-                <th class="action">Action</th>
-            </tr>
-            </thead>
-            <tbody id="completed-list">
-            {% for item in completed_table %}
-            <tr data-id="{{ item.order_no }}" data-status="{{ item.status }}">
-                <td>Step {{ item.order_no }}</td>
-                <td>{{ item.detail }}</td>
-                <td class="status">Completed</td>
-                <td>
-                    <button class="undo-btn" data-id="{{ item.order_no }}" data-completed="true">Undo</button>
-                </td>
-            </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+            <h1 class="todo-header">To-Do</h1>
+            <table>
+                <thead>
+                <tr>
+                    <th class="step">Step</th>
+                    <th class="item">Item</th>
+                    <th class="status">Status</th>
+                    <th class="action">Action</th>
+                </tr>
+                </thead>
+                <tbody id="todo-list">
+                {% for item in items %}
+                    {% if not item.status %}
+                        <tr data-id="{{ item.order_no }}">
+                            <td>Step {{ item.order_no }}</td>
+                            <td>{{ item.detail }}</td>
+                            <td class="status">{% if item.status %}Completed{% else %}Incomplete{% endif %}</td>
+                            <td>
+                                <button class="complete-btn" data-id="{{ item.order_no }}"
+                                        data-completed="{% if item.status %}true{% else %}false{% endif %}">Complete
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
+            <h1 class="completed-header">Completed</h1>
+            <table>
+                <thead>
+                <tr>
+                    <th class="step">Step</th>
+                    <th class="item">Item</th>
+                    <th class="status">Status</th>
+                    <th class="action">Action</th>
+                </tr>
+                </thead>
+                <tbody id="completed-list">
+                {% for item in items %}
+                    {% if item.status %}
+                        <tr data-id="{{ item.order_no }}">
+                            <td>Step {{ item.order_no }}</td>
+                            <td>{{ item.detail }}</td>
+                            <td class="status">Completed</td>
+                            <td>
+                                <button class="undo-btn" data-id="{{ item.order_no }}" data-completed="true">Undo
+                                </button>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+                </tbody>
+            </table>
         {% endblock %}
     </div>
 </aside>
 {% include 'footer.html' %}
 
 <link href="../static/styles/checklist.css" rel="stylesheet">
-<script src="../static/scripts/checklist.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/checklist.js') }}"></script>

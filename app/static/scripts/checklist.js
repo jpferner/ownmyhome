@@ -1,100 +1,94 @@
-// Add event listeners to "Complete" and "Undo" buttons
-const buttons = document.querySelectorAll('.complete-btn, .undo-btn');
-for (let i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', toggleStatus);
-}
+$(document).ready(function () {
+    // Get the CSRF token from the meta tag in the header
+    const csrf_token = $('meta[name=csrf-token]').attr('content');
 
-// Send AJAX request to toggle item status
-function toggleStatus(event) {
-    const id = event.target.getAttribute('data-id');
-    const completed = event.target.getAttribute('data-completed') === 'true';
-    fetch(`/toggle_status/${id}`, {
-        method: 'POST',
-        body: JSON.stringify({completed: !completed}),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    }).then(() => {
-        if (completed) {
-            // Move item from completed to todo table
-            const row = event.target.parentElement.parentElement;
-            row.querySelector('.status').textContent = 'Incomplete';
-            row.querySelector('button').className = 'complete-btn';
-            row.querySelector('button').textContent = 'Complete';
-            row.querySelector('button').setAttribute('data-completed', 'false');
-            document.getElementById('todo-list').appendChild(row);
-        } else {// Move item from todo to completed table
-            const row = event.target.parentElement.parentElement;
-            row.querySelector('.status').textContent = 'Completed';
-            row.querySelector('button').className = 'undo-btn';
-            row.querySelector('button').textContent = 'Undo';
-            row.querySelector('button').setAttribute('data-completed', 'true');
-            document.getElementById('completed-list').appendChild(row);
-        }
-        // Sort the tables by step number
-        const todoList = document.getElementById('todo-list');
-        const completedList = document.getElementById('completed-list');
-        const sortedTodo = Array.from(todoList.children).sort((a, b) => {
-            const aStep = parseInt(a.querySelector('td').textContent.slice(5));
-            const bStep = parseInt(b.querySelector('td').textContent.slice(5));
-            return aStep - bStep;
+    // When the complete button is clicked
+    $('table').on('click', '.complete-btn', function () {
+        const btn = $(this);
+        const order_no = btn.data('id');
+
+        // Send a POST request to update the item status in the database
+        $.ajax({
+            url: '/checklist',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            contentType: 'application/json',
+            data: JSON.stringify({
+                order_no: order_no,
+                status: true
+            }),
+            success: function (response) {
+                if (response.success) {
+                    // Update the button and table row
+                    btn.removeClass('complete-btn').addClass('undo-btn').text('Undo');
+                    const row = btn.closest('tr');
+                    row.find('.status').text('Completed');
+
+                    // Find the correct position for the row in the completed list
+                    const rows = $('#completed-list tr');
+                    let inserted = false;
+                    rows.each(function () {
+                        const currentRow = $(this);
+                        if (parseInt(currentRow.data('id')) > order_no) {
+                            currentRow.before(row);
+                            inserted = true;
+                            return false;
+                        }
+                    });
+
+                    // If the correct position wasn't found, append the row to the end of the list
+                    if (!inserted) {
+                        $('#completed-list').append(row);
+                    }
+                }
+            }
         });
-        const sortedCompleted = Array.from(completedList.children).sort((a, b) => {
-            const aStep = parseInt(a.querySelector('td').textContent.slice(5));
-            const bStep = parseInt(b.querySelector('td').textContent.slice(5));
-            return aStep - bStep;
+    });
+
+    // When the undo button is clicked
+    $('table').on('click', '.undo-btn', function () {
+        const btn = $(this);
+        const order_no = btn.data('id');
+
+        // Send a POST request to update the item status in the database
+        $.ajax({
+            url: '/checklist',
+            type: 'POST',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            contentType: 'application/json',
+            data: JSON.stringify({
+                order_no: order_no,
+                status: false
+            }),
+            success: function (response) {
+                if (response.success) {
+                    // Update the button and table row
+                    btn.removeClass('undo-btn').addClass('complete-btn').text('Complete');
+                    const row = btn.closest('tr');
+                    row.find('.status').text('Incomplete');
+
+                    // Find the correct position for the row in the todo list
+                    const rows = $('#todo-list tr');
+                    let inserted = false;
+                    rows.each(function () {
+                        const currentRow = $(this);
+                        if (parseInt(currentRow.data('id')) > order_no) {
+                            currentRow.before(row);
+                            inserted = true;
+                            return false;
+                        }
+                    });
+
+                    // If the correct position wasn't found, append the row to the end of the list
+                    if (!inserted) {
+                        $('#todo-list').append(row);
+                    }
+                }
+            }
         });
-        todoList.innerHTML = '';
-        sortedTodo.forEach(item => todoList.appendChild(item));
-        completedList.innerHTML = '';
-        sortedCompleted.forEach(item => completedList.appendChild(item));
     });
-}
-
-// Update the To-Do and Completed tables
-function updateChecklists() {
-    const todoList = document.getElementById('todo-list');
-    const completedList = document.getElementById('completed-list');
-    fetch('/get_checklists').then(response => {
-        if (response.ok) {
-            response.json().then(data => {
-                // Sort the todo and completed tables by step number
-                const sortedTodo = data.sort((a, b) => a.order - b.order);
-                const sortedCompleted = data.completed.sort((a, b) => a.order - b.order);
-                // Clear existing table rows
-                todoList.innerHTML = '';
-                completedList.innerHTML = '';
-                // Add updated table rows
-                sortedTodo.forEach(item => {
-                    const row = createTableRow(item);
-                    todoList.appendChild(row);
-                });
-                sortedCompleted.forEach(item => {
-                    const row = createTableRow(item);
-                    completedList.appendChild(row);
-                });
-            });
-        }
-    });
-}
-
-// Helper function to create a table row from a checklist item
-function createTableRow(item) {
-    const row = document.createElement('tr');
-    row.setAttribute('data-id', item.order);
-    row.innerHTML = `
-        <td>Step ${item.order}</td>
-        <td>${item.detail}</td>
-        <td class="status">${item.status ? 'Completed' : 'Incomplete'}</td>
-        <td>
-            <button class="${item.status ? 'undo-btn' : 'complete-btn'}" data-id="${item.order}" data-completed="${item.status}">
-                ${item.status ? 'Undo' : 'Complete'}
-            </button>
-        </td>
-    `;
-    row.querySelector('button').addEventListener('click', toggleStatus);
-    return row;
-}
-
-// Initialize the To-Do and Completed tables
-updateChecklists();
+});

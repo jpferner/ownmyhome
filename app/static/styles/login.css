@@ -1,0 +1,14 @@
+.success {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.error {
+    background-color: red;
+    color: white;
+}
+
+.logout {
+    background-color: #2980b9;
+    color: white;
+}
