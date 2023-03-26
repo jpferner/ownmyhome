@@ -17,12 +17,6 @@
 
 
 <aside>
-  <h1>Testing</h1>
-
-  <h3>Update Database</h3>
-    <form method="post" action="{{ url_for('update') }}">
-        <button type="submit">Update Database</button>
-    </form>
     <div class="aside-container">
         <div class="aside-box">
             {% if current_user.is_authenticated %}
@@ -52,6 +46,7 @@
             {% endif %}
         </div>
     </div>
+
 </aside>
 
 {% include 'footer.html' %}

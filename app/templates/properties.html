@@ -22,18 +22,20 @@
 <script>
 $(document).ready(function() {
   $('input[name="favorite"]').change(function() {
-    var propId = $(this).attr('id');
-    var checked = $(this).is(':checked');
+      const propId = $(this).attr('id');
+      const checked = $(this).is(':checked');
+      const csrf_token = $('meta[name="csrf-token"]').attr('content'); // get the CSRF token from the meta tag
     $.ajax({
       url: "{{ url_for('update_favorites') }}",
       type: "POST",
-      data: {propId: propId, checked: checked.toString()},
+      data: {propId: propId, checked: checked.toString(), csrf_token: csrf_token}, // include the CSRF token in the data
       success: function(response) {
-        $('#props').html(response.props);
+        $('#props-table').html(response.props);
         $('#favorites').html(response.favorites);
       }
     });
   });
+
 
   // Load the favorites table when the page is first loaded
   $.ajax({
@@ -56,6 +58,7 @@ $(document).ready(function() {
 <aside>
   <h1>PROPERTIES IN WILMINGTON NC</h1>
   <form method="POST" action="{{ url_for('update_favorites') }}">
+  {{ csrf_token }}
     <div id="props">
       <table>
         <tr>

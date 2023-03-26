@@ -1,7 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
+from flask_wtf.csrf import CSRFError, validate_csrf
 
 from app import app
+
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from app.models import *
 
@@ -246,8 +248,13 @@ def update():
     """
 
     #  if in future we need to drop all tables and recreate
-    #db.drop_all()
-    #db.create_all()
+    # db.drop_all()
+    # db.create_all()
+
+    try:
+        csrf_token = request.form['csrf_token']
+    except KeyError:
+        raise CSRFError('CSRF token missing')
 
     # for now just the property table
     db.session.query(Property).delete()
@@ -265,22 +272,26 @@ def update():
     prop5 = Property(propId=400, street='1025 Cardinal ln', city='Wilmington', state='NC', zcode=28422,
                      county='New Hanover', price=235000, yearBuilt=2006, numBeds=3, numBaths=1)
 
-    #looking for a solution to add users running into a password error
-    #user1 = Users(id=26, first_name="Bob", last_name="smith", email="123@gmail.comm")
-    #user1.set_password('123456789')
+    # looking for a solution to add users running into a password error
+    # user1 = Users(id=26, first_name="Bob", last_name="smith", email="123@gmail.comm")
+    # user1.set_password('123456789')
     db.session.add(prop1)
     db.session.add(prop2)
     db.session.add(prop3)
     db.session.add(prop4)
     db.session.add(prop5)
-    #db.session.add(user1)
+    # db.session.add(user1)
 
     db.session.commit()
     flash('dummy data added')
     return render_template('index.html')
 
+
 @app.route('/update_favorites', methods=['POST'])
 def update_favorites():
+    csrf_token = request.form['csrf_token']
+    validate_csrf(csrf_token)
+
     propId = request.form['propId']
     checked = request.form['checked'] == 'true'
     prop = Property.query.filter_by(propId=propId).first()
@@ -292,12 +303,8 @@ def update_favorites():
     favorites_table = render_template('favorites_table.html', props=Property, favorite_props=favorite_props)
     return jsonify(props=props_table, favorites=favorites_table)
 
+
 @app.route('/favorites_table')
 def favorites_table():
     favorite_props = Property.query.filter_by(favorite=True).all()
     return render_template('favorites_table.html', favorite_props=favorite_props)
-
-
-
-
-

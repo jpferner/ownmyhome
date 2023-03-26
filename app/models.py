@@ -5,9 +5,6 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 
 
-
-
-
 class ChecklistItems(db.Model):
     status = db.Column(db.Boolean, default=False)
     detail = db.Column(db.String(255))
@@ -51,9 +48,10 @@ class Users(db.Model, UserMixin):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+    # From David H I may need this next sprint
+    # def set_password(self, password):
+    # self.password_hash = generate_password_hash(password, "sha256")
 
-    def set_password(self,password):
-        self.password_hash = generate_password_hash(password,"sha256")
 
 class Property(db.Model):
     propId = db.Column(db.Integer, primary_key=True)
@@ -66,11 +64,11 @@ class Property(db.Model):
     yearBuilt = db.Column(db.Integer)
     numBeds = db.Column(db.Integer)
     numBaths = db.Column(db.Integer)
-    favorite = db.Column(db.Boolean,default=False)
+    favorite = db.Column(db.Boolean, default=False)
+
     # not ready yet
-    #user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='property_user_id_fk'), nullable=False)
-    #user = db.relationship('Users', backref=db.backref('properties', lazy=True))
+    # user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='property_user_id_fk'), nullable=False)
+    # user = db.relationship('Users', backref=db.backref('properties', lazy=True))
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
-

@@ -33,9 +33,9 @@
 <script>
 $(document).ready(function() {
   $('input[name="favorite"]').change(function() {
-    var propId = $(this).attr('id');
-    var checked = $(this).is(':checked');
-    $.ajax({
+      const propId = $(this).attr('id');
+      const checked = $(this).is(':checked');
+      $.ajax({
       url: "{{ url_for('update_favorites') }}",
       type: "POST",
       data: {propId: propId, checked: checked.toString()},
