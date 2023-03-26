@@ -32,7 +32,7 @@
                 </div>
                 <span id="next" class="next fa fa-angle-right" aria-hidden="true"></span>
             </div>
-            <span class="c-paginator__year">2022</span>
+            <span class="c-paginator__year">2023</span>
         </div>
         <div class="c-sort">
             <a class="o-btn c-today__btn" href="javascript:;">TODAY</a>
@@ -92,7 +92,7 @@ function fill_table(month, month_length, indexMonth) {
       for (var i = 1; i <= 7 && day <= month_length; i++) {
         if (day >= 1 && day <= 9) {
           document.write(
-            "<div data-day='2022-" +
+            "<div data-day='2023-" +
               indexMonth +
               "-0" +
               day +
@@ -103,7 +103,7 @@ function fill_table(month, month_length, indexMonth) {
           day++;
         } else {
           document.write(
-            "<div data-day='2022-" +
+            "<div data-day='2023-" +
               indexMonth +
               "-" +
               day +
@@ -139,7 +139,7 @@ function fill_table(month, month_length, indexMonth) {
             <script>
 
       // CAHNGE the below variable to the CURRENT YEAR
-      year = 2022;
+      year = 2023;
 
       // first day of the week of the new year
       today = new Date("January 1, " + year);
@@ -166,7 +166,9 @@ function fill_table(month, month_length, indexMonth) {
         <form id="addEvent">
             <input placeholder="Event name" type="text" name="name">
             <input type="date" name="date">
+            <input type="time" name="time">
             <textarea placeholder="Notes" name="notes" cols="30" rows="10"></textarea>
+
             <!--      <select name="tags">-->
             <!--          <option value="event">event</option>-->
             <!--          <option value="important">important</option>-->

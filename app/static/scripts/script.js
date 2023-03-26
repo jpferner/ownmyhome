@@ -43,18 +43,28 @@ var selectedDay = moment().format("YYYY-MM-DD");
 var currentEventId = 0;
 
 // ------ set default events -------
-function defaultEvents(dataDay,dataName,dataNotes,classTag){
-  var date = $('*[data-day='+dataDay+']');
-  date.attr("data-name", dataName);
-  date.attr("data-notes", dataNotes);
-  date.addClass("event");
-  date.addClass("event--" + classTag);
+function defaultEvents(dataDay,dataName,dataNotes,dataTime){
+
+  var event = $('*[data-day='+dataDay+']');
+
+  event.attr("data-name", dataName);
+  event.attr("data-notes", dataNotes);
+  event.attr("data-date", dataDay);
+  //date.addClass("event");
+  event.attr("data-time", dataTime)
+  //date.addClass("event--" + classTag);
+  fillEventSidebar(event);
+  updateEventList();
 }
 
 //defaultEvents(today, 'YEAH!','Today is your day','important');
 //defaultEvents('2022-12-25', 'MERRY CHRISTMAS','A lot of gift!!!!','festivity');
 //defaultEvents('2022-05-04', "LUCA'S BIRTHDAY",'Another gifts...?','birthday');
-//defaultEvents('2022-03-03', "MY LADY'S BIRTHDAY",'A lot of money to spent!!!!','birthday');
+
+defaultEvents('2023-03-25', "event2",'these are my notes for buying this house.', '04:30:00');
+defaultEvents('2023-03-25', "buying the house",'these are my notes for buying this house.', '05:30:00');
+
+
 
 
 // ------ functions control -------
@@ -98,6 +108,7 @@ closeBtn.on("click", function() {
 saveBtn.on("click", function() {
   var inputName = $("input[name=name]").val();
   var inputDate = $("input[name=date]").val();
+  var inputTime = $("input[name=time").val();
   var inputNotes = $("textarea[name=notes]").val();
   var inputTag = $("select[name=tags]")
     .find(":selected")
@@ -114,6 +125,9 @@ saveBtn.on("click", function() {
       }
       if (inputDate != null) {
         $(this).attr("data-date", inputDate);
+      }
+      if (inputTime != null) {
+        $(this).attr("data-time", inputTime);
       }
       fillEventSidebar($(this));
 
@@ -135,6 +149,7 @@ function fillEventSidebar(self) {
   var thisNotes = self.attr("data-notes");
   var thisEvent = self.hasClass("event");
   var thisDate = self.attr("data-date");
+  var thisTime = self.attr("data-time");
 //  console.log(thisDate);
 
   if (!(thisDate in events)) {
@@ -145,6 +160,7 @@ function fillEventSidebar(self) {
     name: thisName,
     notes: thisNotes,
     date: thisDate,
+    time: thisTime,
     id: currentEventId
   });
   currentEventId += 1;
@@ -194,15 +210,32 @@ function fillEventSidebar(self) {
 function updateEventList() {
   $(".c-aside__eventList").empty();
   const currentDate = selectedDay;
+
+
   if (currentDate in events) {
+    events[currentDate].sort(function(a, b) {
+//        var time1 = a.time;
+//        var time2 = b.time;
+//        console.log(a.time, "\t", b.time);
+//
+//        if (time1 > time2) {
+//            return time2;
+//        }
+//        else return time1;
+        return a.time.localeCompare(b.time);
+    });
+
     events[currentDate].forEach(function (event) {
         $(".c-aside__eventList").append(
-            "<p class='c-aside__event'>" +
+            "<div class='c-aside__event'>" +
             event.name +
-            " <span> . " +
+            " <span> @ " +
+            moment(event.time, 'HH:mm:ss').format('h:mm A') +
+            "<p>" +
             event.notes +
-            "<a class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event <span class='fa fa-plus'></span></a>" +
-            "</span> </p>"
+            "</p>" +
+            "<a class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event <span class='fa fa-trash-o'></span></a>" +
+            "</span> </div>"
 
         );
 
