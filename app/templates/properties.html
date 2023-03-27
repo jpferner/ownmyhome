@@ -1,135 +1,134 @@
 {% include 'header.html' %}
 <style>
-   th, td {
-    padding: 20px;
-    color: black;
-  }
+    th, td {
+        padding: 20px;
+        color: black;
+    }
 
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
+    table {
+        border-collapse: collapse;
+        width: 100%;
+    }
 
-  th {
-    background-color: teal;
-  }
+    th {
+        background-color: teal;
+    }
 
-  tr:nth-child(even) {
-    background-color: gray;
-  }
+    tr:nth-child(even) {
+        background-color: gray;
+    }
 </style>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-$(document).ready(function() {
-  $('input[name="favorite"]').change(function() {
-      const propId = $(this).attr('id');
-      const checked = $(this).is(':checked');
-      const csrf_token = $('meta[name="csrf-token"]').attr('content'); // get the CSRF token from the meta tag
-    $.ajax({
-      url: "{{ url_for('update_favorites') }}",
-      type: "POST",
-      data: {propId: propId, checked: checked.toString(), csrf_token: csrf_token}, // include the CSRF token in the data
-      success: function(response) {
-        $('#props-table').html(response.props);
-        $('#favorites').html(response.favorites);
-      }
+    $(document).ready(function () {
+        $('input[name="favorite"]').change(function () {
+            const propId = $(this).attr('id');
+            const checked = $(this).is(':checked');
+            const csrf_token = $('meta[name="csrf-token"]').attr('content'); // get the CSRF token from the meta tag
+            $.ajax({
+                url: "{{ url_for('update_favorites') }}",
+                type: "POST",
+                data: {propId: propId, checked: checked.toString(), csrf_token: csrf_token}, // include the CSRF token in the data
+                success: function (response) {
+                    $('#props-table').html(response.props);
+                    $('#favorites').html(response.favorites);
+                }
+            });
+        });
+
+        // Load the favorites table when the page is first loaded
+        $.ajax({
+            url: "{{ url_for('favorites_table') }}",
+            success: function (response) {
+                $('#favorites').html(response);
+            }
+        });
     });
-  });
-
-
-  // Load the favorites table when the page is first loaded
-  $.ajax({
-    url: "{{ url_for('favorites_table') }}",
-    success: function(response) {
-      $('#favorites').html(response);
-    }
-  });
-});
 </script>
 
-
 <section>
-  <div class="container">
-    <h1>Welcome to our Real Estate Website</h1>
-    <p>Find your dream property with us</p>
-  </div>
+    <div class="container">
+        <h1>Welcome to our Real Estate Website</h1>
+        <p>Find your dream property with us</p>
+    </div>
 </section>
 
 <aside>
-  <h1>PROPERTIES IN WILMINGTON NC</h1>
-  <form method="POST" action="{{ url_for('update_favorites') }}">
-  {{ csrf_token }}
-    <div id="props">
-      <table>
-        <tr>
-          <th>Id</th>
-          <th>Street</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Zip</th>
-          <th>County</th>
-          <th>Price</th>
-          <th>Year Built</th>
-          <th>Beds</th>
-          <th>Baths</th>
-          <th>Add To Favorites</th>
-        </tr>
+    <h1>PROPERTIES IN WILMINGTON NC</h1>
+    <form method="POST" action="{{ url_for('update_favorites') }}">
+        {#  {{ csrf_token }}#}
+        <div id="props">
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Street</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>County</th>
+                    <th>Price</th>
+                    <th>Year Built</th>
+                    <th>Beds</th>
+                    <th>Baths</th>
+                    <th>Add To Favorites</th>
+                </tr>
 
-        {% for p in props %}
-          <tr>
-            <td>{{p.propId}}</td>
-            <td>{{p.street}}</td>
-            <td>{{p.city}}</td>
-            <td>{{p.state}}</td>
-            <td>{{p.zcode}}</td>
-            <td>{{p.county}}</td>
-            <td>${{p.price}}</td>
-            <td>{{p.yearBuilt}}</td>
-            <td>{{p.numBeds}}</td>
-            <td>{{p.numBaths }}</td>
-            <td><input type="checkbox" id="{{p.propId}}" name="favorite" value="1" {% if p.favorite %}checked{% endif %}></td>
-          </tr>
-        {% endfor %}
-      </table>
-           </div>
-  </form>
+                {% for p in props %}
+                    <tr>
+                        <td>{{ p.propId }}</td>
+                        <td>{{ p.street }}</td>
+                        <td>{{ p.city }}</td>
+                        <td>{{ p.state }}</td>
+                        <td>{{ p.zcode }}</td>
+                        <td>{{ p.county }}</td>
+                        <td>${{ p.price }}</td>
+                        <td>{{ p.yearBuilt }}</td>
+                        <td>{{ p.numBeds }}</td>
+                        <td>{{ p.numBaths }}</td>
+                        <td><input type="checkbox" id="{{ p.propId }}" name="favorite" value="1"
+                                   {% if p.favorite %}checked{% endif %}></td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </form>
 </aside>
 
 <section>
-  <div class="container">
-    <h1>FAVORITE PROPERTIES</h1>
-    <div id="favorites">
-      <table>
-        <tr>
-          <th>Id</th>
-          <th>Street</th>
-          <th>City</th>
-          <th>State</th>
-          <th>Zip</th>
-          <th>County</th>
-          <th>Price</th>
-          <th>Year Built</th>
-          <th>Beds</th>
-          <th>Baths</th>
-        </tr>
+    <div class="container">
+        <h1>FAVORITE PROPERTIES</h1>
+        <div id="favorites">
+            <table>
+                <tr>
+                    <th>Id</th>
+                    <th>Street</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Zip</th>
+                    <th>County</th>
+                    <th>Price</th>
+                    <th>Year Built</th>
+                    <th>Beds</th>
+                    <th>Baths</th>
+                </tr>
 
-        {% for p in favorite_props %}
-          <tr>
-            <td>{{p.propId}}</td>
-            <td>{{p.street}}</td>
-            <td>{{p.city}}</td>
-            <td>{{p.state}}</td>
-            <td>{{p.zcode}}</td>
-            <td>{{p.county}}</td>
-            <td>${{p.price}}</td>
-            <td>{{p.yearBuilt}}</td>
-            <td>{{p.numBeds}}</td>
-            <td>{{p.numBaths }}</td>
-          </tr>
-        {% endfor %}
-      </table>
+                {% for p in favorite_props %}
+                    <tr>
+                        <td>{{ p.propId }}</td>
+                        <td>{{ p.street }}</td>
+                        <td>{{ p.city }}</td>
+                        <td>{{ p.state }}</td>
+                        <td>{{ p.zcode }}</td>
+                        <td>{{ p.county }}</td>
+                        <td>${{ p.price }}</td>
+                        <td>{{ p.yearBuilt }}</td>
+                        <td>{{ p.numBeds }}</td>
+                        <td>{{ p.numBaths }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
-  </div>
 </section>
 
 {% include 'footer.html' %}

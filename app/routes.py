@@ -1,6 +1,6 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
-from flask_wtf.csrf import CSRFError, validate_csrf
+from flask_wtf.csrf import validate_csrf
 
 from app import app
 
@@ -251,10 +251,10 @@ def update():
     # db.drop_all()
     # db.create_all()
 
-    try:
-        csrf_token = request.form['csrf_token']
-    except KeyError:
-        raise CSRFError('CSRF token missing')
+    # try:
+    #     csrf_token = request.form['csrf_token']
+    # except KeyError:
+    #     raise CSRFError('CSRF token missing')
 
     # for now just the property table
     db.session.query(Property).delete()
