@@ -33,9 +33,11 @@
         <div class="aside-box">
             {% if current_user.is_authenticated %}
                 <h1 class="welcome-user">Welcome, {{ current_user.first_name }}</h1>
+                <h2><a href="{{ url_for('logout') }}">Logout</a></h2>
             {% else %}
-                <h3>Login Form</h3>
+                <h3 style="text-decoration: underline">Login</h3>
                 {% include 'login_form_partial.html' %}
+                <p><a href="{{ url_for('sign_up') }}">Create a free account!</a></p>
             {% endif %}
         </div>
     </div>
