@@ -41,7 +41,8 @@
 .aside-box input[type="text"],
 .aside-box input[type="password"],
 .aside-box input[type="submit"] {
-    width: 100%;
+    width: 50%;
+    text-align: center;
     box-sizing: border-box;
     padding: 10px;
     margin-bottom: 10px;
@@ -66,6 +67,18 @@
 .aside-box input[type="submit"]:hover {
     background-color: black;
     color: #ffffff;
+}
+
+.aside-box a{
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.aside-box a:hover{
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
 }
 
 .welcome-user {

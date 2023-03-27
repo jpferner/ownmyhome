@@ -176,7 +176,7 @@ def sign_up():
 def logout():
     logout_user()
     flash("You have successfully logged out!", category='logout')
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
