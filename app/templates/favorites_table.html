@@ -1,0 +1,31 @@
+<table>
+  <tr>
+    <th>Id</th>
+    <th>Street</th>
+    <th>City</th>
+    <th>State</th>
+    <th>Zip</th>
+    <th>County</th>
+    <th>Price</th>
+    <th>Year Built</th>
+    <th>Beds</th>
+    <th>Baths</th>
+  </tr>
+
+  {% for p in favorite_props %}
+
+      <tr>
+        <td>{{p.propId}}</td>
+        <td>{{p.street}}</td>
+        <td>{{p.city}}</td>
+        <td>{{p.state}}</td>
+        <td>{{p.zcode}}</td>
+        <td>{{p.county}}</td>
+        <td>${{p.price}}</td>
+        <td>{{p.yearBuilt}}</td>
+        <td>{{p.numBeds}}</td>
+        <td>{{p.numBaths }}</td>
+      </tr>
+
+  {% endfor %}
+</table>
