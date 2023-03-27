@@ -8,5 +8,11 @@
 
 <aside>
   <h1>SERVICES PAGE</h1>
+   <h3>Reset Data</h3>
+   <form method="POST" action="{{ url_for('update') }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <button type="submit">Reset Database</button>
+</form>
+
 </aside>
 {% include 'footer.html' %}

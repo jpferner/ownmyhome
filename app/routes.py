@@ -1,7 +1,9 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
+from flask_wtf.csrf import validate_csrf
 
 from app import app
+
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from app.models import *
 from datetime import date
@@ -122,7 +124,7 @@ def login():
             # Check the hashed password
             if check_password_hash(user.password_hash, login_form.password_hash.data):
                 login_user(user)  # logs in the user and creates session
-                flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
+                # flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
                 return redirect(url_for('home'))
             else:
                 flash("Invalid Email and/or Password. Please try again.", category='error')
@@ -224,3 +226,73 @@ def index():
     if request.method == 'POST':
         return redirect(url_for('index'))
     return render_template('index.html')
+
+
+@app.route('/update', methods=['POST'])
+def update():
+    """
+    This method will drop all tables and recreate them.
+    Next dummy data will be inserted
+    """
+
+    #  if in future we need to drop all tables and recreate
+    # db.drop_all()
+    # db.create_all()
+
+    # try:
+    #     csrf_token = request.form['csrf_token']
+    # except KeyError:
+    #     raise CSRFError('CSRF token missing')
+
+    # for now just the property table
+    db.session.query(Property).delete()
+    db.session.commit()
+
+    # Insert dummy data
+    prop1 = Property(propId=100, street='123 Apple st', city='Wilmington', state='NC', zcode=28402,
+                     county='New Hanover', price=235000, yearBuilt=1999, numBeds=2, numBaths=1)
+    prop2 = Property(propId=230, street='456 Walnut ave', city='Wilmington', state='NC', zcode=28409,
+                     county='New Hanover', price=435000, yearBuilt=2018, numBeds=4, numBaths=3)
+    prop3 = Property(propId=300, street='836 Arrow dr', city='Wilmington', state='NC', zcode=28412,
+                     county='New Hanover', price=355000, yearBuilt=2009, numBeds=3, numBaths=2)
+    prop4 = Property(propId=500, street='987 Rich st', city='Wilmington', state='NC', zcode=28402, county='New Hanover',
+                     price=735000, yearBuilt=2008, numBeds=8, numBaths=5)
+    prop5 = Property(propId=400, street='1025 Cardinal ln', city='Wilmington', state='NC', zcode=28422,
+                     county='New Hanover', price=235000, yearBuilt=2006, numBeds=3, numBaths=1)
+
+    # looking for a solution to add users running into a password error
+    # user1 = Users(id=26, first_name="Bob", last_name="smith", email="123@gmail.comm")
+    # user1.set_password('123456789')
+    db.session.add(prop1)
+    db.session.add(prop2)
+    db.session.add(prop3)
+    db.session.add(prop4)
+    db.session.add(prop5)
+    # db.session.add(user1)
+
+    db.session.commit()
+    flash('dummy data added')
+    return render_template('index.html')
+
+
+@app.route('/update_favorites', methods=['POST'])
+def update_favorites():
+    csrf_token = request.form['csrf_token']
+    validate_csrf(csrf_token)
+
+    propId = request.form['propId']
+    checked = request.form['checked'] == 'true'
+    prop = Property.query.filter_by(propId=propId).first()
+    prop.favorite = checked
+    db.session.commit()
+
+    favorite_props = Property.query.filter_by(favorite=True).all()
+    props_table = render_template('props_table.html', props=Property.query.all(), favorite_props=favorite_props)
+    favorites_table = render_template('favorites_table.html', props=Property, favorite_props=favorite_props)
+    return jsonify(props=props_table, favorites=favorites_table)
+
+
+@app.route('/favorites_table')
+def favorites_table():
+    favorite_props = Property.query.filter_by(favorite=True).all()
+    return render_template('favorites_table.html', favorite_props=favorite_props)
