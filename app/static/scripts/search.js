@@ -3,7 +3,7 @@ $(document).ready(function () {
         event.preventDefault();
         const searchQuery = $('#search-input').val();
         const zipCode = $('#zip-input').val();
-        fetchResults(searchQuery, zipCode, 1);
+        fetchResults(searchQuery, zipCode, 0);
     });
 
     $('#search-results').on('click', '.pagination-btn', function () {
@@ -15,6 +15,7 @@ $(document).ready(function () {
 });
 
 function fetchResults(searchQuery, zipCode, startIndex) {
+    $('html, body').scrollTop(0);
     $.ajax({
         url: '/search',
         data: {
@@ -32,7 +33,7 @@ function fetchResults(searchQuery, zipCode, startIndex) {
     });
 }
 
-function displayResults(results, totalResults, startIndex) {
+function displayResults(results, totalResults, startIndex, searchQuery, zipCode) {
     const resultsDiv = $('#search-results');
     resultsDiv.empty();
 
@@ -79,7 +80,7 @@ function displayResults(results, totalResults, startIndex) {
         const maxVisiblePages = 10;
         const previousButton = $('<button class="btn btn-primary">&lt;</button>');
         previousButton.prop('disabled', currentPage === 1);
-        previousButton.on('click', () => fetchResults(searchQuery, zipCode, currentPage - 1));
+        previousButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage - 1) * 10));
         pagination.append(previousButton);
 
         let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
@@ -90,17 +91,19 @@ function displayResults(results, totalResults, startIndex) {
         }
 
         for (let i = startPage; i <= endPage; i++) {
-            const pageButton = $('<button class="btn btn-primary"></button>').text(i);
-            if (i === currentPage) {
-                pageButton.addClass('active');
-            }
-            pageButton.on('click', () => fetchResults(searchQuery, zipCode, i));
+            const pageButton = $('<button class="btn btn-primary pagination-btn"></button>').text(i);
+            pageButton.data('start', (i - 1) * 10);
+            pageButton.toggleClass('active', i === (currentPage + 1));
+            pageButton.on('click', function () {
+                const startIndex = $(this).data('start');
+                fetchResults(searchQuery, zipCode, startIndex);
+            });
             pagination.append(pageButton);
         }
 
         const nextButton = $('<button class="btn btn-primary">&gt;</button>');
         nextButton.prop('disabled', currentPage === numPages);
-        nextButton.on('click', () => fetchResults(searchQuery, zipCode, currentPage + 1));
+        nextButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage + 1) * 10));
         pagination.append(nextButton);
 
         resultsDiv.append(pagination);
@@ -108,26 +111,26 @@ function displayResults(results, totalResults, startIndex) {
 }
 
 function autoComplete(request, response) {
-  $.ajax({
-    url: '/search_suggestions',
-    data: {
-      query: request.term,
-    },
-    method: 'GET',
-    success: function (data) {
-      response(data.suggestions);
-    },
-    error: function (error) {
-      console.error('Error:', error);
-    },
-  });
+    $.ajax({
+        url: '/search_suggestions',
+        data: {
+            query: request.term,
+        },
+        method: 'GET',
+        success: function (data) {
+            response(data.suggestions);
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        },
+    });
 }
 
 // Autocomplete setup
 $(function () {
-  $('#search-input').autocomplete({
-    source: autoComplete,
-    minLength: 2,
-    delay: 300,
-  });
+    $('#search-input').autocomplete({
+        source: autoComplete,
+        minLength: 2,
+        delay: 300,
+    });
 });
