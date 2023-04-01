@@ -6,15 +6,36 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 20px;
+  list-style: none;
+  counter-reset: item;
 }
 
 #search-results li {
-  width: calc(33.3% - 10px);
+  width: calc(30% - 10px);
   box-sizing: border-box;
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  counter-increment: item;
 }
 
 #search-results h4 {
   margin: 0 0 10px;
+}
+
+#search-results h4::before {
+  content: counter(item);
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: teal;
+  color: white;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 50%;
+  margin-right: 10px;
 }
 
 #search-results a {
