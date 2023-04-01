@@ -8,23 +8,37 @@
 </section>
 
 <aside>
-    <div id="combined-map"></div>
     <h2>Search for Home Buying Services</h2>
     <form id="search-form">
         <div class="form-group">
-            <label for="search-input">Services:</label>
-            <input type="text" id="search-input" placeholder="Search services...">
+            <label for="search-input">Services</label>
+            <select id="search-input">
+                <option value="">Select a service</option>
+                <option value="Contractor">Contractor</option>
+                <option value="Credit Repair">Credit Repair</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Flooring">Flooring</option>
+                <option value="Home Inspector">Home Inspector</option>
+                <option value="Insurance Broker">Insurance Broker</option>
+                <option value="Land Surveyor">Land Surveyor</option>
+                <option value="Landscaper">Landscaper</option>
+                <option value="Mortgage Broker">Mortgage Broker</option>
+                <option value="Painter">Painter</option>
+                <option value="Plumber">Plumber</option>
+                <option value="Realtor">Realtor</option>
+            </select>
         </div>
         <div class="form-group">
-            <label for="zip-input">Zip code:</label>
+            <label for="zip-input">Zip code</label>
             <input type="text" id="zip-input" placeholder="Zip code">
         </div>
         <div class="form-group">
-            <label for="radius-input">Radius (miles):</label>
+            <label for="radius-input">Radius (miles)</label>
             <input type="number" id="radius-input" placeholder="Radius (miles)" value="10">
         </div>
         <button type="submit">Search</button>
     </form>
+    <div id="combined-map"></div>
     <div id="search-results" data-default-image="{{ url_for('static', filename='images/noimage.jpg') }}"></div>
 </aside>
 
