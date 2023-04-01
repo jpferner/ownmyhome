@@ -16,12 +16,14 @@ $(document).ready(function () {
 
 function fetchResults(searchQuery, zipCode, startIndex) {
     $('html, body').scrollTop(0);
+    const radius = $('#radius-input').val() * 1609.34;  // Convert miles to meters
     $.ajax({
         url: '/search',
         data: {
             query: searchQuery,
             zip: zipCode,
             start: startIndex,
+            radius: radius,
         },
         method: 'GET',
         success: function (data) {
@@ -36,6 +38,7 @@ function fetchResults(searchQuery, zipCode, startIndex) {
 function displayResults(results, totalResults, startIndex, searchQuery, zipCode) {
     const resultsDiv = $('#search-results');
     resultsDiv.empty();
+    createCombinedMap(results);
 
     if (results.length === 0) {
         resultsDiv.append('<p>No results found.</p>');
@@ -43,28 +46,28 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
     }
 
     const list = $('<ol></ol>');
-    results.forEach(function (result) {
+    results.forEach(function (result, index) {
         const listItem = $('<li></li>');
         const title = $('<h4></h4>', {text: result.title});
-        const link = $('<a></a>', {
-            href: result.link,
-            text: result.link,
+        const mapsLink = $('<a></a>', {
+            href: result.maps_link,
+            text: 'View on Google Maps',
             target: '_blank',
         });
         const snippet = $('<p></p>', {text: result.snippet});
 
-        listItem.append(title, link, snippet);
+        listItem.append(title, mapsLink, snippet);
 
-        if (result.image) {
-            const thumbnail = $('<img>', {
-                src: result.image,
+        if (result.lat && result.lng) {
+            const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${result.lat},${result.lng}&zoom=15&size=100x100&markers=color:red%7Clabel:${index + 1}%7C${result.lat},${result.lng}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
+            const mapThumbnail = $('<img>', {
+                src: mapImageUrl,
                 alt: result.title,
                 width: 100,
                 height: 100,
             });
-            listItem.append(thumbnail);
+            listItem.append(mapThumbnail);
         }
-
         list.append(listItem);
     });
 
@@ -108,6 +111,25 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
 
         resultsDiv.append(pagination);
     }
+}
+
+function createCombinedMap(results) {
+    const markers = results
+        .map(
+            (result, index) => `markers=color:red%7Clabel:${index + 1}%7C${result.lat},${result.lng}`
+        )
+        .join('&');
+
+    const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?size=600x400&${markers}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
+
+    const combinedMap = $('<img>', {
+        src: mapImageUrl,
+        alt: 'Combined Map',
+        width: 600,
+        height: 400,
+    });
+
+    $('#combined-map').empty().append(combinedMap);
 }
 
 function autoComplete(request, response) {

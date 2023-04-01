@@ -70,3 +70,14 @@
   background-color: gold;
   pointer-events: none;
 }
+
+.form-group {
+  display: inline-block;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+}

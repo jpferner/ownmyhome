@@ -8,14 +8,24 @@
 </section>
 
 <aside>
+    <div id="combined-map"></div>
     <h2>Search for Home Buying Services</h2>
     <form id="search-form">
-        <input type="text" id="search-input" placeholder="Search services...">
-        <input type="text" id="zip-input" placeholder="Zip code">
+        <div class="form-group">
+            <label for="search-input">Services:</label>
+            <input type="text" id="search-input" placeholder="Search services...">
+        </div>
+        <div class="form-group">
+            <label for="zip-input">Zip code:</label>
+            <input type="text" id="zip-input" placeholder="Zip code">
+        </div>
+        <div class="form-group">
+            <label for="radius-input">Radius (miles):</label>
+            <input type="number" id="radius-input" placeholder="Radius (miles)" value="10">
+        </div>
         <button type="submit">Search</button>
     </form>
     <div id="search-results"></div>
-
 </aside>
 
 {% include 'footer.html' %}

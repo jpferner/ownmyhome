@@ -1,7 +1,10 @@
+import time
+
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf.csrf import validate_csrf
 import requests
+from urllib.parse import urlencode
 
 from app import app
 
@@ -217,58 +220,65 @@ def services():
 def search():
     query = request.args.get('query')
     zip_code = request.args.get('zip')
-    start_index = request.args.get('start', 1)
-    search_query = f"{query} {zip_code}"
-    api_key = "AIzaSyBj-W0e3TEZGKOiuCT92QzWYOSRyyZUQM8"
-    search_engine_id = "40c4746d0a5c7419b"
-    url = f"https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&q={search_query}&start={start_index}"
+    start_index = int(request.args.get('start', 1))
+    radius = request.args.get('radius', 5000)  # Default radius is 5,000 meters (approx. 3.1 miles)
 
-    response = requests.get(url)
-    data = response.json()
-    results = [
-        {
-            "title": item["title"],
-            "link": item["link"],
-            "snippet": item["snippet"],
-            "image": item["pagemap"]["cse_thumbnail"][0]["src"] if "pagemap" in item and "cse_thumbnail" in item[
-                "pagemap"] else None,
+    lat, lng = get_lat_lng_from_zip(zip_code)
+    if lat and lng:
+        places_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+        params = {
+            "query": f"{query} near {zip_code}",
+            "location": f"{lat},{lng}",
+            "radius": radius,
+            "key": "AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU",
         }
-        for item in data.get("items", [])
-    ]
-    total_results = int(data["searchInformation"]["totalResults"])
+
+        if start_index > 1:
+            params["pagetoken"] = get_page_token(start_index - 1, places_url, params)
+
+        response = requests.get(places_url, params=params)
+        data = response.json()
+        results = [
+            {
+                "title": item["name"],
+                "link": item["formatted_address"],
+                "snippet": item.get("formatted_phone_number", ""),
+                "image": item.get("icon", ""),
+                "lat": item["geometry"]["location"]["lat"],
+                "lng": item["geometry"]["location"]["lng"],
+                "maps_link": f"https://www.google.com/maps/place/?q=place_id:{item['place_id']}"
+            }
+            for item in data.get("results", [])
+        ]
+        total_results = len(results)
+    else:
+        results = []
+        total_results = 0
 
     return jsonify({"results": results, "totalResults": total_results})
 
 
-@app.route('/search_suggestions', methods=['GET'])
-def search_suggestions():
-    query = request.args.get('query')
-
-    # Replace the following line with your code to fetch search suggestions
-    suggestions = fetch_suggestions(query)
-
-    return jsonify(suggestions=suggestions)
-
-
-def fetch_suggestions(query):
-    url = "https://api.duckduckgo.com/"
-    params = {
-        "q": query,
-        "format": "json",
-        "t": "AppName",  # Replace "AppName" with your app's name
-        "ia": "meanings",
-    }
-
-    try:
+def get_page_token(offset, url, params):
+    for _ in range(offset // 20):
         response = requests.get(url, params=params)
-        response.raise_for_status()
         data = response.json()
-        suggestions = [result["Text"] for result in data["Results"]]
-    except Exception as e:
-        print(f"Error fetching suggestions: {e}")
-        suggestions = []
+        if "next_page_token" in data:
+            params["pagetoken"] = data["next_page_token"]
+        else:
+            break
+        time.sleep(2)  # Google Places API requires a short delay between requests for the next page token
+    return params.get("pagetoken")
 
-    return suggestions
+
+def get_lat_lng_from_zip(zip_code):
+    geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={zip_code}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU"
+    response = requests.get(geocode_url)
+    data = response.json()
+    if data["status"] == "OK":
+        location = data["results"][0]["geometry"]["location"]
+        return location["lat"], location["lng"]
+    else:
+        return None, None
 
 
 @app.route('/index', methods=['GET', 'POST'])
