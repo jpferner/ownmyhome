@@ -1,18 +1,45 @@
 {% include 'header.html' %}
+
 <section>
-  <div class="container">
-    <h1>Welcome to our Real Estate Website</h1>
-    <p>Find your dream property with us</p>
-  </div>
+    <div class="container">
+        <h1>Welcome to our Real Estate Website</h1>
+        <p>Find your dream property with us</p>
+    </div>
 </section>
 
 <aside>
-  <h1>SERVICES PAGE</h1>
-   <h3>Reset Data</h3>
-   <form method="POST" action="{{ url_for('update') }}">
-    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-    <button type="submit">Reset Database</button>
-</form>
-
+    <h2>Search for Home Buying Services</h2>
+    <form id="search-form">
+        <div class="form-group">
+            <label for="search-input">Services</label>
+            <select id="search-input">
+                <option value="">Select a service</option>
+                <option value="Contractor">Contractor</option>
+                <option value="Credit Repair">Credit Repair</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Flooring">Flooring</option>
+                <option value="Home Inspector">Home Inspector</option>
+                <option value="Insurance Broker">Insurance Broker</option>
+                <option value="Land Surveyor">Land Surveyor</option>
+                <option value="Landscaper">Landscaper</option>
+                <option value="Mortgage Broker">Mortgage Broker</option>
+                <option value="Painter">Painter</option>
+                <option value="Plumber">Plumber</option>
+                <option value="Realtor">Realtor</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="zip-input">Zip code</label>
+            <input type="text" id="zip-input" placeholder="Zip code">
+        </div>
+        <button type="submit">Search</button>
+    </form>
+    <div id="combined-map"></div>
+    <div id="search-results" data-default-image="{{ url_for('static', filename='images/noimage.jpg') }}"></div>
 </aside>
+
 {% include 'footer.html' %}
+
+<link href="../static/styles/search.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/search.js') }}"></script>
