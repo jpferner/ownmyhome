@@ -16,7 +16,7 @@ $(document).ready(function () {
 
 function fetchResults(searchQuery, zipCode, startIndex) {
     $('html, body').scrollTop(0);
-    const radius = $('#radius-input').val() * 1609.34;  // Convert miles to meters
+    const radius = 20 * 1609.34;  // Convert miles to meters
     $.ajax({
         url: '/search',
         data: {
