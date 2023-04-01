@@ -1,6 +1,7 @@
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf.csrf import validate_csrf
+import requests
 
 from app import app
 
@@ -190,7 +191,6 @@ def calculator():
     - If the request is a POST request: the rendered calculator.html template with the mortgage total displayed.
     """
     if request.method == 'POST':
-
         return render_template('calculator.html')
     return render_template('calculator.html', HomeVal=500000, DownPay=150000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
@@ -211,6 +211,64 @@ def services():
     if request.method == 'POST':
         return redirect(url_for('index'))
     return render_template('services.html')
+
+
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query')
+    zip_code = request.args.get('zip')
+    start_index = request.args.get('start', 1)
+    search_query = f"{query} {zip_code}"
+    api_key = "AIzaSyBj-W0e3TEZGKOiuCT92QzWYOSRyyZUQM8"
+    search_engine_id = "40c4746d0a5c7419b"
+    url = f"https://www.googleapis.com/customsearch/v1?key={api_key}&cx={search_engine_id}&q={search_query}&start={start_index}"
+
+    response = requests.get(url)
+    data = response.json()
+    results = [
+        {
+            "title": item["title"],
+            "link": item["link"],
+            "snippet": item["snippet"],
+            "image": item["pagemap"]["cse_thumbnail"][0]["src"] if "pagemap" in item and "cse_thumbnail" in item[
+                "pagemap"] else None,
+        }
+        for item in data.get("items", [])
+    ]
+    total_results = int(data["searchInformation"]["totalResults"])
+
+    return jsonify({"results": results, "totalResults": total_results})
+
+
+@app.route('/search_suggestions', methods=['GET'])
+def search_suggestions():
+    query = request.args.get('query')
+
+    # Replace the following line with your code to fetch search suggestions
+    suggestions = fetch_suggestions(query)
+
+    return jsonify(suggestions=suggestions)
+
+
+def fetch_suggestions(query):
+    url = "https://api.duckduckgo.com/"
+    params = {
+        "q": query,
+        "format": "json",
+        "t": "AppName",  # Replace "AppName" with your app's name
+        "ia": "meanings",
+    }
+
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()
+        data = response.json()
+        suggestions = [result["Text"] for result in data["Results"]]
+    except Exception as e:
+        print(f"Error fetching suggestions: {e}")
+        suggestions = []
+
+    return suggestions
 
 
 @app.route('/index', methods=['GET', 'POST'])
