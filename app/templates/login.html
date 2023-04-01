@@ -57,6 +57,10 @@
                 {{ form.password_hash() }}
             </p>
 
+            <p>
+                {{ form.remember_me.label }}
+                {{ form.remember_me() }}
+            </p>
 
             <p>
                 {{ form.submit }}

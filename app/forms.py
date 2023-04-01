@@ -49,6 +49,9 @@ class LoginForm(FlaskForm):
     # did not set password validators for login page; will flash message if invalid password
     password_hash = PasswordField("Password:", validators=[InputRequired()])
 
+    # remember the user once user is signed in; if checked
+    remember_me = BooleanField('Remember me', default='checked')
+
     submit = SubmitField('Submit')
 
     # IF NEEDED...Custom Form Validation Methods - Will run automatically with WTForms

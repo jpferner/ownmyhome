@@ -158,10 +158,14 @@ def login():
 
     if login_form.validate_on_submit():
         user = Users.query.filter_by(email=login_form.email.data).first()
+
+        # True if Remember_me checkbox is checked and false otherwise
+        remember_me = True if request.form.get('remember_me') else False
         if user:
             # Check the hashed password
             if check_password_hash(user.password_hash, login_form.password_hash.data):
-                login_user(user)  # logs in the user and creates session
+                # logs in the user and creates session
+                login_user(user, remember=remember_me)
                 # flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
                 return redirect(url_for('home'))
             else:
