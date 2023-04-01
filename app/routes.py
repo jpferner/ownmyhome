@@ -243,7 +243,7 @@ def search():
                 "title": item["name"],
                 "link": item["formatted_address"],
                 "snippet": item.get("formatted_phone_number", ""),
-                "image": item.get("icon", ""),
+                "photo_reference": item["photos"][0]["photo_reference"] if "photos" in item else None,
                 "lat": item["geometry"]["location"]["lat"],
                 "lng": item["geometry"]["location"]["lng"],
                 "maps_link": f"https://www.google.com/maps/place/?q=place_id:{item['place_id']}"

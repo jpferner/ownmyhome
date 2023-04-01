@@ -3,16 +3,14 @@
 }
 
 #search-results ol {
-  list-style-type: none;
-  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 #search-results li {
-  margin-bottom: 20px;
-  padding: 15px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  background-color: #f5f5f5;
+  width: calc(33.3% - 10px);
+  box-sizing: border-box;
 }
 
 #search-results h4 {
@@ -80,4 +78,10 @@
 .form-group label {
   display: block;
   margin-bottom: 5px;
+}
+
+@media (max-width: 768px) {
+  #search-results li {
+    width: 100%;
+  }
 }

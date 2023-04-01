@@ -23,7 +23,7 @@ function fetchResults(searchQuery, zipCode, startIndex) {
             query: searchQuery,
             zip: zipCode,
             start: startIndex,
-            radius: radius,
+            radius: radius
         },
         method: 'GET',
         success: function (data) {
@@ -46,36 +46,47 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
     }
 
     const list = $('<ol></ol>');
-    results.forEach(function (result, index) {
-        const listItem = $('<li></li>');
-        const title = $('<h4></h4>', {text: result.title});
-        const mapsLink = $('<a></a>', {
-            href: result.maps_link,
-            text: 'View on Google Maps',
-            target: '_blank',
-        });
-        const snippet = $('<p></p>', {text: result.snippet});
-
-        listItem.append(title, mapsLink, snippet);
-
-        if (result.lat && result.lng) {
-            const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?center=${result.lat},${result.lng}&zoom=15&size=100x100&markers=color:red%7Clabel:${index + 1}%7C${result.lat},${result.lng}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
-            const mapThumbnail = $('<img>', {
-                src: mapImageUrl,
-                alt: result.title,
-                width: 100,
-                height: 100,
+    const defaultImageUrl = resultsDiv.data('default-image');
+    results.slice(startIndex, startIndex + 9).forEach(function (result, index) {
+        if (index < 9) { // Only display 9 results at a time
+            const listItem = $('<li></li>');
+            const title = $('<h4></h4>', {text: result.title});
+            const mapsLink = $('<a></a>', {
+                href: result.maps_link,
+                text: 'View on Google Maps',
+                target: '_blank',
             });
-            listItem.append(mapThumbnail);
+            const snippet = $('<p></p>', {text: result.snippet});
+
+            listItem.append(title, mapsLink, snippet);
+
+            if (result.photo_reference) {
+                const imageUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&photoreference=${result.photo_reference}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
+                const image = $('<img>', {
+                    src: imageUrl,
+                    alt: result.title,
+                    width: 100,
+                    height: 100,
+                });
+                listItem.append(image);
+            } else {
+                const defaultImage = $('<img>', {
+                    src: defaultImageUrl,
+                    alt: 'Default Image',
+                    width: 100,
+                    height: 100,
+                });
+                listItem.append(defaultImage);
+            }
+            list.append(listItem);
         }
-        list.append(listItem);
     });
 
     resultsDiv.append(list);
 
     const parsedTotalResults = parseInt(totalResults, 10);
-    const numPages = Math.ceil(parsedTotalResults / 10);
-    const currentPage = Math.ceil(startIndex / 10);
+    const numPages = Math.ceil(parsedTotalResults / 9);
+    const currentPage = Math.ceil(startIndex / 9);
 
     if (numPages > 1) {
         const pagination = $('<div class="pagination"></div>');
@@ -83,7 +94,7 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
         const maxVisiblePages = 10;
         const previousButton = $('<button class="btn btn-primary">&lt;</button>');
         previousButton.prop('disabled', currentPage === 1);
-        previousButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage - 1) * 10));
+        previousButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage - 1) * 9));
         pagination.append(previousButton);
 
         let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
@@ -95,7 +106,7 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
 
         for (let i = startPage; i <= endPage; i++) {
             const pageButton = $('<button class="btn btn-primary pagination-btn"></button>').text(i);
-            pageButton.data('start', (i - 1) * 10);
+            pageButton.data('start', (i - 1) * 9);
             pageButton.toggleClass('active', i === (currentPage + 1));
             pageButton.on('click', function () {
                 const startIndex = $(this).data('start');
@@ -106,7 +117,7 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
 
         const nextButton = $('<button class="btn btn-primary">&gt;</button>');
         nextButton.prop('disabled', currentPage === numPages);
-        nextButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage + 1) * 10));
+        nextButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage + 1) * 9));
         pagination.append(nextButton);
 
         resultsDiv.append(pagination);
@@ -115,12 +126,16 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
 
 function createCombinedMap(results) {
     const markers = results
+        .filter((result) => result.lat && result.lng)
+        .slice(0, 9)
         .map(
             (result, index) => `markers=color:red%7Clabel:${index + 1}%7C${result.lat},${result.lng}`
         )
         .join('&');
 
-    const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?size=600x400&${markers}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
+    const boundingBox = getBoundingBox(results);
+    const visible = `visible=${boundingBox.south},${boundingBox.west}|${boundingBox.north},${boundingBox.east}`;
+    const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?size=600x400&${visible}&${markers}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
 
     const combinedMap = $('<img>', {
         src: mapImageUrl,
@@ -130,6 +145,27 @@ function createCombinedMap(results) {
     });
 
     $('#combined-map').empty().append(combinedMap);
+}
+
+function getBoundingBox(results) {
+    let minLat = Infinity;
+    let minLng = Infinity;
+    let maxLat = -Infinity;
+    let maxLng = -Infinity;
+
+    results.forEach((result) => {
+        minLat = Math.min(minLat, result.lat);
+        minLng = Math.min(minLng, result.lng);
+        maxLat = Math.max(maxLat, result.lat);
+        maxLng = Math.max(maxLng, result.lng);
+    });
+
+    return {
+        south: minLat,
+        west: minLng,
+        north: maxLat,
+        east: maxLng,
+    };
 }
 
 function autoComplete(request, response) {
