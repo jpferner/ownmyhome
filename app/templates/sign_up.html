@@ -39,6 +39,17 @@
                 <span class="errors" style="background-color: red; color: white" >
                     {% for error in form.confirm_email.errors %}
                         {{ error }}
+                        <br>
+                    {% endfor %}
+                </span>
+            {% endif %}
+
+        <!-- Error message for Password field -->
+            {% if form.password_hash.errors %}
+                <span class="errors" style="background-color: red; color: white;" >
+                    {% for error in form.password_hash.errors %}
+                        {{ error }}
+                        <br>
                     {% endfor %}
                 </span>
             {% endif %}
@@ -48,6 +59,7 @@
                 <span class="errors" style="background-color: red; color: white;" >
                     {% for error in form.confirm_password_hash.errors %}
                         {{ error }}
+                        <br>
                     {% endfor %}
                 </span>
             {% endif %}
@@ -96,6 +108,11 @@
             <p>
                 {{ form.password_hash.label }}
                 {{ form.password_hash() }}
+
+                <span style="font-size: small">
+                    {{ form.show_password.label }}
+                    {{ form.show_password() }}
+                </span>
             </p>
 
 {#            <!-- Error message for Confirm Password field -->#}
@@ -110,7 +127,12 @@
             <p>
                 {{ form.confirm_password_hash.label }}
                 {{ form.confirm_password_hash() }}
+                <span style="font-size: small">
+                    {{ form.confirm_show_password.label }}
+                    {{ form.confirm_show_password() }}
+                </span>
             </p>
+
 
             <p>
                 {{ form.accept_tos.label }}
@@ -124,11 +146,7 @@
         </form>
     </div>
 
-    <!-- Display the users in the databases on the sign-up form -->
-    {% for current_user in current_users %}
-        {{ current_user.id }}. {{ current_user.first_name }} {{ current_user.last_name }}
-        - {{ current_user.email }} <br>
-    {% endfor %}
+
 </aside>
 {% include 'footer.html' %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -137,5 +155,38 @@
     document.addEventListener("DOMContentLoaded", function () {
         const imagePath = "{{ url_for('static', filename='images/') }}";
         initSlideshow(imagePath);
+    });
+</script>
+
+<script>
+    window.addEventListener("load", function () {
+        const show_password_checkbox = document.getElementById('{{ form.show_password.id }}');
+        const password = document.getElementById('{{ form.password_hash.id }}');
+        show_password_checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                password.type = 'text';
+            }
+            else {
+                password.type = 'password';
+            }
+
+        });
+    });
+</script>
+
+{#Script for the showing the confirm password field in plain text#}
+<script>
+    window.addEventListener("load", function () {
+        const show_password_checkbox = document.getElementById('{{ form.confirm_show_password.id }}');
+        const password = document.getElementById('{{ form.confirm_password_hash.id }}');
+        show_password_checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                password.type = 'text';
+            }
+            else {
+                password.type = 'password';
+            }
+
+        });
     });
 </script>
