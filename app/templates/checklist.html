@@ -1,9 +1,11 @@
 {% include 'header.html' %}
 
 <section>
-    <div class="container">
-        <h1>Welcome to the home buyer's checklist</h1>
-        <p>Every step of the home buying process is at your fingertips</p>
+    <div class="homepage">
+        <h1>Welcome To Own My Home</h1>
+        <p>Find your dream property with us</p>
+    </div>
+    <div class="slideshow">
     </div>
 </section>
 <aside>
@@ -70,3 +72,10 @@
 <link href="../static/styles/checklist.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ url_for('static', filename='scripts/checklist.js') }}"></script>
+<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagePath = "{{ url_for('static', filename='images/') }}";
+        initSlideshow(imagePath);
+    });
+</script>
