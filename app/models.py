@@ -54,7 +54,7 @@ class Users(db.Model, UserMixin):
 
 
 class Property(db.Model):
-    propId = db.Column(db.Integer, primary_key=True)
+    propId = db.Column(db.Integer)
     street = db.Column(db.String(100))
     city = db.Column(db.String(25), index=True)
     state = db.Column(db.String(2))
@@ -66,9 +66,13 @@ class Property(db.Model):
     numBaths = db.Column(db.Integer)
     favorite = db.Column(db.Boolean, default=False)
 
-    # not ready yet
-    # user_id = db.Column(db.Integer, db.ForeignKey('users.id', name='property_user_id_fk'), nullable=False)
-    # user = db.relationship('Users', backref=db.backref('properties', lazy=True))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user = db.relationship('Users', backref=db.backref('properties', lazy=True))
+
+    __table_args__ = (
+        PrimaryKeyConstraint('street', 'user_id', name='property_pk'),
+    )
+
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)

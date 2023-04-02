@@ -37,6 +37,7 @@ def home():
 
 
 @app.route('/properties', methods=['GET', 'POST'])
+@login_required
 def properties():
     """
         Renders the properties page of the website.
@@ -46,10 +47,47 @@ def properties():
         Returns:
             The rendered properties page HTML.
     """
+
+
     if request.method == 'POST':
         return redirect(url_for('index'))
-    props = Property.query.all()
+    props = Property.query.filter_by(user_id=current_user.id).all()
     return render_template('properties.html', props=props)
+
+
+def add_properties(user_id):
+    properties_data = [
+        {'propId': 1, 'street': '123 Main St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+         'county': 'New Hanover', 'price': 185000, 'yearBuilt': 1990, 'numBeds': 2, 'numBaths': 1},
+        {'propId': 2, 'street': '835 Walnut Ave', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+         'county': 'New Hanover', 'price': 265000, 'yearBuilt': 2009, 'numBeds': 3, 'numBaths': 2},
+        {'propId': 3, 'street': '667 Marsh Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
+         'county': 'New Hanover', 'price': 450000, 'yearBuilt': 2018, 'numBeds': 5, 'numBaths': 3},
+        {'propId': 4, 'street': '225 Creek Ln', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28404,
+         'county': 'New Hanover', 'price': 285000, 'yearBuilt': 2015, 'numBeds': 2, 'numBaths': 2},
+        {'propId': 5, 'street': '456 SeaHawk St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
+         'county': 'New Hanover', 'price': 985000, 'yearBuilt': 2022, 'numBeds': 8, 'numBaths': 5}
+       # add more properties as needed
+    ]
+
+    for data in properties_data:
+        property = Property(
+            propId=data['propId'],
+            street=data['street'],
+            city=data['city'],
+            state=data['state'],
+            zcode=data['zcode'],
+            county=data['county'],
+            price=data['price'],
+            yearBuilt=data['yearBuilt'],
+            numBeds=data['numBeds'],
+            numBaths=data['numBaths'],
+            favorite=False,
+            user_id=user_id
+        )
+        db.session.add(property)
+
+    db.session.commit()
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
@@ -205,8 +243,10 @@ def sign_up():
             db.session.add(user)
             db.session.commit()
 
+            add_properties(user.id)
             # Add checklist items for the new user
             add_checklist_items(user.id)
+
 
             flash('Account created! Please use your credentials to log in.', category='success')
             return redirect(url_for('login'))
