@@ -57,7 +57,10 @@ class LoginForm(FlaskForm):
                         validators=[InputRequired(), Email(granular_message=True, message="Invalid email format!")])
 
     # did not set password validators for login page; will flash message if invalid password
-    password_hash = PasswordField("Password:", validators=[InputRequired()])
+    password_hash = PasswordField("Password:", validators=[InputRequired()], id='password_hash')
+
+    # checkbox to show the user's password in plain text
+    show_password = BooleanField('Show password', id='check')
 
     # remember the user once user is signed in; if checked
     remember_me = BooleanField('Remember me', default='checked')
