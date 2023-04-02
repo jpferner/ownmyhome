@@ -174,6 +174,9 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
+        login_form.email.data = bleach.clean(login_form.email.data, strip=True)
+        login_form.password_hash.data = bleach.clean(login_form.password_hash.data, strip=True)
+
         user = Users.query.filter_by(email=login_form.email.data).first()
 
         # True if Remember_me checkbox is checked and false otherwise
