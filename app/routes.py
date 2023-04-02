@@ -36,6 +36,21 @@ def home():
     return render_template('index.html', test=test, login_form=login_form, first_incomplete_item=first_incomplete_item)
 
 
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    """
+        Renders the index.html template and handles POST requests.
+        POST requests are not currently used and will simply redirect the user to the index page.
+
+        Returns:
+        - If the request is a GET request: the rendered index.html template.
+        - If the request is a POST request: a redirect to the index page.
+    """
+    if request.method == 'POST':
+        return redirect(url_for('index'))
+    return render_template('index.html')
+
+
 @app.route('/properties', methods=['GET', 'POST'])
 def properties():
     """
@@ -235,7 +250,7 @@ def logout():
     """
     logout_user()
     flash("You have successfully logged out!", category='logout')
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
@@ -371,21 +386,6 @@ def get_lat_lng_from_zip(zip_code):
         return location["lat"], location["lng"]
     else:
         return None, None
-
-
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    """
-        Renders the index.html template and handles POST requests.
-        POST requests are not currently used and will simply redirect the user to the index page.
-
-        Returns:
-        - If the request is a GET request: the rendered index.html template.
-        - If the request is a POST request: a redirect to the index page.
-    """
-    if request.method == 'POST':
-        return redirect(url_for('index'))
-    return render_template('index.html')
 
 
 @app.route('/update', methods=['POST'])
