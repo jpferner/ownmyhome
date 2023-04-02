@@ -47,13 +47,20 @@
 </script>
 
 <section>
-    <div class="container">
-        <h1>Welcome to our Real Estate Website</h1>
+    <div class="homepage">
+        <h1>Welcome To Own My Home</h1>
         <p>Find your dream property with us</p>
+    </div>
+    <div class="slideshow">
     </div>
 </section>
 
 <aside>
+    <h3>Reset Data</h3>
+    <form method="POST" action="{{ url_for('update') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit">Reset Database</button>
+    </form>
     <h1>PROPERTIES IN WILMINGTON NC</h1>
     <form method="POST" action="{{ url_for('update_favorites') }}">
         {#  {{ csrf_token }}#}
@@ -132,6 +139,14 @@
 </section>
 
 {% include 'footer.html' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagePath = "{{ url_for('static', filename='images/') }}";
+        initSlideshow(imagePath);
+    });
+</script>
 
 
 
