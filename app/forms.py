@@ -36,9 +36,10 @@ class SignUpForm(FlaskForm):
                                               Regexp("^(?=.*[a-z])",
                                                      message="Password must have at least one lowercase character"),
                                               Regexp("^(?=.*\\d)", message="Password must contain at least one number"),
-                                              Regexp("(?=.*[@$!%*#?&])",
+                                              Regexp("(?=.*[@$!_%*#?&])",
                                                      message="Password must contain at least one special character"
                                                      ),
+                                              Regexp("(?!.*[.<>/])", message="Password cannot contain ., <, >, or /.")
                                               ], id='password_hash')
 
     # checkbox to show the user's password in plain text
