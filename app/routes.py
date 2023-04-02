@@ -11,6 +11,8 @@ from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login
 from app.models import *
 from datetime import date
 
+import bleach
+
 
 # Define routes
 @app.route("/")
@@ -209,12 +211,22 @@ def sign_up():
     # name = None
     signup_form = SignUpForm()
 
+
     # Validate the Sign-Up form
     if signup_form.validate_on_submit():
-        print(f"Plaintext Password: {signup_form.password_hash.data}")
+
+        # sanitize/clean all fields on the sign-up form before storing in database
+        signup_form.first_name.data = bleach.clean(signup_form.first_name.data, strip=True)
+        signup_form.last_name.data = bleach.clean(signup_form.last_name.data, strip=True)
+        signup_form.email.data = bleach.clean(signup_form.email.data, strip=True)
+        signup_form.confirm_email.data = bleach.clean(signup_form.confirm_email.data, strip=True)
+        signup_form.password_hash.data = bleach.clean(signup_form.password_hash.data, strip=True)
+        signup_form.confirm_password_hash.data = bleach.clean(signup_form.confirm_password_hash.data, strip=True)
+
+
         # hash the new user's password
         hashed_password = generate_password_hash(signup_form.password_hash.data, "sha256")
-        print(f"After hashing password: {hashed_password}")
+
 
         user = Users.query.filter_by(email=signup_form.email.data).first()
         if user is None:
