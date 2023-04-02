@@ -39,13 +39,20 @@ class SignUpForm(FlaskForm):
                                               Regexp("(?=.*[@$!%*#?&])",
                                                      message="Password must contain at least one special character"
                                                      ),
-                                              ])
+                                              ], id='password_hash')
+
+    # checkbox to show the user's password in plain text
+    show_password = BooleanField('Show password', id='check')
 
     confirm_password_hash = PasswordField("Confirm Password:",
                                           validators=[InputRequired(), EqualTo("password_hash",
                                                                                message="Passwords do not match. "
                                                                                        "Please try "
-                                                                                       "again")])
+                                                                                       "again")],
+                                          id='confirm_password_hash')
+
+    # checkbox to show the user's password in plain text
+    confirm_show_password = BooleanField('Show password', id='confirm_check')
 
     accept_tos = BooleanField("I accept the Terms of Service.", validators=[InputRequired()])
 

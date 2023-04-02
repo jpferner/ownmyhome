@@ -17,7 +17,24 @@
         {{ login_form.csrf_token }}
         <span style="color: white">{{ login_form.email.label }}</span> <br> {{ login_form.email() }}<br>
         <span style="color: white">{{ login_form.password_hash.label }}</span> <br> {{ login_form.password_hash() }}<br>
+        <span style="color: white; font-size: small" >{{ login_form.show_password.label }}</span> <br> {{ login_form.show_password() }}<br>
         <span style="color: white">{{ login_form.remember_me.label }}</span> <br> {{ login_form.remember_me() }}<br>
         {{ login_form.submit() }}
     </form>
 {% endif %}
+
+<script>
+    window.addEventListener("load", function () {
+        const show_password_checkbox = document.getElementById('{{ login_form.show_password.id }}');
+        const password = document.getElementById('{{ login_form.password_hash.id }}');
+        show_password_checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                password.type = 'text';
+            }
+            else {
+                password.type = 'password';
+            }
+
+        });
+    });
+</script>
