@@ -37,6 +37,17 @@
                 <span class="errors" style="background-color: red; color: white" >
                     {% for error in form.confirm_email.errors %}
                         {{ error }}
+                        <br>
+                    {% endfor %}
+                </span>
+            {% endif %}
+
+        <!-- Error message for Password field -->
+            {% if form.password_hash.errors %}
+                <span class="errors" style="background-color: red; color: white;" >
+                    {% for error in form.password_hash.errors %}
+                        {{ error }}
+                        <br>
                     {% endfor %}
                 </span>
             {% endif %}
@@ -46,6 +57,7 @@
                 <span class="errors" style="background-color: red; color: white;" >
                     {% for error in form.confirm_password_hash.errors %}
                         {{ error }}
+                        <br>
                     {% endfor %}
                 </span>
             {% endif %}

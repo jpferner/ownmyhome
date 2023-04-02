@@ -4,6 +4,7 @@ from wtforms.validators import Email
 from wtforms.validators import EqualTo
 from wtforms.validators import InputRequired
 from wtforms.validators import Length
+from wtforms.validators import Regexp
 
 """This file is designated to the creation of Forms
     Sign-Up Form and Login Form
@@ -29,7 +30,16 @@ class SignUpForm(FlaskForm):
     password_hash = PasswordField("Password:",
                                   validators=[InputRequired(),
                                               Length(min=8,
-                                                     message='Password should be at least %(min)d characters long')])
+                                                     message='Password should be at least %(min)d characters long'),
+                                              Regexp("^(?=.*[A-Z])",
+                                                     message="Password must have at least one uppercase character"),
+                                              Regexp("^(?=.*[a-z])",
+                                                     message="Password must have at least one lowercase character"),
+                                              Regexp("^(?=.*\\d)", message="Password must contain at least one number"),
+                                              Regexp("(?=.*[@$!%*#?&])",
+                                                     message="Password must contain at least one special character"
+                                                     ),
+                                              ])
 
     confirm_password_hash = PasswordField("Confirm Password:",
                                           validators=[InputRequired(), EqualTo("password_hash",
