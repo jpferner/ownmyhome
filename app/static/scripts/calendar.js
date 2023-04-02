@@ -30,10 +30,54 @@ var winCreator = $(".js-event__creator");
 var inputDate = $(this).data();
 today = year + "-" + month + "-" + day;
 var events = {};
+var eventForm = {};
 var selectedDay = moment().format("YYYY-MM-DD");
 var currentEventId = 0;
+const csrf_token = $('meta[name=csrf-token]').attr('content');
+
 
 // ------ set default events -------
+
+$(document).ready(function () {
+    loadEvents();
+});
+
+function loadEvents() {
+     $.ajax({
+            url: '/calendar/events',
+            type: 'GET',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            success: function (response) {
+                events = {};
+
+                response.forEach(function (event) {
+                    var datetime = moment(event.time)
+                    var date = datetime.format("YYYY-MM-DD");
+                    var time = datetime.format("HH:mm:ss");
+
+                    if (!(date in events)) {
+                        events[date] = [];
+
+                    }
+                    events[date].push({
+                        id: event.id,
+                        name: event.name,
+                        notes: event.notes,
+                        date: date,
+                        time: time
+                    });
+
+                });
+                console.log(response);
+                updateEventList();
+            }
+        });
+
+}
+
+
 function defaultEvents(dataDay,dataName,dataNotes,dataTime){
 
   var event = $('*[data-day='+dataDay+']');
@@ -52,8 +96,8 @@ function defaultEvents(dataDay,dataName,dataNotes,dataTime){
 //defaultEvents('2022-12-25', 'MERRY CHRISTMAS','A lot of gift!!!!','festivity');
 //defaultEvents('2022-05-04', "LUCA'S BIRTHDAY",'Another gifts...?','birthday');
 
-defaultEvents('2023-03-25', "event2",'these are my notes for buying this house.', '04:30:00');
-defaultEvents('2023-03-25', "buying the house",'these are my notes for buying this house.', '05:30:00');
+//defaultEvents('2023-03-25', "event2",'these are my notes for buying this house.', '04:30:00');
+//defaultEvents('2023-03-25', "buying the house",'these are my notes for buying this house.', '05:30:00');
 
 
 
@@ -79,19 +123,37 @@ dataCel.each(function() {
   }
 });
 
+function openForm() {
+    winCreator.addClass("isVisible");
+  $("body").addClass("overlay");
+  document.querySelector('input[name="date"]').value = eventForm.date;
+  document.querySelector('input[name="name"]').value = eventForm.name;
+  document.querySelector('textarea[name="notes"]').value = eventForm.notes;
+  document.querySelector('input[name="time"]').value = eventForm.time;
+
+}
+
 //window event creator
 addBtn.on("click", function() {
-  winCreator.addClass("isVisible");
-  $("body").addClass("overlay");
   dataCel.each(function() {
     if ($(this).hasClass("isSelected")) {
       today = $(this).data("day");
-      document.querySelector('input[type="date"]').value = today;
-    } else {
-      document.querySelector('input[type="date"]').value = today;
+
     }
   });
+
+  eventForm = {
+  id: undefined,
+  date: today,
+  notes: "",
+  name: "",
+  time: "00:00:00"
+  }
+
+  openForm();
+
 });
+
 closeBtn.on("click", function() {
   winCreator.removeClass("isVisible");
   $("body").removeClass("overlay");
@@ -101,36 +163,51 @@ saveBtn.on("click", function() {
   var inputDate = $("input[name=date]").val();
   var inputTime = $("input[name=time").val();
   var inputNotes = $("textarea[name=notes]").val();
-  var inputTag = $("select[name=tags]")
-    .find(":selected")
-    .text();
-    if (inputName != null) {
-        $(this).attr("data-name", inputName);
-      }
-      if (inputNotes != null) {
-        $(this).attr("data-notes", inputNotes);
-      }
-      $(this).addClass("event");
-      if (inputTag != null) {
-        $(this).addClass("event--" + inputTag);
-      }
-      if (inputDate != null) {
-        $(this).attr("data-date", inputDate);
-      }
-      if (inputTime != null) {
-        $(this).attr("data-time", inputTime);
-      }
-      fillEventSidebar($(this));
 
-  dataCel.each(function() {
-    if ($(this).data("day") === inputDate) {
 
-    }
+  $.ajax({
+
+            url: eventForm.id !== undefined ? "/calendar/events/" + eventForm.id : "/calendar/events",
+            type: eventForm.id !== undefined ? 'PUT' : 'POST',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            contentType: 'application/json',
+            data: JSON.stringify({
+                name: inputName,
+                notes: inputNotes,
+                time: inputDate + 'T' + inputTime + ".000000"
+            }),
+            success: function (response) {
+                if (eventForm.id !== undefined) {
+                    events[eventForm.date] = events[eventForm.date].filter(function (event) {
+                        return event.id !== response.id;
+                    });
+
+                }
+                var datetime = moment(response.time)
+                var date = datetime.format("YYYY-MM-DD");
+                var time = datetime.format("HH:mm:ss");
+
+                if (!(date in events)) {
+                    events[date] = [];
+
+                }
+                events[date].push({
+                    id: response.id,
+                    name: response.name,
+                    notes: response.notes,
+                    date: date,
+                    time: time
+                });
+                updateEventList();
+
+                winCreator.removeClass("isVisible");
+                $("body").removeClass("overlay");
+                $("#addEvent")[0].reset();
+            }
   });
 
-  winCreator.removeClass("isVisible");
-  $("body").removeClass("overlay");
-  $("#addEvent")[0].reset();
 });
 
 //fill sidebar event info
@@ -226,6 +303,8 @@ function updateEventList() {
             event.notes +
             "</p>" +
             "<a class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event <span class='fa fa-trash-o'></span></a>" +
+            "<a class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>edit event <span class='fa fa-trash-o'></span></a>" +
+
             "</span> </div>"
 
         );
@@ -243,13 +322,41 @@ function removeEvent(element) {
     var eventId = parseInt(element.getAttribute("data-id"));
     var eventDate = element.getAttribute("data-date");
 
-    events[eventDate] = events[eventDate].filter(function (event) {
-        return event.id !== eventId;
-    })
-    updateEventList();
+    $.ajax({
+            url: '/calendar/events/' + eventId,
+            type: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            success: function (response) {
+                events[eventDate] = events[eventDate].filter(function (event) {
+                    return event.id !== eventId;
+                });
+                updateEventList();
+            }
+        });
+
+
 
 }
 
+function editEvent(element) {
+    var eventId = parseInt(element.getAttribute("data-id"));
+    var eventDate = element.getAttribute("data-date");
+
+    events[eventDate].forEach(function (event) {
+        if (eventId === event.id) {
+            eventForm = {
+                id: event.id,
+                name: event.name,
+                notes: event.notes,
+                date: event.date,
+                time: event.time
+            };
+        }
+    });
+    openForm();
+}
 
 dataCel.on("click", function() {
   var thisEl = $(this);
