@@ -9,10 +9,7 @@
 
 {% if login_form %}
     <form method="POST" action="{{ url_for('login') }}">
-        <!-- Flash successful logout messages on homepage -->
-        {% for category, message in get_flashed_messages(with_categories=true) %}
-            <p class="{{ category }}">{{ message }}</p>
-        {% endfor %}
+
 
         {{ login_form.csrf_token }}
         <span style="color: white">{{ login_form.email.label }}</span> <br> {{ login_form.email() }}<br>
