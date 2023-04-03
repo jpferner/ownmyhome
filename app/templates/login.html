@@ -10,10 +10,12 @@
 </head>
 
 <section>
-  <div class="container">
-    <h1>Welcome to our Real Estate Website</h1>
-    <p>Find your dream property with us</p>
-  </div>
+    <div class="homepage">
+        <h1>Welcome To Own My Home</h1>
+        <p>Find your dream property with us</p>
+    </div>
+    <div class="slideshow">
+    </div>
 </section>
 
 {#<!-- Displays success message at top of screen if user sign up information is valid -->#}
@@ -57,6 +59,15 @@
                 {{ form.password_hash() }}
             </p>
 
+            <p>
+                {{ form.show_password.label }}
+                {{ form.show_password() }}
+            </p>
+
+            <p>
+                {{ form.remember_me.label }}
+                {{ form.remember_me() }}
+            </p>
 
             <p>
                 {{ form.submit }}
@@ -65,4 +76,29 @@
         </form>
     </div>
 </aside>
+
+<script>
+    window.addEventListener("load", function () {
+        const show_password_checkbox = document.getElementById('{{ form.show_password.id }}');
+        const password = document.getElementById('{{ form.password_hash.id }}');
+        show_password_checkbox.addEventListener('change', function () {
+            if (this.checked) {
+                password.type = 'text';
+            }
+            else {
+                password.type = 'password';
+            }
+
+        });
+    });
+</script>
+
 {% include 'footer.html' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagePath = "{{ url_for('static', filename='images/') }}";
+        initSlideshow(imagePath);
+    });
+</script>

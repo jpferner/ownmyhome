@@ -1,9 +1,11 @@
 {% include 'header.html' %}
 <section>
-  <div class="container">
-    <h1>Welcome to our Mortgage rate calculator</h1>
-    <p>Know what you'll pay today!</p>
-  </div>
+    <div class="homepage">
+        <h1>Welcome To Own My Home</h1>
+        <p>Find your dream property with us</p>
+    </div>
+    <div class="slideshow">
+    </div>
 </section>
 <aside>
     <form id="calc-form">
@@ -63,3 +65,11 @@
 
 <link href="../static/styles/calculator.css" rel="stylesheet">
 <script src="../static/scripts/calculator.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagePath = "{{ url_for('static', filename='images/') }}";
+        initSlideshow(imagePath);
+    });
+</script>
