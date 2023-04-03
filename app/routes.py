@@ -11,6 +11,8 @@ from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login
 from app.models import *
 from datetime import date
 
+import bleach
+
 
 # Define routes
 @app.route("/")
@@ -34,6 +36,21 @@ def home():
             ChecklistItems.order_no).first()
 
     return render_template('index.html', test=test, login_form=login_form, first_incomplete_item=first_incomplete_item)
+
+
+@app.route('/index', methods=['GET', 'POST'])
+def index():
+    """
+        Renders the index.html template and handles POST requests.
+        POST requests are not currently used and will simply redirect the user to the index page.
+
+        Returns:
+        - If the request is a GET request: the rendered index.html template.
+        - If the request is a POST request: a redirect to the index page.
+    """
+    if request.method == 'POST':
+        return redirect(url_for('index'))
+    return render_template('index.html')
 
 
 @app.route('/properties', methods=['GET', 'POST'])
@@ -195,11 +212,18 @@ def login():
     login_form = LoginForm()
 
     if login_form.validate_on_submit():
+        login_form.email.data = bleach.clean(login_form.email.data, strip=True)
+        login_form.password_hash.data = bleach.clean(login_form.password_hash.data, strip=True)
+
         user = Users.query.filter_by(email=login_form.email.data).first()
+
+        # True if Remember_me checkbox is checked and false otherwise
+        remember_me = True if request.form.get('remember_me') else False
         if user:
             # Check the hashed password
             if check_password_hash(user.password_hash, login_form.password_hash.data):
-                login_user(user)  # logs in the user and creates session
+                # logs in the user and creates session
+                login_user(user, remember=remember_me)
                 # flash(f"Login Successful! Welcome back, {user.first_name}!", category='success')
                 return redirect(url_for('home'))
             else:
@@ -228,12 +252,22 @@ def sign_up():
     # name = None
     signup_form = SignUpForm()
 
+
     # Validate the Sign-Up form
     if signup_form.validate_on_submit():
-        print(f"Plaintext Password: {signup_form.password_hash.data}")
+
+        # sanitize/clean all fields on the sign-up form before storing in database
+        signup_form.first_name.data = bleach.clean(signup_form.first_name.data, strip=True)
+        signup_form.last_name.data = bleach.clean(signup_form.last_name.data, strip=True)
+        signup_form.email.data = bleach.clean(signup_form.email.data, strip=True)
+        signup_form.confirm_email.data = bleach.clean(signup_form.confirm_email.data, strip=True)
+        signup_form.password_hash.data = bleach.clean(signup_form.password_hash.data, strip=True)
+        signup_form.confirm_password_hash.data = bleach.clean(signup_form.confirm_password_hash.data, strip=True)
+
+
         # hash the new user's password
         hashed_password = generate_password_hash(signup_form.password_hash.data, "sha256")
-        print(f"After hashing password: {hashed_password}")
+
 
         user = Users.query.filter_by(email=signup_form.email.data).first()
         if user is None:
@@ -271,7 +305,7 @@ def logout():
     """
     logout_user()
     flash("You have successfully logged out!", category='logout')
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
@@ -407,21 +441,6 @@ def get_lat_lng_from_zip(zip_code):
         return location["lat"], location["lng"]
     else:
         return None, None
-
-
-@app.route('/index', methods=['GET', 'POST'])
-def index():
-    """
-        Renders the index.html template and handles POST requests.
-        POST requests are not currently used and will simply redirect the user to the index page.
-
-        Returns:
-        - If the request is a GET request: the rendered index.html template.
-        - If the request is a POST request: a redirect to the index page.
-    """
-    if request.method == 'POST':
-        return redirect(url_for('index'))
-    return render_template('index.html')
 
 
 @app.route('/update', methods=['POST'])
