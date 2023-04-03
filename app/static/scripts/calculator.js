@@ -1,3 +1,52 @@
+/*const form = document.getElementById("Form");
+form.addEventListener("submit", function(event) {
+    event.preventDefault();
+});*/
+function validate(event){
+    event.preventDefault()
+    calculation()
+    return false
+/*
+    let check;
+    let test = true;
+    check = document.querySelector('calc-form');
+    if (check.checkValidity()){
+        calculation()
+    }*/
+/*    check = document.querySelector('input[name="DownPay"]');
+    check = check.checkValidity()
+    if (!check){return false}
+    check = document.querySelector('input[name="LoanAmt"]');
+    check = check.checkValidity()
+    if (!check){return false}
+    check = document.querySelector('input[name="InterestRate"]');
+    check = check.checkValidity()
+    if (!check){return false}
+    check = document.querySelector('input[name="LoanTerm"]');
+    check = check.checkValidity()
+    if (!check){return false}
+    check = document.querySelector('input[name="PropTax"]');
+    check = check.checkValidity()
+    if (!check){return false}
+    check = document.querySelector('input[name="LoanType"]');
+    check = check.checkValidity()
+    if (!check){return false}*/
+
+/*    if (test) {
+        calculation()
+    }
+    return false*/
+
+
+}
+
+function validateInput(input) {
+  const valid = input.checkValidity();
+  if (!valid) {
+    input.reportValidity();
+    return false
+  }
+}
 function calculation(){
 
     const home = document.getElementById('HomeVal').value;
@@ -7,14 +56,23 @@ function calculation(){
     const loanTerm = document.getElementById('LoanTerm').value;
     const prop = document.getElementById('PropTax').value;
     const loanType = document.getElementById('LoanType').value;
-    let n = loanTerm * 12;
+    const loanTermMonth = loanTerm * 12;
+    const mon_int = interest / 12;
+    const mon_prop_pay = prop / 12
 
-    let propPay = prop / 12
+
     // Fixed Rate Loan
-    let total =(loan * (interest/12) * Math.pow(1 + interest/12, n)) / (Math.pow(1 + interest/12, n) - 1)
-    total += propPay
+    let mort_Mon_Total = (loan * mon_int * Math.pow(1 + mon_int, loanTermMonth)) / (Math.pow(1 + mon_int, loanTermMonth) - 1)
 
-    document.getElementById('MortTotal').textContent=Number(total.toFixed(2)).toLocaleString()
+    // Adds Property Tax onto monthly total
+    mort_Mon_Total += mon_prop_pay
+
+    let total_mort = mort_Mon_Total * loanTermMonth
+    let mort_interest = total_mort - loan
+
+
+    document.getElementById('MortMonTotal').textContent=Number(mort_Mon_Total.toFixed(2)).toLocaleString()
+    document.getElementById('TotalInterest').textContent=Number(mort_interest.toFixed(2)).toLocaleString()
 
     return false
 }
