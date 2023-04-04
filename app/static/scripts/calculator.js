@@ -1,41 +1,26 @@
-/*const form = document.getElementById("Form");
-form.addEventListener("submit", function(event) {
-    event.preventDefault();
-});*/
 function validate(event){
     event.preventDefault()
-    calculation()
-    return false
-/*
+
     let check;
     let test = true;
-    check = document.querySelector('calc-form');
-    if (check.checkValidity()){
-        calculation()
-    }*/
-/*    check = document.querySelector('input[name="DownPay"]');
-    check = check.checkValidity()
-    if (!check){return false}
-    check = document.querySelector('input[name="LoanAmt"]');
-    check = check.checkValidity()
-    if (!check){return false}
-    check = document.querySelector('input[name="InterestRate"]');
-    check = check.checkValidity()
-    if (!check){return false}
-    check = document.querySelector('input[name="LoanTerm"]');
-    check = check.checkValidity()
-    if (!check){return false}
-    check = document.querySelector('input[name="PropTax"]');
-    check = check.checkValidity()
-    if (!check){return false}
-    check = document.querySelector('input[name="LoanType"]');
-    check = check.checkValidity()
-    if (!check){return false}*/
+    check = document.querySelector('input[id="HomeVal"]');
+    console.log(check.checkValidity())
+    if (!check.checkValidity()){check.reportValidity(); test = false}
+    check = document.querySelector('input[id="DownPay"]');
+    if (!check.checkValidity()){check.reportValidity(); test = false}
+    check = document.querySelector('input[id="LoanAmt"]');
+    if (!check.checkValidity()){check.reportValidity(); test = false}
+    check = document.querySelector('input[id="InterestRate"]');
+    if (!check.checkValidity()){check.reportValidity(); test = false}
+    check = document.querySelector('input[id="LoanTerm"]');
+    if (!check.checkValidity()){check.reportValidity(); test = false}
+    check = document.querySelector('input[id="PropTax"]');
+    if (!check.checkValidity()){check.reportValidity(); test = false}
 
-/*    if (test) {
+    if (test) {
         calculation()
     }
-    return false*/
+    return false
 
 
 }
