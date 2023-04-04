@@ -17,8 +17,84 @@
     tr:nth-child(even) {
         background-color: gray;
     }
+    .property-thumbnail {
+        width: 100px; /* Set the desired width for the thumbnail */
+        height: auto; /* Maintain the aspect ratio */
+        object-fit: cover; /* Make sure the image covers the entire thumbnail area */
+    }
+    /* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+}
+
+/* Modal Content (image) */
+.modal-content {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+}
+
+/* Caption of Modal Image */
+#caption {
+  margin: auto;
+  display: block;
+  width: 80%;
+  max-width: 700px;
+  text-align: center;
+  color: #ccc;
+  padding: 10px 0;
+  height: 150px;
+}
+
+/* Add Animation */
+.modal-content, #caption {
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@keyframes zoom {
+  from {transform:scale(0)}
+  to {transform:scale(1)}
+}
+
+/* The Close Button */
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* 100% Image Width on Smaller Screens */
+@media only screen and (max-width: 700px){
+  .modal-content {
+    width: 100%;
+  }
+}
+
 </style>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
     $(document).ready(function () {
         $('input[name="favorite"]').change(function () {
@@ -39,10 +115,104 @@
         // Load the favorites table when the page is first loaded
         $.ajax({
             url: "{{ url_for('favorites_table') }}",
-            success: function (response) {
-                $('#favorites').html(response);
+            success: function(response) {
+               $('#favorites-table').html(response.favorites);
             }
         });
+
+        function filterProperties() {
+            const priceFilter = $('#price-filter').val();
+            const bedroomsFilter = $('#bedrooms-filter').val();
+            const bathroomsFilter = $('#bathrooms-filter').val();
+
+            let visiblePropertyCount = 0;
+
+            $('#props table tr').not(':first').each(function () {
+
+                const price = parseInt($(this).find('td:eq(7)').text().replace(/[$,]/g, ''));
+                const bedrooms = parseInt($(this).find('td:eq(9)').text());
+                const bathrooms = parseInt($(this).find('td:eq(10)').text());
+                let show = true;
+
+                if (priceFilter !== 'all') {
+                    const range = priceFilter.split('-');
+                    if (range[1] === '+') {
+                        show = show && price >= parseInt(range[0]);
+                    } else {
+                        show = show && price >= parseInt(range[0]) && price <= parseInt(range[1]);
+                    }
+                }
+
+                if (bedroomsFilter !== 'all') {
+                    if (bedroomsFilter === '5+') {
+                        show = show && bedrooms >= 5;
+                    } else {
+                        show = show && bedrooms === parseInt(bedroomsFilter);
+                    }
+                }
+
+                if (bathroomsFilter !== 'all') {
+                    if (bathroomsFilter === '5+') {
+                        show = show && bathrooms >= 5;
+                    } else {
+                        show = show && bathrooms === parseInt(bathroomsFilter);
+                    }
+                }
+
+                if (show) {
+                    $(this).show();
+                    visiblePropertyCount++;
+                } else {
+                    $(this).hide();
+                }
+            });
+
+            if (visiblePropertyCount > 0) {
+                $('#no-properties-message').hide();
+            } else {
+                $('#no-properties-message').show();
+            }
+        }
+
+        function resetFilters() {
+            $('#price-filter').val('all');
+            $('#bedrooms-filter').val('all');
+            $('#bathrooms-filter').val('all');
+            $('#props table tr').not(':first').show();
+        }
+
+
+        // Add event listeners for filtering
+       $('#apply-filters').on('click', filterProperties);
+       $('#reset-filters').on('click', resetFilters);
+
+
+        // Initial filter to ensure properties are filtered when the page loads
+        filterProperties();
+
+        // Get the modal
+        const modal = document.getElementById("myModal");
+
+        // Get the image and insert it inside the modal - use its "alt" text as a caption
+        const img = document.getElementsByClassName("property-thumbnail");
+        const modalImg = document.getElementById("img01");
+        const captionText = document.getElementById("caption");
+        for (let i = 0; i < img.length; i++) {
+          img[i].onclick = function () {
+            modal.style.display = "block";
+            modalImg.src = this.src;
+            captionText.innerHTML = this.alt;
+          }
+        }
+
+        // Get the <span> element that closes the modal
+        const span = document.getElementsByClassName("close")[0];
+
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+          modal.style.display = "none";
+        }
+
     });
 </script>
 
@@ -56,18 +226,53 @@
 </section>
 
 <aside>
-    <h3>Reset Data</h3>
-    <form method="POST" action="{{ url_for('update') }}">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
-        <button type="submit">Reset Database</button>
-    </form>
+    <div id="myModal" class="modal">
+      <span class="close">&times;</span>
+      <img class="modal-content" id="img01">
+    </div>
+
     <h1>PROPERTIES IN WILMINGTON NC</h1>
     <form method="POST" action="{{ url_for('update_favorites') }}">
-        {#  {{ csrf_token }}#}
+    <div>
+        <label for="price-filter">Price:</label>
+        <select id="price-filter">
+            <option value="all">All</option>
+            <option value="0-250000">0 - $250,000</option>
+            <option value="250001-500000">$250,001 - $500,000</option>
+            <option value="500001-750000">$500,001 - $750,000</option>
+            <option value="750001-1000000">$750,001 - $1,000,000</option>
+            <option value="1000001+">$1,000,001+</option>
+        </select>
+
+        <label for="bedrooms-filter">Bedrooms:</label>
+        <select id="bedrooms-filter">
+            <option value="all">All</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5+">5+</option>
+        </select>
+
+        <label for="bathrooms-filter">Bathrooms:</label>
+        <select id="bathrooms-filter">
+            <option value="all">All</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5+">5+</option>
+        </select>
+        <button type="button" id="apply-filters">Apply Filters</button>
+        <button type="button" id="reset-filters">Reset Filters</button>
+
+    </div><br>
+
         <div id="props">
             <table>
                 <tr>
                     <th>Id</th>
+                    <th>Picture</th>
                     <th>Street</th>
                     <th>City</th>
                     <th>State</th>
@@ -83,7 +288,8 @@
                 {% for p in props %}
                     <tr>
                         <td>{{ p.propId }}</td>
-                        <td>{{ p.street }}</td>
+                        <td><img class="property-thumbnail" src="{{ url_for('static', filename='/images/property_images/' + p.image_filename) }}" alt="Property image"></td>
+                        <td><a href="{{ p.propUrl }}" target="_blank" class="street-link">{{ p.street }}</a></td>
                         <td>{{ p.city }}</td>
                         <td>{{ p.state }}</td>
                         <td>{{ p.zcode }}</td>
@@ -97,6 +303,7 @@
                     </tr>
                 {% endfor %}
             </table>
+            <div id="no-properties-message" style="display: none;">Sorry, no properties meet your choices.</div>
         </div>
     </form>
 </aside>
@@ -108,6 +315,7 @@
             <table>
                 <tr>
                     <th>Id</th>
+                    <th>Picture</th>
                     <th>Street</th>
                     <th>City</th>
                     <th>State</th>
@@ -122,7 +330,8 @@
                 {% for p in favorite_props %}
                     <tr>
                         <td>{{ p.propId }}</td>
-                        <td>{{ p.street }}</td>
+                        <td><img class="property-thumbnail" src="{{ url_for('static', filename='/images/property_images/' + p.image_filename) }}" alt="Property image"></td>
+                        <td><a href="{{ p.propUrl }}" target="_blank" class="street-link">{{ p.street }}</a></td>
                         <td>{{ p.city }}</td>
                         <td>{{ p.state }}</td>
                         <td>{{ p.zcode }}</td>
@@ -139,7 +348,7 @@
 </section>
 
 {% include 'footer.html' %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
 <script>
     document.addEventListener("DOMContentLoaded", function () {
