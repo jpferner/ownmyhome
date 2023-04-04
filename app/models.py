@@ -14,7 +14,6 @@ class ChecklistItems(db.Model):
     # Relationship with the Users table
     user = db.relationship('Users', backref=db.backref('checklist_items', lazy=True))
 
-
     __table_args__ = (
         PrimaryKeyConstraint('order_no', 'user_id'),
     )
@@ -73,11 +72,10 @@ class Property(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('Users', backref=db.backref('properties', lazy=True))
-    favorited_by = db.relationship('UserFavorite', back_populates='property', lazy='dynamic', cascade='all, delete-orphan') # cascade deletes the related UserFavorite instances when a Property is deleted
+    favorited_by = db.relationship('UserFavorite', back_populates='property', lazy='dynamic', cascade='all, delete-orphan')  # cascade deletes the related UserFavorite instances when a Property is deleted
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
-
 
 
 class UserFavorite(db.Model):
@@ -86,6 +84,3 @@ class UserFavorite(db.Model):
 
     user = db.relationship('Users', back_populates='favorite_properties')
     property = db.relationship('Property', back_populates='favorited_by')
-
-
-
