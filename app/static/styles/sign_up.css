@@ -1,7 +1,6 @@
 form label{
     display: inline-block;
     width: 45%;
-    text-align: left;
 }
 
 #sign-up-form {
@@ -13,6 +12,16 @@ form label{
 
 #sign-up-form input {
     margin-bottom: .5em;
+}
+
+.toggle-password, .toggle-confirm-password {
+    right: 5px; /* Adjust the distance from the right edge */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 10;
+    font-size: 1.2em;
+    color: darkorange;
 }
 
 @media screen and (max-width: 1724px) {

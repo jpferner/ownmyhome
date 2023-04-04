@@ -41,7 +41,7 @@
 .aside-box input[type="text"],
 .aside-box input[type="password"],
 .aside-box input[type="submit"] {
-    width: 50%;
+    width: 65%;
     text-align: center;
     box-sizing: border-box;
     padding: 10px;

@@ -22,6 +22,7 @@
                 {% endif %}
             {% else %}
                 <p>Please log in to view the checklist.</p>
+                <p><a href="{{ url_for('sign_up') }}">Create a free account!</a></p>
             {% endif %}
         </div>
         <div class="aside-box">
@@ -38,7 +39,6 @@
             {% else %}
                 <h3 style="text-decoration: underline">Login</h3>
                 {% include 'login_form_partial.html' %}
-                <p><a href="{{ url_for('sign_up') }}">Create a free account!</a></p>
             {% endif %}
         </div>
     </div>
