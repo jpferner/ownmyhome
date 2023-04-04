@@ -19,6 +19,9 @@
 
 .password-container input {
     padding-right: 30px; /* Add padding to the password field */
+    text-align: center;
+    width: 21%;
+    padding-left: 2%;
 }
 
 .toggle-password {
@@ -29,4 +32,9 @@
     z-index: 10;
     font-size: 1.2em;
     color: goldenrod;
+}
+
+.email-container input{
+    text-align: center;
+    width: 25%;
 }

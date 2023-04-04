@@ -47,10 +47,10 @@
 
         <form method="POST">
             {{ form.hidden_tag() }}  <!-- creates CSRF token -->
-            <p>
+            <div class="email-container">
                 {{ form.email.label }} <br>
                 {{ form.email() }}
-            </p>
+            </div>
             <div class="password-container">
                 {{ form.password_hash.label }} <span id="toggle-password" class="toggle-password">👁</span> <br>
                 {{ form.password_hash() }}
