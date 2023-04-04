@@ -65,6 +65,8 @@ class Property(db.Model):
     numBeds = db.Column(db.Integer)
     numBaths = db.Column(db.Integer)
     favorite = db.Column(db.Boolean, default=False)
+    image_filename = db.Column(db.String(255))
+    propUrl = db.Column(db.String(255), nullable=True)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('Users', backref=db.backref('properties', lazy=True))

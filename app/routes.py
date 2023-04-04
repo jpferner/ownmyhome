@@ -74,16 +74,16 @@ def properties():
 
 def add_properties(user_id):
     properties_data = [
-        {'propId': 1, 'street': '123 Main St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
-         'county': 'New Hanover', 'price': 185000, 'yearBuilt': 1990, 'numBeds': 2, 'numBaths': 1},
-        {'propId': 2, 'street': '835 Walnut Ave', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
-         'county': 'New Hanover', 'price': 265000, 'yearBuilt': 2009, 'numBeds': 3, 'numBaths': 2},
-        {'propId': 3, 'street': '667 Marsh Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
-         'county': 'New Hanover', 'price': 450000, 'yearBuilt': 2018, 'numBeds': 5, 'numBaths': 3},
-        {'propId': 4, 'street': '225 Creek Ln', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28404,
-         'county': 'New Hanover', 'price': 285000, 'yearBuilt': 2015, 'numBeds': 2, 'numBaths': 2},
-        {'propId': 5, 'street': '456 SeaHawk St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
-         'county': 'New Hanover', 'price': 985000, 'yearBuilt': 2022, 'numBeds': 8, 'numBaths': 5}
+        {'propId': 1, 'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+         'county': 'New Hanover', 'price': 299900, 'yearBuilt': 2023, 'numBeds': 2, 'numBaths': 2, 'image_filename':'prop1.gif','propUrl':'https://www.zillow.com/homedetails/1007-Orange-St-Wilmington-NC-28401/54309332_zpid/'},
+        {'propId': 2, 'street': '6604 Whimbrel Ct', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
+         'county': 'New Hanover', 'price': 370000, 'yearBuilt': 1990, 'numBeds': 3, 'numBaths': 3, 'image_filename':'prop2.gif', 'propUrl':'https://www.zillow.com/homedetails/6604-Whimbrel-Ct-Wilmington-NC-28409/2133943557_zpid/'},
+        {'propId': 3, 'street': '3507 S College Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
+         'county': 'New Hanover', 'price': 415000, 'yearBuilt': 1968, 'numBeds': 3, 'numBaths': 2, 'image_filename':'prop3.gif','propUrl':'https://www.zillow.com/homedetails/3507-S-College-Rd-Wilmington-NC-28409/54332506_zpid/'},
+        {'propId': 4, 'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
+         'county': 'New Hanover', 'price': 549000, 'yearBuilt': 2017, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop4.gif','propUrl':'https://www.zillow.com/homedetails/4770-Tupelo-Dr-Wilmington-NC-28411/247832477_zpid/'},
+        {'propId': 5, 'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+         'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop5.gif','propUrl':'https://www.zillow.com/homedetails/311-S-3rd-St-Wilmington-NC-28401/54308970_zpid/'}
        # add more properties as needed
     ]
 
@@ -100,6 +100,8 @@ def add_properties(user_id):
             numBeds=data['numBeds'],
             numBaths=data['numBaths'],
             favorite=False,
+            image_filename=data['image_filename'],
+            propUrl=data['propUrl'],
             user_id=user_id
         )
         db.session.add(property)
@@ -443,54 +445,6 @@ def get_lat_lng_from_zip(zip_code):
         return None, None
 
 
-@app.route('/update', methods=['POST'])
-def update():
-    """
-        This method is responsible for updating the database with dummy data for testing purposes.
-        It first deletes all properties from the Property table, then adds new properties.
-
-        Returns:
-        - A rendered template for the index page with a success message.
-    """
-
-    #  if in future we need to drop all tables and recreate
-    # db.drop_all()
-    # db.create_all()
-
-    # try:
-    #     csrf_token = request.form['csrf_token']
-    # except KeyError:
-    #     raise CSRFError('CSRF token missing')
-
-    # for now just the property table
-    db.session.query(Property).delete()
-    db.session.commit()
-
-    # Insert dummy data
-    prop1 = Property(propId=100, street='123 Apple st', city='Wilmington', state='NC', zcode=28402,
-                     county='New Hanover', price=235000, yearBuilt=1999, numBeds=2, numBaths=1)
-    prop2 = Property(propId=230, street='456 Walnut ave', city='Wilmington', state='NC', zcode=28409,
-                     county='New Hanover', price=435000, yearBuilt=2018, numBeds=4, numBaths=3)
-    prop3 = Property(propId=300, street='836 Arrow dr', city='Wilmington', state='NC', zcode=28412,
-                     county='New Hanover', price=355000, yearBuilt=2009, numBeds=3, numBaths=2)
-    prop4 = Property(propId=500, street='987 Rich st', city='Wilmington', state='NC', zcode=28402, county='New Hanover',
-                     price=735000, yearBuilt=2008, numBeds=8, numBaths=5)
-    prop5 = Property(propId=400, street='1025 Cardinal ln', city='Wilmington', state='NC', zcode=28422,
-                     county='New Hanover', price=235000, yearBuilt=2006, numBeds=3, numBaths=1)
-
-    # looking for a solution to add users running into a password error
-    # user1 = Users(id=26, first_name="Bob", last_name="smith", email="123@gmail.comm")
-    # user1.set_password('123456789')
-    db.session.add(prop1)
-    db.session.add(prop2)
-    db.session.add(prop3)
-    db.session.add(prop4)
-    db.session.add(prop5)
-    # db.session.add(user1)
-
-    db.session.commit()
-    flash('dummy data added')
-    return render_template('index.html')
 
 
 @app.route('/update_favorites', methods=['POST'])
@@ -516,7 +470,7 @@ def update_favorites():
 
     favorite_props = Property.query.filter_by(favorite=True).all()
     props_table = render_template('props_table.html', props=Property.query.all(), favorite_props=favorite_props)
-    favorites_table = render_template('favorites_table.html', props=Property, favorite_props=favorite_props)
+    favorites_table = render_template('favorites_table.html', favorite_props=favorite_props)
     return jsonify(props=props_table, favorites=favorites_table)
 
 

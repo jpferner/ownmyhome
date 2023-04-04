@@ -1,6 +1,7 @@
 <table>
   <tr>
     <th>Id</th>
+    <th>Picture</th>
     <th>Street</th>
     <th>City</th>
     <th>State</th>
@@ -16,6 +17,7 @@
 
       <tr>
         <td>{{p.propId}}</td>
+        <td><img class="property-thumbnail" src="{{ url_for('static', filename='/images/property_images/' + (p.image_filename if p.image_filename else 'default_image.jpg')) }}" alt="Property image"></td>
         <td>{{p.street}}</td>
         <td>{{p.city}}</td>
         <td>{{p.state}}</td>

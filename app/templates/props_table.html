@@ -1,6 +1,7 @@
 <table>
   <tr>
     <th>Id</th>
+    <th>Picture</th>
     <th>Street</th>
     <th>City</th>
     <th>State</th>
@@ -16,6 +17,7 @@
   {% for p in props %}
     <tr>
       <td>{{p.propId}}</td>
+      <td><img class="property-thumbnail" src="{{ url_for('static', filename='/images/property_images/' + (p.image_filename if p.image_filename else 'default.jpg')) }}" alt="Property image"></td>
       <td>{{p.street}}</td>
       <td>{{p.city}}</td>
       <td>{{p.state}}</td>
@@ -38,7 +40,7 @@ $(document).ready(function() {
       $.ajax({
       url: "{{ url_for('update_favorites') }}",
       type: "POST",
-      data: {propId: propId, checked: checked.toString()},
+      data: {propId: propId, checked: checked.toString(), csrf_token: $('meta[name="csrf-token"]').attr('content')},
       success: function(response) {
         $('#props-table').html(response.props);
         $('#favorites').html(response.favorites);
