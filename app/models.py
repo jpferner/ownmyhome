@@ -14,6 +14,7 @@ class ChecklistItems(db.Model):
     # Relationship with the Users table
     user = db.relationship('Users', backref=db.backref('checklist_items', lazy=True))
 
+
     __table_args__ = (
         PrimaryKeyConstraint('order_no', 'user_id'),
     )
@@ -28,6 +29,8 @@ class Users(db.Model, UserMixin):
     last_name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)  # no user can have an email that's already in db
     password_hash = db.Column(db.String(150))  # hashed password
+
+    favorite_properties = db.relationship('UserFavorite', back_populates='user')
 
     # Create a string representation - putting user's first name on screen if desired
     def __repr__(self):
@@ -54,7 +57,7 @@ class Users(db.Model, UserMixin):
 
 
 class Property(db.Model):
-    propId = db.Column(db.Integer)
+    propId = db.Column(db.Integer, primary_key=True)
     street = db.Column(db.String(100))
     city = db.Column(db.String(25), index=True)
     state = db.Column(db.String(2))
@@ -70,11 +73,19 @@ class Property(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('Users', backref=db.backref('properties', lazy=True))
-
-    __table_args__ = (
-        PrimaryKeyConstraint('street', 'user_id', name='property_pk'),
-    )
-
+    favorited_by = db.relationship('UserFavorite', back_populates='property', lazy='dynamic', cascade='all, delete-orphan') # cascade deletes the related UserFavorite instances when a Property is deleted
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
+
+
+
+class UserFavorite(db.Model):
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+    property_id = db.Column(db.Integer, db.ForeignKey('property.propId'), primary_key=True)
+
+    user = db.relationship('Users', back_populates='favorite_properties')
+    property = db.relationship('Property', back_populates='favorited_by')
+
+
+

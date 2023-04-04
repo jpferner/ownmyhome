@@ -18,7 +18,7 @@
       <tr>
         <td>{{p.propId}}</td>
         <td><img class="property-thumbnail" src="{{ url_for('static', filename='/images/property_images/' + (p.image_filename if p.image_filename else 'default_image.jpg')) }}" alt="Property image"></td>
-        <td>{{p.street}}</td>
+        <td><a href="{{ p.propUrl }}" target="_blank" class="street-link">{{ p.street }}</a></td>
         <td>{{p.city}}</td>
         <td>{{p.state}}</td>
         <td>{{p.zcode}}</td>

@@ -3,6 +3,7 @@ import time
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf.csrf import validate_csrf
+
 import requests
 
 from app import app
@@ -83,7 +84,7 @@ def add_properties(user_id):
         {'propId': 4, 'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
          'county': 'New Hanover', 'price': 549000, 'yearBuilt': 2017, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop4.gif','propUrl':'https://www.zillow.com/homedetails/4770-Tupelo-Dr-Wilmington-NC-28411/247832477_zpid/'},
         {'propId': 5, 'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
-         'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop5.gif','propUrl':'https://www.zillow.com/homedetails/311-S-3rd-St-Wilmington-NC-28401/54308970_zpid/'}
+         'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop5.gif','propUrl':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
        # add more properties as needed
     ]
 
@@ -464,13 +465,34 @@ def update_favorites():
 
     propId = request.form['propId']
     checked = request.form['checked'] == 'true'
-    prop = Property.query.filter_by(propId=propId).first()
-    prop.favorite = checked
-    db.session.commit()
 
-    favorite_props = Property.query.filter_by(favorite=True).all()
+    # Get the property instance
+    prop = Property.query.filter_by(propId=propId).first()
+
+    # Update the favorite status of the property
+    if checked:
+        favorite = UserFavorite(user_id=current_user.id, property_id=propId)
+        existing_favorite = UserFavorite.query.filter_by(user_id=current_user.id, property_id=propId).first()
+        if not existing_favorite:
+            db.session.add(favorite)
+            print('1')
+
+    else:
+        favorite = UserFavorite.query.filter_by(user_id=current_user.id, property_id=propId).first()
+        if favorite:
+            print('2')
+            db.session.delete(favorite)
+
+    db.session.commit()  # Save changes to the database
+
+    # Get the list of favorite properties for the user
+    user_favorites = UserFavorite.query.filter_by(user_id=current_user.id).all()
+    favorite_props = [uf.property for uf in user_favorites]
+
+    # Render the templates
     props_table = render_template('props_table.html', props=Property.query.all(), favorite_props=favorite_props)
     favorites_table = render_template('favorites_table.html', favorite_props=favorite_props)
+
     return jsonify(props=props_table, favorites=favorites_table)
 
 
@@ -482,5 +504,10 @@ def favorites_table():
         Returns:
         - The rendered favorites_table.html template.
     """
-    favorite_props = Property.query.filter_by(favorite=True).all()
+    user_favorites = UserFavorite.query.filter_by(user_id=current_user.id).all()
+    favorite_props = [uf.property for uf in user_favorites]
     return render_template('favorites_table.html', favorite_props=favorite_props)
+
+
+
+
