@@ -235,6 +235,9 @@ def login():
         else:  # user is not found and doesn't exist in database
             flash("Invalid Email and/or Password. Please try again.", category='error')
 
+    # Reset the Remember Me checkbox if error occurs during Login
+    login_form.remember_me.data = False
+
     return render_template('login.html', form=login_form)
 
 
@@ -292,6 +295,9 @@ def sign_up():
             return redirect(url_for('sign_up'))
 
     # current_users = Users.query.order_by(Users.id)  # query current db of Users
+
+    # Reset the checkbox for Accept TOS if error occurs at Sign Up
+    signup_form.accept_tos.data = False
 
     return render_template('sign_up.html', form=signup_form)
 
