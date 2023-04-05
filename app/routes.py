@@ -3,6 +3,7 @@ import time
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf.csrf import validate_csrf
+
 import requests
 
 from app import app
@@ -54,6 +55,7 @@ def index():
 
 
 @app.route('/properties', methods=['GET', 'POST'])
+@login_required
 def properties():
     """
         Renders the properties page of the website.
@@ -63,10 +65,49 @@ def properties():
         Returns:
             The rendered properties page HTML.
     """
+
+
     if request.method == 'POST':
         return redirect(url_for('index'))
-    props = Property.query.all()
+    props = Property.query.filter_by(user_id=current_user.id).all()
     return render_template('properties.html', props=props)
+
+
+def add_properties(user_id):
+    properties_data = [
+        {'propId': 1, 'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+         'county': 'New Hanover', 'price': 299900, 'yearBuilt': 2023, 'numBeds': 2, 'numBaths': 2, 'image_filename':'prop1.gif','propUrl':'https://www.zillow.com/homedetails/1007-Orange-St-Wilmington-NC-28401/54309332_zpid/'},
+        {'propId': 2, 'street': '6604 Whimbrel Ct', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
+         'county': 'New Hanover', 'price': 370000, 'yearBuilt': 1990, 'numBeds': 3, 'numBaths': 3, 'image_filename':'prop2.gif', 'propUrl':'https://www.zillow.com/homedetails/6604-Whimbrel-Ct-Wilmington-NC-28409/2133943557_zpid/'},
+        {'propId': 3, 'street': '3507 S College Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
+         'county': 'New Hanover', 'price': 415000, 'yearBuilt': 1968, 'numBeds': 3, 'numBaths': 2, 'image_filename':'prop3.gif','propUrl':'https://www.zillow.com/homedetails/3507-S-College-Rd-Wilmington-NC-28409/54332506_zpid/'},
+        {'propId': 4, 'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
+         'county': 'New Hanover', 'price': 549000, 'yearBuilt': 2017, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop4.gif','propUrl':'https://www.zillow.com/homedetails/4770-Tupelo-Dr-Wilmington-NC-28411/247832477_zpid/'},
+        {'propId': 5, 'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+         'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop5.gif','propUrl':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+       # add more properties as needed
+    ]
+
+    for data in properties_data:
+        property = Property(
+            propId=data['propId'],
+            street=data['street'],
+            city=data['city'],
+            state=data['state'],
+            zcode=data['zcode'],
+            county=data['county'],
+            price=data['price'],
+            yearBuilt=data['yearBuilt'],
+            numBeds=data['numBeds'],
+            numBaths=data['numBaths'],
+            favorite=False,
+            image_filename=data['image_filename'],
+            propUrl=data['propUrl'],
+            user_id=user_id
+        )
+        db.session.add(property)
+
+    db.session.commit()
 
 
 @app.route('/checklist', methods=['GET', 'POST'])
@@ -194,6 +235,9 @@ def login():
         else:  # user is not found and doesn't exist in database
             flash("Invalid Email and/or Password. Please try again.", category='error')
 
+    # Reset the Remember Me checkbox if error occurs during Login
+    login_form.remember_me.data = False
+
     return render_template('login.html', form=login_form)
 
 
@@ -239,8 +283,10 @@ def sign_up():
             db.session.add(user)
             db.session.commit()
 
+            add_properties(user.id)
             # Add checklist items for the new user
             add_checklist_items(user.id)
+
 
             flash('Account created! Please use your credentials to log in.', category='success')
             return redirect(url_for('login'))
@@ -249,6 +295,9 @@ def sign_up():
             return redirect(url_for('sign_up'))
 
     # current_users = Users.query.order_by(Users.id)  # query current db of Users
+
+    # Reset the checkbox for Accept TOS if error occurs at Sign Up
+    signup_form.accept_tos.data = False
 
     return render_template('sign_up.html', form=signup_form)
 
@@ -403,54 +452,6 @@ def get_lat_lng_from_zip(zip_code):
         return None, None
 
 
-@app.route('/update', methods=['POST'])
-def update():
-    """
-        This method is responsible for updating the database with dummy data for testing purposes.
-        It first deletes all properties from the Property table, then adds new properties.
-
-        Returns:
-        - A rendered template for the index page with a success message.
-    """
-
-    #  if in future we need to drop all tables and recreate
-    # db.drop_all()
-    # db.create_all()
-
-    # try:
-    #     csrf_token = request.form['csrf_token']
-    # except KeyError:
-    #     raise CSRFError('CSRF token missing')
-
-    # for now just the property table
-    db.session.query(Property).delete()
-    db.session.commit()
-
-    # Insert dummy data
-    prop1 = Property(propId=100, street='123 Apple st', city='Wilmington', state='NC', zcode=28402,
-                     county='New Hanover', price=235000, yearBuilt=1999, numBeds=2, numBaths=1)
-    prop2 = Property(propId=230, street='456 Walnut ave', city='Wilmington', state='NC', zcode=28409,
-                     county='New Hanover', price=435000, yearBuilt=2018, numBeds=4, numBaths=3)
-    prop3 = Property(propId=300, street='836 Arrow dr', city='Wilmington', state='NC', zcode=28412,
-                     county='New Hanover', price=355000, yearBuilt=2009, numBeds=3, numBaths=2)
-    prop4 = Property(propId=500, street='987 Rich st', city='Wilmington', state='NC', zcode=28402, county='New Hanover',
-                     price=735000, yearBuilt=2008, numBeds=8, numBaths=5)
-    prop5 = Property(propId=400, street='1025 Cardinal ln', city='Wilmington', state='NC', zcode=28422,
-                     county='New Hanover', price=235000, yearBuilt=2006, numBeds=3, numBaths=1)
-
-    # looking for a solution to add users running into a password error
-    # user1 = Users(id=26, first_name="Bob", last_name="smith", email="123@gmail.comm")
-    # user1.set_password('123456789')
-    db.session.add(prop1)
-    db.session.add(prop2)
-    db.session.add(prop3)
-    db.session.add(prop4)
-    db.session.add(prop5)
-    # db.session.add(user1)
-
-    db.session.commit()
-    flash('dummy data added')
-    return render_template('index.html')
 
 
 @app.route('/update_favorites', methods=['POST'])
@@ -470,13 +471,34 @@ def update_favorites():
 
     propId = request.form['propId']
     checked = request.form['checked'] == 'true'
-    prop = Property.query.filter_by(propId=propId).first()
-    prop.favorite = checked
-    db.session.commit()
 
-    favorite_props = Property.query.filter_by(favorite=True).all()
+    # Get the property instance
+    prop = Property.query.filter_by(propId=propId).first()
+
+    # Update the favorite status of the property
+    if checked:
+        favorite = UserFavorite(user_id=current_user.id, property_id=propId)
+        existing_favorite = UserFavorite.query.filter_by(user_id=current_user.id, property_id=propId).first()
+        if not existing_favorite:
+            db.session.add(favorite)
+            print('1')
+
+    else:
+        favorite = UserFavorite.query.filter_by(user_id=current_user.id, property_id=propId).first()
+        if favorite:
+            print('2')
+            db.session.delete(favorite)
+
+    db.session.commit()  # Save changes to the database
+
+    # Get the list of favorite properties for the user
+    user_favorites = UserFavorite.query.filter_by(user_id=current_user.id).all()
+    favorite_props = [uf.property for uf in user_favorites]
+
+    # Render the templates
     props_table = render_template('props_table.html', props=Property.query.all(), favorite_props=favorite_props)
-    favorites_table = render_template('favorites_table.html', props=Property, favorite_props=favorite_props)
+    favorites_table = render_template('favorites_table.html', favorite_props=favorite_props)
+
     return jsonify(props=props_table, favorites=favorites_table)
 
 
@@ -488,5 +510,10 @@ def favorites_table():
         Returns:
         - The rendered favorites_table.html template.
     """
-    favorite_props = Property.query.filter_by(favorite=True).all()
+    user_favorites = UserFavorite.query.filter_by(user_id=current_user.id).all()
+    favorite_props = [uf.property for uf in user_favorites]
     return render_template('favorites_table.html', favorite_props=favorite_props)
+
+
+
+
