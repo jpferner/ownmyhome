@@ -14,6 +14,9 @@
                 <td>Monthly Mortgage Total: $<label id="MortMonTotal">{{ MortTotal }}</label></td>
             </tr>
             <tr>
+                <td>Total Mortgage: $<label id="TotalMort">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
                 <td>Total Interest: $<label id="TotalInterest">{{ MortTotal }}</label></td>
             </tr>
         </table>
@@ -47,12 +50,33 @@
                 <td><input type="number" id="PropTax" placeholder="2400" value="{{ PropTax }}" min="0" oninput="validateInput(this)"><br></td>
             </tr>
             <tr class="info">
-                <td><label for="LoanType">Loan Type</label></td>
+                <td><label for="LoanType">Loan Type:</label></td>
                 <td><select id="LoanType">
                     <option value="Conventional">Conventional</option>
                     <option value="loan2">loan2</option>
                     <option value="loan3">loan3</option>
                 </select></td>
+            </tr>
+        </table>
+        <table class="calculator1">
+            <tr class="info">
+                <td>Debt Calculation Inputs:</td>
+            </tr>
+            <tr class="info">
+                <td><label for="Income">Annual Income:</label></td>
+                <td><input type="number" id="Income" placeholder="20000" value="{{ Income }}" min="0" oninput="validateInput(this)"><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="Credit">Monthly Credit Card Payments:</label></td>
+                <td><input type="number" id="Credit" placeholder="500" value="{{ Credit }}" min="0" oninput="validateInput(this)"><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="CarPay">Monthly Car Payment:</label></td>
+                <td><input type="number" id="CarPay" placeholder="350" value="{{ CarPay }}" min="0" oninput="validateInput(this)"><br></td>
+            </tr>
+            <tr class="info">
+                <td><label for="StudentPay">Monthly Student Loan:</label></td>
+                <td><input type="number" id="StudentPay" placeholder="2500" value="{{ Income }}" min="0" oninput="validateInput(this)"><br></td>
             </tr>
         </table>
         <p>

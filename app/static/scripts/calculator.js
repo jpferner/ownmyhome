@@ -29,7 +29,7 @@ function validateInput(input) {
   const valid = input.checkValidity();
   if (!valid) {
     input.reportValidity();
-    return false
+    return false;
   }
 }
 function calculation(){
@@ -43,20 +43,22 @@ function calculation(){
     const loanType = document.getElementById('LoanType').value;
     const loanTermMonth = loanTerm * 12;
     const mon_int = interest / 12;
-    const mon_prop_pay = prop / 12
+    const mon_prop_pay = prop / 12;
+
 
 
     // Fixed Rate Loan
-    let mort_Mon_Total = (loan * mon_int * Math.pow(1 + mon_int, loanTermMonth)) / (Math.pow(1 + mon_int, loanTermMonth) - 1)
+    let mort_Mon_Total = (loan * mon_int * Math.pow(1 + mon_int, loanTermMonth)) / (Math.pow(1 + mon_int, loanTermMonth) - 1);
+    let total_mort = mort_Mon_Total * loanTermMonth;
 
     // Adds Property Tax onto monthly total
     mort_Mon_Total += mon_prop_pay
 
-    let total_mort = mort_Mon_Total * loanTermMonth
     let mort_interest = total_mort - loan
-
+    total_mort = total_mort + (prop * 30)
 
     document.getElementById('MortMonTotal').textContent=Number(mort_Mon_Total.toFixed(2)).toLocaleString()
+    document.getElementById('TotalMort').textContent=Number(total_mort.toFixed(2)).toLocaleString()
     document.getElementById('TotalInterest').textContent=Number(mort_interest.toFixed(2)).toLocaleString()
 
     return false
