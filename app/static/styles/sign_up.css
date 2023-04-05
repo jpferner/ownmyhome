@@ -15,6 +15,11 @@ form label{
     margin-bottom: .5em;
 }
 
+#tos:link, #tos:visited, #tos:hover, #tos:active {
+    text-decoration: none;
+    color: blue;
+}
+
 @media screen and (max-width: 1724px) {
     #sign-up-form{width: 40%}
 }
