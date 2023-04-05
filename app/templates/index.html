@@ -13,6 +13,16 @@
 
 <aside>
     <div class="aside-container">
+        <div class="synopsis">
+            <p>
+                Welcome to Own My Home (OMH), your all-in-one platform for making the home buying journey seamless
+                and hassle-free. At OMH, we empower you to discover the perfect property, connect with trusted realtors,
+                and access a wide range of services tailored to your home buying needs. Our intuitive project checklist
+                keeps you organized and on track, while our user-friendly affordability calculator provides a clear
+                understanding of how much home you can comfortably purchase. Begin your journey with OMH today and let
+                us help you turn your dream of homeowner-ship into a reality.
+            </p>
+        </div>
         <div class="aside-box">
             {% if current_user.is_authenticated %}
                 {% if first_incomplete_item %}
@@ -26,14 +36,26 @@
             {% endif %}
         </div>
         <div class="aside-box">
-            <h3>Random Property</h3>
+            <h3>Featured Property</h3>
             {% if random_property %}
-                <p>{{ random_property.street }}</p>
+                <a href="{{ random_property.propUrl }}">
+                    <img src="{{ url_for('static', filename='images/property_images/' + random_property.image_filename) }}"
+                         alt="Property Image" class="property-image">
+                    <p>{{ random_property.street }}, {{ random_property.city }}, {{ random_property.state }} {{ random_property.zcode }}</p>
+                </a>
             {% else %}
                 <p>No property found.</p>
             {% endif %}
         </div>
         <div class="aside-box">
+            <h3>Upcoming Event</h3>
+            {% if calendar %}
+                <p>{{ calendar.detail }}</p>
+            {% else %}
+                <p>No Upcoming Event.</p>
+            {% endif %}
+        </div>
+        <div class="aside-box" id="login">
             {% if current_user.is_authenticated %}
                 <h1 class="welcome-user">Welcome, {{ current_user.first_name }}</h1>
             {% else %}
