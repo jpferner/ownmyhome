@@ -23,13 +23,9 @@ class SignUpForm(FlaskForm):
     email = StringField("Email:",
                         validators=[InputRequired(), Email('Valid email address required.')])
 
-    # confirm_email = StringField("Confirm Email:",
-    #                             validators=[InputRequired(), EqualTo("email", message='Emails do not match. Please '
-    #                                                                                   'try again.')])
     confirm_email = StringField("Confirm Email:",
                                 validators=[InputRequired(), EqualTo("email", message='Emails do not match. Please '
                                                                                       'try again.')])
-
     password_hash = PasswordField("Password:",
                                   validators=[InputRequired(),
                                               Length(min=8,
