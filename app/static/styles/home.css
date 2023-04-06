@@ -1,7 +1,20 @@
 .aside-container {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-around;
     margin: 20px 0;
+}
+
+.synopsis {
+    order: 1;
+    flex-basis: 65%;
+    align-items: center;
+    font-size: 34px;
+    font-style: italic;
+}
+
+#login {
+    background-color: dimgrey;
 }
 
 .aside-box {
@@ -15,6 +28,17 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: 20px;
+}
+
+.aside-box:nth-child(5) {
+    order: 2;
+}
+
+.aside-box:nth-child(2),
+.aside-box:nth-child(3),
+.aside-box:nth-child(4) {
+    order: 3;
 }
 
 .aside-box h3 {
@@ -41,7 +65,7 @@
 .aside-box input[type="text"],
 .aside-box input[type="password"],
 .aside-box input[type="submit"] {
-    width: 50%;
+    width: 65%;
     text-align: center;
     box-sizing: border-box;
     padding: 10px;
@@ -79,6 +103,14 @@
     text-decoration: none;
     color: black;
     font-weight: bold;
+}
+
+.property-image {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 5px;
 }
 
 .welcome-user {
