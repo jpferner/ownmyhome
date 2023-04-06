@@ -5,6 +5,7 @@ from wtforms.validators import EqualTo
 from wtforms.validators import InputRequired
 from wtforms.validators import Length
 from wtforms.validators import Regexp
+from flask import Markup
 
 """This file is designated to the creation of Forms
     Sign-Up Form and Login Form
@@ -54,7 +55,10 @@ class SignUpForm(FlaskForm):
     # checkbox to show the user's password in plain text
     confirm_show_password = BooleanField('Show password', id='confirm_check')
 
-    accept_tos = BooleanField("I accept the Terms of Service.", validators=[InputRequired()])
+    # url label for Terms of Service
+    url_label = Markup("<a id='tos' target='_blank' href='https://www.termsandconditionsgenerator.com/live.php?token=WHZDugV9ku8Yfxs8mVwMZIhx12VmZHpr'>Terms of Service.</a>")
+
+    accept_tos = BooleanField("I accept the " + url_label, validators=[InputRequired()])
 
     create_account = SubmitField("Create Account")
 
