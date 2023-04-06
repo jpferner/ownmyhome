@@ -1,4 +1,5 @@
 import time
+from random import choice
 
 from flask import render_template, flash, redirect, url_for, request, jsonify
 from flask_login import login_user, login_required, logout_user, current_user
@@ -28,7 +29,6 @@ def home():
         Returns:
             str: The rendered HTML for the home page.
     """
-    test = "Hello, World!"
     login_form = LoginForm()
 
     first_incomplete_item = None
@@ -36,7 +36,11 @@ def home():
         first_incomplete_item = ChecklistItems.query.filter_by(user_id=current_user.id, status=False).order_by(
             ChecklistItems.order_no).first()
 
-    return render_template('index.html', test=test, login_form=login_form, first_incomplete_item=first_incomplete_item)
+    all_properties = Property.query.all()
+    random_property = choice(all_properties) if all_properties else None
+
+    return render_template('index.html', login_form=login_form, first_incomplete_item=first_incomplete_item,
+                           random_property=random_property)
 
 
 @app.route('/index', methods=['GET', 'POST'])
@@ -452,8 +456,6 @@ def get_lat_lng_from_zip(zip_code):
         return None, None
 
 
-
-
 @app.route('/update_favorites', methods=['POST'])
 def update_favorites():
     """
@@ -513,7 +515,3 @@ def favorites_table():
     user_favorites = UserFavorite.query.filter_by(user_id=current_user.id).all()
     favorite_props = [uf.property for uf in user_favorites]
     return render_template('favorites_table.html', favorite_props=favorite_props)
-
-
-
-
