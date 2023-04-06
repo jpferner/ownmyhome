@@ -8,7 +8,7 @@ import requests
 
 from app import app
 
-from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
+from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm
 from app.models import *
 from datetime import date
 
@@ -315,6 +315,11 @@ def logout():
     logout_user()
     flash("You have successfully logged out!", category='logout')
     return redirect(url_for('login'))
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password_request():
+    password_reset_form = ResetPasswordRequestForm()
+    return render_template('reset_password_request.html', title='Rest Password Request', form=password_reset_form)
 
 
 @app.route('/calculator', methods=['GET', 'POST'])

@@ -21,8 +21,11 @@ class SignUpForm(FlaskForm):
                                                                                        "between 2 and 25 characters"
                                                                                        "in length.")])
     email = StringField("Email:",
-                        validators=[InputRequired(), Email(granular_message=True)])
+                        validators=[InputRequired(), Email('Valid email address required.')])
 
+    # confirm_email = StringField("Confirm Email:",
+    #                             validators=[InputRequired(), EqualTo("email", message='Emails do not match. Please '
+    #                                                                                   'try again.')])
     confirm_email = StringField("Confirm Email:",
                                 validators=[InputRequired(), EqualTo("email", message='Emails do not match. Please '
                                                                                       'try again.')])
@@ -62,7 +65,7 @@ class SignUpForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField("Email:",
-                        validators=[InputRequired(), Email(granular_message=True, message="Invalid email format!")])
+                        validators=[InputRequired(), Email('Valid email address required.')])
 
     # did not set password validators for login page; will flash message if invalid password
     password_hash = PasswordField("Password:", validators=[InputRequired()], id='password_hash')
@@ -75,4 +78,8 @@ class LoginForm(FlaskForm):
 
     submit = SubmitField('Submit')
 
-    # IF NEEDED...Custom Form Validation Methods - Will run automatically with WTForms
+class ResetPasswordRequestForm(FlaskForm):
+    email = StringField("Email:",
+                        validators=[InputRequired(), Email('Valid email address required.')])
+
+    submit = SubmitField('Reset Password')

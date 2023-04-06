@@ -34,6 +34,17 @@
 
         <!-- Capture and displays all the error messages at top of Sign-Up form -->
 
+
+        <!-- Error message for  Email field -->
+            {% if form.email.errors %}
+                <span class="errors" style="background-color: red; color: white" >
+                    {% for error in form.email.errors %}
+                        {{ error }}
+                        <br>
+                    {% endfor %}
+                </span>
+            {% endif %}
+
         <!-- Error message for Confirm Email field -->
             {% if form.confirm_email.errors %}
                 <span class="errors" style="background-color: red; color: white" >
