@@ -1,8 +1,11 @@
 from flask_login import UserMixin
 from sqlalchemy import PrimaryKeyConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
+# from itsdangerous import URLSafeTimedSerializer as Serializer
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 from app import db
+from app import app
 
 
 class ChecklistItems(db.Model):
@@ -50,6 +53,30 @@ class Users(db.Model, UserMixin):
 
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
+
+    def get_reset_token(self, expires_secs=300):
+        """
+        This method creates the token, using itsdangerous, that will verify
+        the person and account that will have their password reset
+        Args:
+            expires_secs: integer number of seconds for expiration
+
+        Returns: a signed string serialized with the internal serializer
+
+        """
+        serial = Serializer(app.config['SECRET_KEY'], expires_secs)
+        return serial.dumps({'user_id': self.id}).decode('utf-8')
+    @staticmethod
+    def verify_reset_token(token):
+        serial = Serializer(app.config['SECRET_KEY'])
+        try:
+            user_id = serial.loads(token)['user_id']
+        except:
+            return None
+        return Users.query.get(user_id)
+
+
+
     # From David H I may need this next sprint
     # def set_password(self, password):
     # self.password_hash = generate_password_hash(password, "sha256")

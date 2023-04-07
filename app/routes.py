@@ -9,11 +9,17 @@ import requests
 
 from app import app
 
-from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm
+from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
 from datetime import date
 
 import bleach
+
+# required import for password reset
+from flask_mail import Message
+from app import mail
+
+
 
 
 # Define routes
@@ -222,7 +228,8 @@ def login():
         login_form.email.data = bleach.clean(login_form.email.data, strip=True)
         login_form.password_hash.data = bleach.clean(login_form.password_hash.data, strip=True)
 
-        user = Users.query.filter_by(email=login_form.email.data).first()
+        # check for the user in the database with email in lowercase
+        user = Users.query.filter_by(email=login_form.email.data.lower()).first()
 
         # True if Remember_me checkbox is checked and false otherwise
         remember_me = True if request.form.get('remember_me') else False
@@ -274,10 +281,16 @@ def sign_up():
         signup_form.password_hash.data = bleach.clean(signup_form.password_hash.data, strip=True)
         signup_form.confirm_password_hash.data = bleach.clean(signup_form.confirm_password_hash.data, strip=True)
 
+        # convert all fields on the sign-up form being stored in the db to lowercase
+        # strip all whitespace from beginning and end of the sting
+        signup_form.first_name.data = signup_form.first_name.data.lower().strip()
+        signup_form.last_name.data = signup_form.last_name.data.lower().strip()
+        signup_form.email.data = signup_form.email.data.lower().strip()
+        # password is entered into db as entered due to case sensitivity
+        signup_form.password_hash.data = signup_form.password_hash.data.strip()
 
         # hash the new user's password
         hashed_password = generate_password_hash(signup_form.password_hash.data, "sha256")
-
 
         user = Users.query.filter_by(email=signup_form.email.data).first()
         if user is None:
@@ -320,10 +333,67 @@ def logout():
     flash("You have successfully logged out!", category='logout')
     return redirect(url_for('login'))
 
+def send_password_reset_email(user):
+    token = user.get_reset_token()
+    message = Message('Password Reset Request',
+                      sender=app.config['MAIL_USERNAME'],
+                      recipients=[user.email])
+
+    # _external=True will send an absolute URL
+    message.body = f"""To reset your password, please follow this link:"
+                   
+                   {url_for('reset_token', token=token, _external=True)}
+                   
+                   If you ignore this email, no changes will be made regarding your account.
+                   Thank you!
+                   """
+    mail.send(message)
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password_request():
     password_reset_form = ResetPasswordRequestForm()
-    return render_template('reset_password_request.html', title='Rest Password Request', form=password_reset_form)
+    if password_reset_form.validate_on_submit():
+        user = Users.query.filter_by(email=password_reset_form.email.data.lower()).first()
+
+        # if the user exists
+        if user:
+            send_password_reset_email(user)
+            flash('Password reset request has been sent. Please check your email for instructions'
+                  ' on how how to reset your password.\n'
+                  'Important: Password reset link expires in 5 minutes.', category='success')
+            return redirect(url_for('login'))
+        else:
+            flash("We're sorry. There is no account associated with the email provided.")
+    return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form,)
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    user = Users.verify_reset_token(token)
+    if user is None:  # redirect the user to the request password reset page
+        flash("Invalid or expired token. Please try again.")
+        return redirect(url_for('reset_password_request'))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        # sanitize/clean all fields on the sign-up form before storing in database
+        form.password_hash.data = bleach.clean(form.password_hash.data, strip=True)
+        form.confirm_password_hash.data = bleach.clean(form.confirm_password_hash.data, strip=True)
+
+        # password is entered into db as entered due to case sensitivity
+        form.password_hash.data = form.password_hash.data.strip()
+
+        # hash the new password
+        hashed_password = generate_password_hash(form.password_hash.data, "sha256")
+
+        # make the user's new password the hashed password
+        user.password_hash = hashed_password
+
+        # commit the password change to the database
+        db.session.commit()
+        flash('Password change successful! Please log into your account.', category='success')
+
+        return redirect(url_for('login'))
+    return render_template('change_password.html', title="Reset Password", form=form)
+
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
