@@ -1,9 +1,16 @@
+.calc-form {
+    text-align: center;
+}
 .calculator {
     background-color: #cccccc;
     width: 25%;
     border: 1px solid black;
     margin: auto;
     text-align: left;
+}
+.outputs {
+    width: 25%;
+    margin: auto;
 }
 .info {
     border: 1px solid black;
@@ -17,17 +24,17 @@ td {
 }
 
 @media screen and (max-width: 1800px) {
-    .calculator1{width: 30%}
+    .calculator{width: 30%}
 }
 
 @media screen and (max-width: 1525px) {
-    .calculator1{width:35%}
+    .calculator{width:35%}
 }
 
 @media screen and (max-width: 1325px) {
-    .calculator1{width:42%}
+    .calculator{width:42%}
 }
 
 @media screen and (max-width: 1150px) {
-    .calculator1{width:50%}
+    .calculator{width:50%}
 }

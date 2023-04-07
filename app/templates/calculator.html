@@ -8,16 +8,22 @@
     </div>
 </section>
 <aside>
-    <form id="calc-form">
-        <table style="margin: auto; width: 20%">
+    <form class="calc-form">
+        <table class="outputs">
             <tr>
-                <td>Monthly Mortgage Total: $<label id="MortMonTotal">{{ MortTotal }}</label></td>
+                <td>Monthly Payments Total: $<label id="MonPayTotal">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Monthly Mortgage: $<label id="MortMonTotal">{{ MortTotal }}</label></td>
             </tr>
             <tr>
                 <td>Total Mortgage: $<label id="TotalMort">{{ MortTotal }}</label></td>
             </tr>
             <tr>
                 <td>Total Interest: $<label id="TotalInterest">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Debt to Income Ratio: <label id="Debt">{{ MortTotal }}</label>%</td>
             </tr>
         </table>
         <table class="calculator">
@@ -72,7 +78,7 @@
             </tr>
             <tr class="info">
                 <td><label for="StudentPay">Monthly Student Loan:</label></td>
-                <td><input type="number" id="StudentPay" placeholder="2500" value="{{ StudentPay }}" min="0" oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"><br></td>
+                <td><input type="number" id="StudentPay" placeholder="400" value="{{ StudentPay }}" min="0" oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"><br></td>
             </tr>
         </table>
         <p>
