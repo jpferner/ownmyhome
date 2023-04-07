@@ -32,7 +32,7 @@
 
         <!-- Displays success message at top of screen if user sign up information is valid -->
         {% for category, message in get_flashed_messages(with_categories=true) %}
-            <p class="{{ category }}">{{ message }}</p>
+            <pre class="{{ category }}">{{ message }}</pre>
         {% endfor %}
 
         <!-- Error message for Confirm Email field -->

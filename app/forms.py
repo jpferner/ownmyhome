@@ -5,6 +5,7 @@ from wtforms.validators import EqualTo
 from wtforms.validators import InputRequired
 from wtforms.validators import Length
 from wtforms.validators import Regexp
+
 from flask import Markup
 
 """This file is designated to the creation of Forms
@@ -82,13 +83,13 @@ class LoginForm(FlaskForm):
 
 
 class ResetPasswordRequestForm(FlaskForm):
-    email = StringField("Email:",
+    email = StringField("Email:", render_kw={"placeholder": "email"},
                         validators=[InputRequired(), Email('Valid email address required.')])
 
     submit = SubmitField('Reset Password')
 
 class ResetPasswordForm(FlaskForm):
-    password_hash = PasswordField("Password:",
+    password_hash = PasswordField("New Password:",
                                   validators=[InputRequired(),
                                               Length(min=8,
                                                      message='Password should be at least %(min)d characters long'),
@@ -107,7 +108,7 @@ class ResetPasswordForm(FlaskForm):
     # checkbox to show the user's password in plain text
     show_password = BooleanField('Show password', id='check')
 
-    confirm_password_hash = PasswordField("Confirm Password:",
+    confirm_password_hash = PasswordField("Confirm New Password:",
                                           validators=[InputRequired(), EqualTo("password_hash",
                                                                                message="Passwords do not match. "
                                                                                        "Please try "
@@ -115,6 +116,6 @@ class ResetPasswordForm(FlaskForm):
                                           id='confirm_password_hash')
 
     # checkbox to show the user's password in plain text
-    confirm_show_password = BooleanField('Reset Password')
+    confirm_show_password = BooleanField('Show password', id='confirm_check')
 
     submit = SubmitField('Reset Password')

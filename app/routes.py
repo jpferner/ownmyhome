@@ -281,12 +281,15 @@ def sign_up():
         signup_form.password_hash.data = bleach.clean(signup_form.password_hash.data, strip=True)
         signup_form.confirm_password_hash.data = bleach.clean(signup_form.confirm_password_hash.data, strip=True)
 
-        # convert all fields on the sign-up form being stored in the db to lowercase
+
         # strip all whitespace from beginning and end of the sting
-        signup_form.first_name.data = signup_form.first_name.data.lower().strip()
-        signup_form.last_name.data = signup_form.last_name.data.lower().strip()
+        signup_form.first_name.data = signup_form.first_name.data.strip()
+        signup_form.last_name.data = signup_form.last_name.data.strip()
+
+        # convert email field to lowercase before being stored in the db and strip
         signup_form.email.data = signup_form.email.data.lower().strip()
-        # password is entered into db as entered due to case sensitivity
+
+        # password is entered into db as entered due to case sensitivity and is stripped
         signup_form.password_hash.data = signup_form.password_hash.data.strip()
 
         # hash the new user's password
@@ -357,8 +360,8 @@ def reset_password_request():
         # if the user exists
         if user:
             send_password_reset_email(user)
-            flash('Password reset request has been sent. Please check your email for instructions'
-                  ' on how how to reset your password.\n'
+            flash('Password reset request has been sent.\nPlease check your email for instructions'
+                  ' on how how to reset your password.\n\n'
                   'Important: Password reset link expires in 5 minutes.', category='success')
             return redirect(url_for('login'))
         else:
