@@ -83,13 +83,13 @@ class LoginForm(FlaskForm):
 
 
 class ResetPasswordRequestForm(FlaskForm):
-    email = StringField("Email:", render_kw={"placeholder": "email"},
+    email = StringField("Email:", render_kw={"placeholder": "Email"},
                         validators=[InputRequired(), Email('Valid email address required.')])
 
     submit = SubmitField('Reset Password')
 
 class ResetPasswordForm(FlaskForm):
-    password_hash = PasswordField("New Password:",
+    password_hash = PasswordField("New Password:", render_kw={"placeholder": "new password"},
                                   validators=[InputRequired(),
                                               Length(min=8,
                                                      message='Password should be at least %(min)d characters long'),
@@ -108,7 +108,7 @@ class ResetPasswordForm(FlaskForm):
     # checkbox to show the user's password in plain text
     show_password = BooleanField('Show password', id='check')
 
-    confirm_password_hash = PasswordField("Confirm New Password:",
+    confirm_password_hash = PasswordField("Confirm New Password:", render_kw={"placeholder": "confirm password"},
                                           validators=[InputRequired(), EqualTo("password_hash",
                                                                                message="Passwords do not match. "
                                                                                        "Please try "
@@ -118,4 +118,4 @@ class ResetPasswordForm(FlaskForm):
     # checkbox to show the user's password in plain text
     confirm_show_password = BooleanField('Show password', id='confirm_check')
 
-    submit = SubmitField('Reset Password')
+    submit = SubmitField('Change Password')

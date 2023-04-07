@@ -365,7 +365,7 @@ def reset_password_request():
                   'Important: Password reset link expires in 5 minutes.', category='success')
             return redirect(url_for('login'))
         else:
-            flash("We're sorry. There is no account associated with the email provided.")
+            flash("We're sorry. There is no account associated with the email provided.", category='error')
     return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form,)
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])

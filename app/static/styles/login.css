@@ -1,7 +1,8 @@
 .success {
-    background-color: #4CAF50;
-    color: white;
+    font-size: small;
+    color: green;
 }
+
 
 .error {
     background-color: red;
