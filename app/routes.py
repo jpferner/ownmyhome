@@ -27,10 +27,11 @@ from app import mail
 @app.route("/index")
 def home():
     """
-        Renders the home page of the website, which includes a login form and a checklist of items for authenticated users.
+        Renders the home page of the website, which includes a login form and a checklist of items
+        for authenticated users.
 
-        If the user is authenticated, the first incomplete item in the user's checklist is retrieved from the database and
-        displayed on the page.
+        If the user is authenticated, the first incomplete item in the user's checklist is retrieved
+        from the database and displayed on the page.
 
         Returns:
             str: The rendered HTML for the home page.
@@ -76,7 +77,6 @@ def properties():
             The rendered properties page HTML.
     """
 
-
     if request.method == 'POST':
         return redirect(url_for('index'))
     props = Property.query.filter_by(user_id=current_user.id).all()
@@ -84,22 +84,37 @@ def properties():
 
 
 def add_properties(user_id):
+    """
+        This function injects the data for the properties when a new user is created using a for loop.
+
+        It takes in the parameter user_id.
+
+    """
     properties_data = [
         {'propId': 1, 'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
-         'county': 'New Hanover', 'price': 299900, 'yearBuilt': 2023, 'numBeds': 2, 'numBaths': 2, 'image_filename':'prop1.gif','propUrl':'https://www.zillow.com/homedetails/1007-Orange-St-Wilmington-NC-28401/54309332_zpid/'},
+         'county': 'New Hanover', 'price': 299900, 'yearBuilt': 2023, 'numBeds': 2, 'numBaths': 2,
+         'image_filename': 'prop1.gif',
+         'propUrl': 'https://www.zillow.com/homedetails/1007-Orange-St-Wilmington-NC-28401/54309332_zpid/'},
         {'propId': 2, 'street': '6604 Whimbrel Ct', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
-         'county': 'New Hanover', 'price': 370000, 'yearBuilt': 1990, 'numBeds': 3, 'numBaths': 3, 'image_filename':'prop2.gif', 'propUrl':'https://www.zillow.com/homedetails/6604-Whimbrel-Ct-Wilmington-NC-28409/2133943557_zpid/'},
+         'county': 'New Hanover', 'price': 370000, 'yearBuilt': 1990, 'numBeds': 3, 'numBaths': 3,
+         'image_filename': 'prop2.gif',
+         'propUrl': 'https://www.zillow.com/homedetails/6604-Whimbrel-Ct-Wilmington-NC-28409/2133943557_zpid/'},
         {'propId': 3, 'street': '3507 S College Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
-         'county': 'New Hanover', 'price': 415000, 'yearBuilt': 1968, 'numBeds': 3, 'numBaths': 2, 'image_filename':'prop3.gif','propUrl':'https://www.zillow.com/homedetails/3507-S-College-Rd-Wilmington-NC-28409/54332506_zpid/'},
+         'county': 'New Hanover', 'price': 415000, 'yearBuilt': 1968, 'numBeds': 3, 'numBaths': 2,
+         'image_filename': 'prop3.gif',
+         'propUrl': 'https://www.zillow.com/homedetails/3507-S-College-Rd-Wilmington-NC-28409/54332506_zpid/'},
         {'propId': 4, 'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
-         'county': 'New Hanover', 'price': 549000, 'yearBuilt': 2017, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop4.gif','propUrl':'https://www.zillow.com/homedetails/4770-Tupelo-Dr-Wilmington-NC-28411/247832477_zpid/'},
+         'county': 'New Hanover', 'price': 549000, 'yearBuilt': 2017, 'numBeds': 4, 'numBaths': 3,
+         'image_filename': 'prop4.gif',
+         'propUrl': 'https://www.zillow.com/homedetails/4770-Tupelo-Dr-Wilmington-NC-28411/247832477_zpid/'},
         {'propId': 5, 'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
-         'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3, 'image_filename':'prop5.gif','propUrl':'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
-       # add more properties as needed
+         'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3,
+         'image_filename': 'prop5.gif', 'propUrl': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+        # add more properties as needed
     ]
 
     for data in properties_data:
-        property = Property(
+        propertyLst = Property(
             propId=data['propId'],
             street=data['street'],
             city=data['city'],
@@ -115,7 +130,7 @@ def add_properties(user_id):
             propUrl=data['propUrl'],
             user_id=user_id
         )
-        db.session.add(property)
+        db.session.add(propertyLst)
 
     db.session.commit()
 
@@ -126,12 +141,12 @@ def checklist():
     """
         Renders the checklist page of the website.
 
-        If the request method is GET, fetches all the checklist items for the current user from the database, orders them
-        by their order_no, and renders the checklist page with the items passed as an argument to the template.
+        If the request method is GET, fetches all the checklist items for the current user from the database, orders
+        them by their order_no, and renders the checklist page with the items passed as an argument to the template.
 
-        If the request method is POST, updates the status of the checklist item with the given order_no for the current user
-        in the database to the new status provided in the JSON payload of the request. Returns a JSON response with a
-        success key set to True.
+        If the request method is POST, updates the status of the checklist item with the given order_no for the current
+        user in the database to the new status provided in the JSON payload of the request. Returns a JSON response
+        with a success key set to True.
 
         If the request method is neither GET nor POST, redirects the user to the index page.
 
@@ -170,11 +185,15 @@ def add_checklist_items(user_id):
             None
     """
     steps = [
-        "Do you know what your current credit score is? Check out our services tab above to see what options are available to you.",
-        "Do you have your home picked out? Check out our properties tab to see what homes are available within your search parameters.",
-        "Do you know what type of financing is available to you? Check out our services tab above to see what options are available to you.",
+        "Do you know what your current credit score is? Check out our services tab above to see what options are "
+        "available to you.",
+        "Do you have your home picked out? Check out our properties tab to see what homes are available within your "
+        "search parameters.",
+        "Do you know what type of financing is available to you? Check out our services tab above to see what options "
+        "are available to you.",
         "Do you know how much home you can afford? Check out our calculator tab to find out the right price for you.",
-        "Do you understand your current debt to income ratio and what that means, Check out our calculator tab to find out more."
+        "Do you understand your current debt to income ratio and what that means, Check out our calculator tab to "
+        "find out more.",
     ]
 
     for i, step in enumerate(steps, start=1):
@@ -217,7 +236,8 @@ def login():
        Returns:
            - If the request is a GET request: The rendered login page HTML.
            - If the request is a POST request and the form data is valid: A redirect to the home page.
-           - If the request is a POST request and the form data is invalid: The rendered login page HTML with error messages.
+           - If the request is a POST request and the form data is invalid: The rendered login page HTML with
+           error messages.
     """
     # if request.method == 'POST':
     #     return redirect(url_for('index'))
@@ -263,12 +283,11 @@ def sign_up():
 
         Returns:
         - If the request is a GET request: the rendered sign_up.html template.
-        - If the request is a POST request: either a redirect to the login page with a success message or a redirect to the
-          sign-up page with error messages, depending on the validity of the form data.
+        - If the request is a POST request: either a redirect to the login page with a success message or a redirect
+        to the sign-up page with error messages, depending on the validity of the form data.
     """
     # name = None
     signup_form = SignUpForm()
-
 
     # Validate the Sign-Up form
     if signup_form.validate_on_submit():
@@ -449,13 +468,13 @@ def reset_token(token):
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
     """
-        Renders the calculator.html template and handles POST requests. If the form data is valid, the function will calculate
-        and display the mortgage total on the page.
+        Renders the calculator.html template and handles POST requests. If the form data is valid, the function
+        will calculate and display the mortgage total on the page.
 
         GET request: The function renders the calculator.html template with default values for the inputs.
 
-        POST request: The function calculates the mortgage total using the user's input data and displays the result on the
-        calculator.html template.
+        POST request: The function calculates the mortgage total using the user's input data and displays the
+        result on the calculator.html template.
 
         Returns:
             - If the request is a GET request: the rendered calculator.html template.
@@ -570,7 +589,8 @@ def get_lat_lng_from_zip(zip_code):
                 If the zip code is invalid or the Google Geocoding API does not return a valid response, the function
                 returns a tuple of None values.
     """
-    geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address={zip_code}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU"
+    geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address=" \
+                  f"{zip_code}&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU"
     response = requests.get(geocode_url)
     data = response.json()
     if data["status"] == "OK":
@@ -587,7 +607,8 @@ def update_favorites():
         Expects the following POST parameters:
             - csrf_token: A CSRF token to protect against cross-site request forgery attacks.
             - propId: The ID of the property to update.
-            - checked: A string representation of a boolean value indicating whether the property should be favorited or not.
+            - checked: A string representation of a boolean value indicating whether the property should
+            be favorite or not.
 
         Returns:
             - A JSON object containing the rendered HTML for the updated properties table and favorites table.
@@ -599,7 +620,7 @@ def update_favorites():
     checked = request.form['checked'] == 'true'
 
     # Get the property instance
-    prop = Property.query.filter_by(propId=propId).first()
+    # prop = Property.query.filter_by(propId=propId).first()
 
     # Update the favorite status of the property
     if checked:
@@ -631,7 +652,8 @@ def update_favorites():
 @app.route('/favorites_table')
 def favorites_table():
     """
-        Renders the favorites_table.html template, which displays a table of properties marked as "favorite" by the user.
+        Renders the favorites_table.html template, which displays a table of properties marked as
+        "favorite" by the user.
 
         Returns:
         - The rendered favorites_table.html template.

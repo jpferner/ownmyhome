@@ -78,35 +78,9 @@ class Users(db.Model, UserMixin):
         """
         return check_password_hash(self.password_hash, password)
 
-    def get_reset_token(self, expires_secs=300):
-        """
-        This method creates the token, using itsdangerous, that will verify
-        the person and account that will have their password reset
-        Args:
-            expires_secs: integer number of seconds for expiration
-
-        Returns: a signed string serialized with the internal serializer
-
-        """
-        serial = Serializer(app.config['SECRET_KEY'], expires_secs)
-        return serial.dumps({'user_id': self.id}).decode('utf-8')
-    @staticmethod
-    def verify_reset_token(token):
-        serial = Serializer(app.config['SECRET_KEY'])
-        try:
-            user_id = serial.loads(token)['user_id']
-        except:
-            return None
-        return Users.query.get(user_id)
-
-
-
-    # From David H I may need this next sprint
-    # def set_password(self, password):
-    # self.password_hash = generate_password_hash(password, "sha256")
-
 
 class Property(db.Model):
+    """ Creates the property table and needed relationships"""
     propId = db.Column(db.Integer, primary_key=True)
     street = db.Column(db.String(100))
     city = db.Column(db.String(25), index=True)
@@ -123,13 +97,15 @@ class Property(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('Users', backref=db.backref('properties', lazy=True))
-    favorited_by = db.relationship('UserFavorite', back_populates='property', lazy='dynamic', cascade='all, delete-orphan')  # cascade deletes the related UserFavorite instances when a Property is deleted
+    favorited_by = db.relationship('UserFavorite', back_populates='property', lazy='dynamic',
+                                   cascade='all, delete-orphan')  # cascade deletes the related UserFavorite instances when a Property is deleted
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
 
 
 class UserFavorite(db.Model):
+    """ Creates a table and relationship for the favorites list """
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
     property_id = db.Column(db.Integer, db.ForeignKey('property.propId'), primary_key=True)
 
