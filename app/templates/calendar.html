@@ -1,7 +1,7 @@
 {% include 'header.html' %}
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dycalendarjs@1.2.1/css/dycalendar.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<link rel="stylesheet" href="../static/styles/style.css">
+<link rel="stylesheet" href="../static/styles/calendar.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.cycle2/2.1.6/jquery.cycle2.core.min.js"></script>
 <section>
@@ -40,6 +40,8 @@
     </div>
 </div>
 <script>
+   year = new Date().getFullYear();
+
   // fill the month table with column headings
 function day_title(day_name) {
     document.write("<div class='c-cal__col'>" + day_name + "</div>");
@@ -74,7 +76,7 @@ function fill_table(month, month_length, indexMonth) {
     // fill the first week of days
     for (var i = start_day; i < 8; i++) {
       document.write(
-        "<div data-day='2022-" +
+        "<div data-day='" + year + "-" +
           indexMonth +
           "-0" +
           day +
@@ -92,7 +94,7 @@ function fill_table(month, month_length, indexMonth) {
       for (var i = 1; i <= 7 && day <= month_length; i++) {
         if (day >= 1 && day <= 9) {
           document.write(
-            "<div data-day='2023-" +
+            "<div data-day='" + year + "-" +
               indexMonth +
               "-0" +
               day +
@@ -103,7 +105,7 @@ function fill_table(month, month_length, indexMonth) {
           day++;
         } else {
           document.write(
-            "<div data-day='2023-" +
+            "<div data-day='" + year + "-" +
               indexMonth +
               "-" +
               day +
@@ -138,7 +140,6 @@ function fill_table(month, month_length, indexMonth) {
         <div class="c-cal__container c-calendar__style">
             <script>
 
-      year = 2023
 
       // first day of the week of the new year
       today = new Date("January 1, " + year);
@@ -163,9 +164,20 @@ function fill_table(month, month_length, indexMonth) {
     <div class="c-event__creator c-calendar__style js-event__creator">
         <a href="javascript:;" class="o-btn js-event__close">CLOSE <span class="fa fa-close"></span></a>
         <form id="addEvent">
+            <p id="event_form_error" class="error-message"></p>
             <input placeholder="Event name" type="text" name="name">
-            <input type="date" name="date">
-            <input type="time" name="time">
+            <input  type="date" name="date">
+
+            <span class="">
+                <label>Start time</label>
+                <input  type="time" name="time" step="60">
+            </span>
+
+            <div class="flex-container">
+                <label>End time</label>
+                <input  type="time" name="end_time" step="60">
+            </div>
+
             <textarea placeholder="Notes" name="notes" cols="30" rows="10"></textarea>
 
         </form>
