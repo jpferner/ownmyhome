@@ -3,14 +3,26 @@
 <link rel="stylesheet" href="{{ url_for('static', filename='styles/home.css') }}">
 
 <section>
-    <div class="container">
-        <h1>Welcome to our Real Estate Website</h1>
+    <div class="homepage">
+        <h1>Welcome To Own My Home</h1>
         <p>Find your dream property with us</p>
+    </div>
+    <div class="slideshow">
     </div>
 </section>
 
 <aside>
     <div class="aside-container">
+        <div class="synopsis">
+            <p>
+                Welcome to Own My Home (OMH), your all-in-one platform for making the home buying journey seamless
+                and hassle-free. At OMH, we empower you to discover the perfect property, connect with trusted realtors,
+                and access a wide range of services tailored to your home buying needs. Our intuitive project checklist
+                keeps you organized and on track, while our user-friendly affordability calculator provides a clear
+                understanding of how much home you can comfortably purchase. Begin your journey with OMH today and let
+                us help you turn your dream of homeowner-ship into a reality.
+            </p>
+        </div>
         <div class="aside-box">
             {% if current_user.is_authenticated %}
                 {% if first_incomplete_item %}
@@ -20,24 +32,35 @@
                 {% endif %}
             {% else %}
                 <p>Please log in to view the checklist.</p>
+                <p><a href="{{ url_for('sign_up') }}">Create a free account!</a></p>
             {% endif %}
         </div>
         <div class="aside-box">
-            <h3>Random Property</h3>
+            <h3>Featured Property</h3>
             {% if random_property %}
-                <p>{{ random_property.street }}</p>
+                <a href="{{ random_property.propUrl }}">
+                    <img src="{{ url_for('static', filename='images/property_images/' + random_property.image_filename) }}"
+                         alt="Property Image" class="property-image">
+                    <p>{{ random_property.street }}, {{ random_property.city }}, {{ random_property.state }} {{ random_property.zcode }}</p>
+                </a>
             {% else %}
                 <p>No property found.</p>
             {% endif %}
         </div>
         <div class="aside-box">
+            <h3>Upcoming Event</h3>
+            {% if calendar %}
+                <p>{{ calendar.detail }}</p>
+            {% else %}
+                <p>No Upcoming Event.</p>
+            {% endif %}
+        </div>
+        <div class="aside-box" id="login">
             {% if current_user.is_authenticated %}
                 <h1 class="welcome-user">Welcome, {{ current_user.first_name }}</h1>
-                <h2><a href="{{ url_for('logout') }}">Logout</a></h2>
             {% else %}
                 <h3 style="text-decoration: underline">Login</h3>
                 {% include 'login_form_partial.html' %}
-                <p><a href="{{ url_for('sign_up') }}">Create a free account!</a></p>
             {% endif %}
         </div>
     </div>
@@ -45,3 +68,11 @@
 </aside>
 
 {% include 'footer.html' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagePath = "{{ url_for('static', filename='images/') }}";
+        initSlideshow(imagePath);
+    });
+</script>
