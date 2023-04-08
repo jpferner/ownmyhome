@@ -341,7 +341,7 @@ def calculator():
     return render_template('calculator.html', HomeVal=500000, DownPay=150000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
                            StartDate=date.today(), PropTax=2400, Income=60000, Credit=500, CarPay=350, StudentPay=400,
-                           MortTotal=0)
+                           HomeInsurance=1000, PrivateMortInsurance=5, HOA=350, MortTotal=0)
 
 
 @app.route('/services', methods=['GET', 'POST'])
