@@ -4,9 +4,9 @@ let container = document.querySelector(".container");
 var monthEl = $(".c-main");
 var dataCel = $(".c-cal__cel");
 var dateObj = new Date();
-var month = dateObj.getUTCMonth() + 1;
-var day = dateObj.getUTCDate();
-var year = dateObj.getUTCFullYear();
+var month = dateObj.getMonth() + 1;
+var day = dateObj.getDate();
+var year = dateObj.getFullYear();
 var monthText = [
   "January",
   "February",
@@ -28,7 +28,7 @@ var saveBtn = $(".js-event__save");
 var closeBtn = $(".js-event__close");
 var winCreator = $(".js-event__creator");
 var inputDate = $(this).data();
-today = year + "-" + month + "-" + day;
+today = moment().format("YYYY-MM-DD");
 var events = {};
 var eventForm = {};
 var selectedDay = moment().format("YYYY-MM-DD");
@@ -57,6 +57,9 @@ function loadEvents() {
                     var date = datetime.format("YYYY-MM-DD");
                     var time = datetime.format("HH:mm:ss");
 
+                    var endDatetime = moment(event.endTime);
+                    var endTime = endDatetime.format("HH:mm:ss");
+
                     if (!(date in events)) {
                         events[date] = [];
 
@@ -66,7 +69,8 @@ function loadEvents() {
                         name: event.name,
                         notes: event.notes,
                         date: date,
-                        time: time
+                        time: time,
+                        endTime: endTime
                     });
 
                 });
@@ -77,20 +81,21 @@ function loadEvents() {
 
 }
 
-
-function defaultEvents(dataDay,dataName,dataNotes,dataTime){
-
-  var event = $('*[data-day='+dataDay+']');
-
-  event.attr("data-name", dataName);
-  event.attr("data-notes", dataNotes);
-  event.attr("data-date", dataDay);
-  //date.addClass("event");
-  event.attr("data-time", dataTime)
-  //date.addClass("event--" + classTag);
-  fillEventSidebar(event);
-  updateEventList();
-}
+//
+//function defaultEvents(dataDay,dataName,dataNotes,dataTime){
+//
+//  var event = $('*[data-day='+dataDay+']');
+//
+//  event.attr("data-name", dataName);
+//  event.attr("data-notes", dataNotes);
+//  event.attr("data-date", dataDay);
+//  //date.addClass("event");
+//  event.attr("data-time", dataTime)
+//  event.attr("data-end-time"), dataE
+//  //date.addClass("event--" + classTag);
+//  fillEventSidebar(event);
+//  updateEventList();
+//}
 
 //defaultEvents(today, 'YEAH!','Today is your day','important');
 //defaultEvents('2022-12-25', 'MERRY CHRISTMAS','A lot of gift!!!!','festivity');
@@ -113,23 +118,43 @@ todayBtn.on("click", function() {
     var step = month - indexMonth;
     moveNext(step, true);
   }
+  selectedDay = moment().format("YYYY-MM-DD");
+  updateEventList();
+
+  $(".c-aside__num").text(selectedDay.slice(8));
+  $(".c-aside__month").text(monthText[month - 1]);
+
+  dataCel.each(function() {
+  if ($(this).data("day") === selectedDay) {
+    $(this).addClass("isSelected");
+    //fillEventSidebar($(this));
+  }
+  else {
+    $(this).removeClass("isSelected");
+  }
+});
 });
 
 //highlight the cel of current day
 dataCel.each(function() {
   if ($(this).data("day") === today) {
     $(this).addClass("isToday");
-    fillEventSidebar($(this));
+    $(this).addClass("isSelected");
+    //fillEventSidebar($(this));
   }
 });
 
 function openForm() {
+
+  $("#event_form_error").text("");
+  $("#event_form_error").removeClass("isVisible");
     winCreator.addClass("isVisible");
   $("body").addClass("overlay");
   document.querySelector('input[name="date"]').value = eventForm.date;
   document.querySelector('input[name="name"]').value = eventForm.name;
   document.querySelector('textarea[name="notes"]').value = eventForm.notes;
   document.querySelector('input[name="time"]').value = eventForm.time;
+  document.querySelector('input[name="end_time"]').value = eventForm.endTime;
 
 }
 
@@ -147,7 +172,8 @@ addBtn.on("click", function() {
   date: today,
   notes: "",
   name: "",
-  time: "00:00:00"
+  time: "",
+  endTime: ""
   }
 
   openForm();
@@ -161,8 +187,11 @@ closeBtn.on("click", function() {
 saveBtn.on("click", function() {
   var inputName = $("input[name=name]").val();
   var inputDate = $("input[name=date]").val();
-  var inputTime = $("input[name=time").val();
+  var inputTime = $("input[name=time]").val();
+  var inputEndTime = $('input[name=end_time]').val();
   var inputNotes = $("textarea[name=notes]").val();
+
+  console.log(inputEndTime);
 
 
   $.ajax({
@@ -176,7 +205,8 @@ saveBtn.on("click", function() {
             data: JSON.stringify({
                 name: inputName,
                 notes: inputNotes,
-                time: inputDate + 'T' + inputTime + ".000000"
+                time: inputDate + 'T' + inputTime + ".000000",
+                endTime: inputDate + 'T' + inputEndTime + ".000000"
             }),
             success: function (response) {
                 if (eventForm.id !== undefined) {
@@ -185,9 +215,13 @@ saveBtn.on("click", function() {
                     });
 
                 }
-                var datetime = moment(response.time)
+                var datetime = moment(response.time);
                 var date = datetime.format("YYYY-MM-DD");
                 var time = datetime.format("HH:mm:ss");
+
+                var endDatetime = moment(response.endTime);
+                var endTime = endDatetime.format("HH:mm:ss");
+
 
                 if (!(date in events)) {
                     events[date] = [];
@@ -198,42 +232,62 @@ saveBtn.on("click", function() {
                     name: response.name,
                     notes: response.notes,
                     date: date,
-                    time: time
+                    time: time,
+                    endTime: endTime
                 });
                 updateEventList();
 
                 winCreator.removeClass("isVisible");
                 $("body").removeClass("overlay");
                 $("#addEvent")[0].reset();
+            },
+
+            error: function (xhr, status, error) {
+
+
+                console.log(xhr.responseJSON);
+                var errorMessage = "";
+                if (xhr.responseJSON.code === "OVERLAPPING_TIMES") {
+                    errorMessage = "Event times overlap with another event.";
+                } else if (xhr.responseJSON.code === "INVALID_END_TIME") {
+                    errorMessage = "End time is before the start time.";
+                    console.log(errorMessage);
+                } else {
+                    errorMessage = "Unknown error occurred, please try again."
+                }
+                $("#event_form_error").addClass("isVisible");
+                $("#event_form_error").text(errorMessage);
             }
   });
 
 });
 
-//fill sidebar event info
-function fillEventSidebar(self) {
-  $(".c-aside__event").remove();
-  var thisName = self.attr("data-name");
-  var thisNotes = self.attr("data-notes");
-  var thisEvent = self.hasClass("event");
-  var thisDate = self.attr("data-date");
-  var thisTime = self.attr("data-time");
-//  console.log(thisDate);
-
-  if (!(thisDate in events)) {
-    events[thisDate] = [];
-
-  }
-  events[thisDate].push({
-    name: thisName,
-    notes: thisNotes,
-    date: thisDate,
-    time: thisTime,
-    id: currentEventId
-  });
-  currentEventId += 1;
-  console.log(events);
-  updateEventList();
+////fill sidebar event info
+//function fillEventSidebar(self) {
+//  $(".c-aside__event").remove();
+//  var thisName = self.attr("data-name");
+//  var thisNotes = self.attr("data-notes");
+//  var thisEvent = self.hasClass("event");
+//  var thisDate = self.attr("data-date");
+//  var thisTime = self.attr("data-time");
+//  var thisEndTime = self.attr("data-end-time");
+////  console.log(thisDate);
+//
+//  if (!(thisDate in events)) {
+//    events[thisDate] = [];
+//
+//  }
+//  events[thisDate].push({
+//    name: thisName,
+//    notes: thisNotes,
+//    date: thisDate,
+//    time: thisTime,
+//    endTime: thisEndTime,
+//    id: currentEventId
+//  });
+//  currentEventId += 1;
+//  console.log(events);
+//  updateEventList();
 
 //  switch (true) {
 //    case thisImportant:
@@ -273,7 +327,7 @@ function fillEventSidebar(self) {
 //      );
 //      break;
 //   }
-};
+//};
 
 function updateEventList() {
   $(".c-aside__eventList").empty();
@@ -351,7 +405,8 @@ function editEvent(element) {
                 name: event.name,
                 notes: event.notes,
                 date: event.date,
-                time: event.time
+                time: event.time.substring(0, 5),
+                endTime: event.endTime.substring(0,5)
             };
         }
     });
@@ -369,6 +424,15 @@ dataCel.on("click", function() {
 
 //  fillEventSidebar($(this));
   selectedDay = year + "-" + thisMonth + "-" + thisDay;
+
+  if (selectedDay < today) {
+    $(".js-event__add").hide();
+    $(".js-event__remove").hide();
+  } else {
+    $(".js-event__add").show();
+    $(".js-event__remove").show();
+  }
+
   updateEventList();
 
   $(".c-aside__num").text(thisDay);

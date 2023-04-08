@@ -11,6 +11,7 @@ class CalendarEvents(db.Model):
     name = db.Column(db.String(100), nullable=False)
     notes = db.Column(db.String(500), nullable=True)
     time = db.Column(db.DateTime, default=datetime.utcnow)
+    end_time = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 

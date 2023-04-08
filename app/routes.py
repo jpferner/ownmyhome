@@ -11,7 +11,7 @@ from app import app
 
 from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
 from app.models import *
-from datetime import date
+from datetime import date, timedelta
 
 import bleach
 
@@ -213,30 +213,51 @@ def calendar():
         - If the request is a GET request: the rendered calendar.html template.
         - If the request is a POST request: a redirect to the index page.
     """
-    if request.method == 'POST':
+    # if request.method == 'POST':
+    #
+    #     return redirect(url_for('index'))
+    #
+    # events = CalendarEvents.query.filter_by(user_id=current_user.id).all()
 
-        return redirect(url_for('index'))
 
-    events = CalendarEvents.query.filter_by(user_id=current_user.id).all()
+
     return render_template('calendar.html', events=events)
 
 @app.route('/calendar/events', methods=['GET', 'POST'])
 @login_required
 def events():
 
+
+
     if request.method == 'POST':
+
+
 
         name = request.json['name']
         notes = request.json['notes']
         time = datetime.fromisoformat(request.json['time'])
+        end_time = datetime.fromisoformat(request.json['endTime'])
 
-        new_event = CalendarEvents(name=name, notes=notes, time=time, user_id=current_user.id)
+        if end_time < time:
+            return jsonify({"code": "INVALID_END_TIME"}), 400
+
+        start_of_day = datetime(time.year, time.month, time.day)
+        start_of_nextday = start_of_day + timedelta(days=1)
+        events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id,
+                                             CalendarEvents.time >= start_of_day,
+                                             CalendarEvents.time < start_of_nextday).all()
+
+        for event in events:
+            if (time < event.time and end_time > event.time) or (time > event.time and time < event.end_time):
+                return jsonify({"code": "OVERLAPPING_TIMES"}), 400
+
+        new_event = CalendarEvents(name=name, notes=notes, time=time, end_time=end_time, user_id=current_user.id)
 
         db.session.add(new_event)
         db.session.commit()
         return jsonify(map_events(new_event))
 
-    events = CalendarEvents.query.filter_by(user_id=current_user.id).all()
+    events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time > datetime.now()).all()
     return jsonify([map_events(event) for event in events])
 
 @app.route('/calendar/events/<id>', methods=['PUT', 'DELETE'])
@@ -247,12 +268,29 @@ def edit_remove_event(id):
         name = request.json['name']
         notes = request.json['notes']
         time = datetime.fromisoformat(request.json['time'])
+        end_time = datetime.fromisoformat(request.json['endTime'])
+
+        if end_time < time:
+            return jsonify({"code": "INVALID_END_TIME"}), 400
+
+        start_of_day = datetime(time.year, time.month, time.day)
+
+        start_of_nextday = start_of_day + timedelta(days=1)
+
+        events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time >= start_of_day, CalendarEvents.time < start_of_nextday, CalendarEvents.id != id).all()
+
+        for event in events:
+            if (time < event.time and end_time > event.time) or (time > event.time and time < event.end_time):
+                return jsonify({"code": "OVERLAPPING_TIMES"}), 400
+
+
 
         event = CalendarEvents.query.filter_by(id=id, user_id=current_user.id).first()
 
         event.name = name
         event.notes = notes
         event.time = time
+        event.end_time = end_time
 
         db.session.commit()
 
@@ -273,7 +311,8 @@ def map_events(event):
         "id": event.id,
         "name": event.name,
         "notes": event.notes,
-        "time": event.time.isoformat()
+        "time": event.time.isoformat(),
+        "endTime": event.end_time.isoformat()
     }
 
 # the Login Page
