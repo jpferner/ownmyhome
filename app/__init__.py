@@ -13,6 +13,7 @@ from flask_login import LoginManager
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+from flask_mail import Mail  # for password reset to send the email
 
 from config import Config
 
@@ -37,11 +38,22 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = "To access this page, please log into your account."
 
+mail = Mail()
+mail.init_app(app)
+
 from app.models import Users
 
 
 @login_manager.user_loader
 def load_user(user_id):  # id is the primary key for our user in models.py
+    """
+    Fetches a user against the database using user id
+    Args:
+        user_id: int
+
+    Returns: a new User object
+
+    """
     return Users.query.get(int(user_id))
 
 
