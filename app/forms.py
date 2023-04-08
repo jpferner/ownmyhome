@@ -92,14 +92,14 @@ class ResetPasswordForm(FlaskForm):
     password_hash = PasswordField("New Password:", render_kw={"placeholder": "new password"},
                                   validators=[InputRequired(),
                                               Length(min=8,
-                                                     message='Password should be at least %(min)d characters long'),
+                                                     message='Password should be at least %(min)d characters long.'),
                                               Regexp("^(?=.*[A-Z])",
-                                                     message="Password must have at least one uppercase character"),
+                                                     message="Password must have at least one uppercase character."),
                                               Regexp("^(?=.*[a-z])",
-                                                     message="Password must have at least one lowercase character"),
-                                              Regexp("^(?=.*\\d)", message="Password must contain at least one number"),
+                                                     message="Password must have at least one lowercase character."),
+                                              Regexp("^(?=.*\\d)", message="Password must contain at least one number."),
                                               Regexp("(?=.*[@$!_%*#?&])",
-                                                     message="Password must contain at least one special character"
+                                                     message="Password must contain at least one special character."
                                                      ),
                                               Regexp("(?!.*[.<>/\s])",
                                                      message="Password cannot contain ., <, >, /, or spaces.")
@@ -112,7 +112,7 @@ class ResetPasswordForm(FlaskForm):
                                           validators=[InputRequired(), EqualTo("password_hash",
                                                                                message="Passwords do not match. "
                                                                                        "Please try "
-                                                                                       "again")],
+                                                                                       "again.")],
                                           id='confirm_password_hash')
 
     # checkbox to show the user's password in plain text
