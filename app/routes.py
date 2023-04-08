@@ -336,6 +336,17 @@ def logout():
     return redirect(url_for('login'))
 
 def send_password_reset_email(user):
+    """
+           Sends the password reset email to user that includes the link for a new password.
+
+           If the form data is valid, the user is sent a password reset email.
+           If the form data is invalid, an error message is flashed and the user is redirected back to
+           the Password Reset Request page.
+
+           Returns:
+               None
+    """
+
     token = user.get_reset_token()
     message = Message('Password Reset Request',
                       sender=app.config['MAIL_USERNAME'],
@@ -352,6 +363,23 @@ def send_password_reset_email(user):
     mail.send(message)
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password_request():
+    """
+           Renders the Password Rest Request page of the website and handles
+           password reset request submissions.
+
+           If the form data is valid, the send_password_reset_email is called and the user
+           is sent a password reset email with a link. The user is shown a successful message
+           and redirected to the login page.
+           If the form data is invalid, an error message is flashed and the user is redirected back to the
+           password reset page
+
+           Returns:
+               - If the request is a GET request: The rendered password reset request page HTML.
+               - If the request is a POST request and the form data is valid: A redirect to the login page and
+               password reset email is sent.
+               - If the request is a POST request and the form data is invalid: The rendered password reset request HTML
+               with error messages.
+    """
     password_reset_form = ResetPasswordRequestForm()
     if password_reset_form.validate_on_submit():
         user = Users.query.filter_by(email=password_reset_form.email.data.lower()).first()
@@ -369,6 +397,26 @@ def reset_password_request():
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
+    """
+           Renders the change password page of the website and handles user password submissions.
+           Also, responsible for generating a valid token for the password reset link.
+
+           If the token is valid, the user clicks the reset link and  is redirected to the change password page.
+           If the token is expired, an error message is flashed and the user is redirected back to the
+            password reset request page.
+
+           Returns:
+               - If the request is a GET request: The rendered change password page HTML.
+               - If the request is a POST request and the token is valid: A redirect to the Change Password
+               page where the user is prompted to change their password.
+               - If the request is a POST request and the form data is valid: A redirect to the login page and
+               user is prompted to log in.
+               - If the request is a POST request and the token is invalid: An error message is shown and the
+                user is redirect to the Password Reset Request page
+               - If the request is a POST request and the form data is invalid: User is shown an error message and
+               the Change Password page is reloaded (while the token is valid).
+    """
+
     user = Users.verify_reset_token(token)
     if user is None:  # redirect the user to the request password reset page
         flash("Invalid or expired token. Please try again.")

@@ -46,6 +46,14 @@ from app.models import Users
 
 @login_manager.user_loader
 def load_user(user_id):  # id is the primary key for our user in models.py
+    """
+    Fetches a user against the database using user id
+    Args:
+        user_id: int
+
+    Returns: a new User object
+
+    """
     return Users.query.get(int(user_id))
 
 

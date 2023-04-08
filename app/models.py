@@ -45,13 +45,37 @@ class Users(db.Model, UserMixin):
     # Below is the password hashing for safe storage of passwords in the database
     @property
     def password(self):
+        """
+        Checks for valid attribute reference
+        Returns:
+            Invalid attribute error message
+        """
         raise AttributeError('Password is not a readable attribute!')
 
     @password.setter
     def password(self, password):
+        """
+        Takes the plain text representation of the user's password,
+        calls the generate_password_hash method and passes the plain text password
+        as an argument, and the newly hashed password is assigned to password_hash
+        Args:
+            password: string input from user
+
+        Returns:
+            Hashed password using hashing algorithm "sha256"
+        """
         self.password_hash = generate_password_hash(password)
 
     def verify_password(self, password):
+        """
+        Takes the users plaintext password and will use it to pass to the check_password_hash function to
+        check the user entered password (at login) against the hashed password value stored in the database
+        Args:
+            password: the plaintext password to compare against the hash.
+
+        Returns:
+            True if the password matched, False otherwise
+        """
         return check_password_hash(self.password_hash, password)
 
     def get_reset_token(self, expires_secs=300):
