@@ -5,9 +5,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.cycle2/2.1.6/jquery.cycle2.core.min.js"></script>
 <section>
-    <div class="container">
-        <h1>Welcome to our Real Estate Website</h1>
+    <div class="homepage">
+        <h1>Welcome To Own My Home</h1>
         <p>Find your dream property with us</p>
+    </div>
+    <div class="slideshow">
     </div>
 </section>
 <!--<aside>-->
@@ -190,3 +192,11 @@ function fill_table(month, month_length, indexMonth) {
     <script src="../static/scripts/calendar.js"></script>
 
 {% include 'footer.html' %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagePath = "{{ url_for('static', filename='images/') }}";
+        initSlideshow(imagePath);
+    });
+</script>
