@@ -307,7 +307,6 @@ def sign_up():
             # Add checklist items for the new user
             add_checklist_items(user.id)
 
-
             flash('Account created! Please use your credentials to log in.', category='success')
             return redirect(url_for('login'))
         else:  # redirect user to the sign-up page, so they can create a new account
@@ -420,7 +419,6 @@ def calculator():
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
                            StartDate=date.today(), PropTax=2400,
                            MortTotal=0)
-
 
 @app.route('/services', methods=['GET', 'POST'])
 def services():
