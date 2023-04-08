@@ -27,7 +27,7 @@
       <td>{{p.yearBuilt}}</td>
       <td>{{p.numBeds}}</td>
       <td>{{p.numBaths }}</td>
-      <td><input type="checkbox" id="{{p.propId}}" name="favorite" value="1" {% if p.favorite %}checked{% endif %}></td>
+      <td><label for="{{p.propId}}"></label><input type="checkbox" id="{{p.propId}}" name="favorite" value="1" {% if p.favorite %}checked{% endif %}></td>
     </tr>
   {% endfor %}
 </table>
