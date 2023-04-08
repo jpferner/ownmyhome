@@ -49,7 +49,7 @@
                 </tr>
                 <tr class="info">
                     <td><label for="PrivateMortInsurance">PMI:</label></td>
-                    <td><input type="number" id="PrivateMortInsurance" placeholder="5" value="{{ PrivateMortInsurance }}" min="0" max="50" step="0.1" oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
+                    <td><input type="number" id="PrivateMortInsurance" placeholder="0.5" value="{{ PrivateMortInsurance }}" min="0" max="50" step="0.1" oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
                 </tr>
                 <tr class="info">
                     <td><label for="LoanType">Loan Type:</label></td>
@@ -92,7 +92,13 @@
                 <td>Debt to Income Ratio: <label id="Debt">{{ MortTotal }}</label>%</td>
             </tr>
             <tr>
+                <td>Monthly Income after Debt: $<label id="DebtBudget">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
                 <td>Debt to Income Ratio with Mortgage: <label id="DebtMort">{{ MortTotal }}</label>%</td>
+            </tr>
+            <tr>
+                <td>Monthly Income after Debt and Mortgage: $<label id="DebtMortBudget">{{ MortTotal }}</label></td>
             </tr>
         </table>
     </form>

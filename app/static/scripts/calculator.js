@@ -79,12 +79,16 @@ function calculation(){
 
     // Debt to income
     let debt_income_percent = (mon_payments / mon_income) * 100
+    let debt_income_budget = (mon_income - mon_payments)
     let debt_income_percent_mort = (total_mon_payment / mon_income) * 100
+    let debt_income_mort_budget = mon_income - total_mon_payment
 
     document.getElementById('MonPayTotal').textContent=Number(total_mon_payment.toFixed(2)).toLocaleString()
     document.getElementById('MortMonTotal').textContent=Number(mort_Mon_Total.toFixed(2)).toLocaleString()
     document.getElementById('TotalMort').textContent=Number(total_mort.toFixed(2)).toLocaleString()
     document.getElementById('TotalInterest').textContent=Number(mort_interest.toFixed(2)).toLocaleString()
     document.getElementById('Debt').textContent=Number(debt_income_percent.toFixed(2)).toLocaleString()
+    document.getElementById('DebtBudget').textContent=Number(debt_income_budget.toFixed(2)).toLocaleString()
     document.getElementById('DebtMort').textContent=Number(debt_income_percent_mort.toFixed(2)).toLocaleString()
+    document.getElementById('DebtMortBudget').textContent=Number(debt_income_mort_budget.toFixed(2)).toLocaleString()
 }
