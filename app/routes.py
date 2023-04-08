@@ -20,8 +20,6 @@ from flask_mail import Message
 from app import mail
 
 
-
-
 # Define routes
 @app.route("/")
 @app.route("/index")
@@ -300,7 +298,6 @@ def sign_up():
         signup_form.password_hash.data = bleach.clean(signup_form.password_hash.data, strip=True)
         signup_form.confirm_password_hash.data = bleach.clean(signup_form.confirm_password_hash.data, strip=True)
 
-
         # strip all whitespace from beginning and end of the sting
         signup_form.first_name.data = signup_form.first_name.data.strip()
         signup_form.last_name.data = signup_form.last_name.data.strip()
@@ -354,6 +351,7 @@ def logout():
     flash("You have successfully logged out!", category='logout')
     return redirect(url_for('login'))
 
+
 def send_password_reset_email(user):
     """
            Sends the password reset email to user that includes the link for a new password.
@@ -380,6 +378,8 @@ def send_password_reset_email(user):
                    Thank you!
                    """
     mail.send(message)
+
+
 @app.route('/reset_password', methods=['GET', 'POST'])
 def reset_password_request():
     """
@@ -412,7 +412,8 @@ def reset_password_request():
             return redirect(url_for('login'))
         else:
             flash("We're sorry. There is no account associated with the email provided.", category='error')
-    return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form,)
+    return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form, )
+
 
 @app.route('/reset_password/<token>', methods=['GET', 'POST'])
 def reset_token(token):
@@ -464,7 +465,6 @@ def reset_token(token):
     return render_template('change_password.html', title="Reset Password", form=form)
 
 
-
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
     """
@@ -486,6 +486,7 @@ def calculator():
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
                            StartDate=date.today(), PropTax=2400,
                            MortTotal=0)
+
 
 @app.route('/services', methods=['GET', 'POST'])
 def services():
