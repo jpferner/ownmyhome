@@ -18,23 +18,23 @@
         background-color: gray;
     }
     .property-thumbnail {
-        width: 100px; /* Set the desired width for the thumbnail */
-        height: auto; /* Maintain the aspect ratio */
-        object-fit: cover; /* Make sure the image covers the entire thumbnail area */
+        width: 100px;
+        height: auto;
+        object-fit: cover;
     }
     /* The Modal (background) */
 .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  padding-top: 100px; /* Location of the box */
+  display: none;
+  position: fixed;
+  z-index: 1;
+  padding-top: 100px;
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.9); /* Black w/ opacity */
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0,0,0);
+  background-color: rgba(0,0,0,0.9);
 }
 
 /* Modal Content (image) */
@@ -93,9 +93,32 @@
   }
 }
 
+#map {
+     height: 400px;
+     width: 100%;
+
+}
+
 </style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU&callback=initMap" async defer></script>
+
 
 <script>
+
+
+    function geocodeAddress(geocoder, resultsMap, address) {
+        geocoder.geocode({ 'address': address }, function (results, status) {
+            if (status === 'OK') {
+                const marker = new google.maps.Marker({
+                    map: resultsMap,
+                    position: results[0].geometry.location
+                });
+            } else {
+                console.log('Geocode was not successful for the following reason: ' + status);
+            }
+        });
+    }
+
     $(document).ready(function () {
         $('input[name="favorite"]').change(function () {
             const propId = $(this).attr('id');
@@ -116,7 +139,7 @@
         $.ajax({
             url: "{{ url_for('favorites_table') }}",
             success: function(response) {
-               $('#favorites-table').html(response.favorites);
+               $('#favorites').html(response);
             }
         });
 
@@ -174,6 +197,9 @@
             }
         }
 
+
+
+
         function resetFilters() {
             $('#price-filter').val('all');
             $('#bedrooms-filter').val('all');
@@ -214,6 +240,7 @@
         }
 
     });
+
 </script>
 
 <section>
@@ -228,10 +255,46 @@
 <aside>
     <div id="myModal" class="modal">
       <span class="close">&times;</span>
-      <img class="modal-content" id="img01">
+      <img class="modal-content" id="img01" alt="Image not available" src="">
     </div>
 
-    <h1>PROPERTIES IN WILMINGTON NC</h1>
+    <h1>WILMINGTON NC</h1>
+    <div id="map"></div>
+    <script>
+      function initMap() {
+          const map = new google.maps.Map(document.getElementById('map'), {
+              zoom: 10,
+              center: {lat: 34.2257, lng: -77.9447} // Set the center of the map to Wilmington, NC
+          });
+
+          const geocoder = new google.maps.Geocoder();
+
+          // Function to geocode addresses and place markers
+        function geocodeAddress(address, propUrl) {
+            geocoder.geocode({'address': address}, function(results, status) {
+                if (status === 'OK') {
+                    const marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location,
+                        title: address
+                    });
+                    // Add click event listener for the marker
+                    marker.addListener('click', function () {
+                         window.open(propUrl, '_blank');
+                    });
+                } else {
+                    console.log('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        {% for p in props %}
+            geocodeAddress("{{ p.street }}, {{ p.city }}, {{ p.state }}, {{ p.zcode }}", "{{ p.propUrl }}");
+        {% endfor %}
+    }
+    </script>
+
+    <h1>PROPERTIES AVAILABLE IN WILMINGTON</h1>
     <form method="POST" action="{{ url_for('update_favorites') }}">
     <div>
         <label for="price-filter">Price:</label>
@@ -266,7 +329,7 @@
         <button type="button" id="apply-filters">Apply Filters</button>
         <button type="button" id="reset-filters">Reset Filters</button>
 
-    </div><br>
+    </div><br><br>
 
         <div id="props">
             <table>
@@ -298,8 +361,8 @@
                         <td>{{ p.yearBuilt }}</td>
                         <td>{{ p.numBeds }}</td>
                         <td>{{ p.numBaths }}</td>
-                        <td><input type="checkbox" id="{{ p.propId }}" name="favorite" value="1"
-                                   {% if p.favorite %}checked{% endif %}></td>
+                        <td><label for="{{ p.propId }}"></label><input type="checkbox" id="{{ p.propId }}" name="favorite" value="1"
+                                                                       {% if p.favorite %}checked{% endif %}></td>
                     </tr>
                 {% endfor %}
             </table>
@@ -310,7 +373,7 @@
 
 <section>
     <div class="container">
-        <h1>FAVORITE PROPERTIES</h1>
+        <h1>MY FAVORITE PROPERTIES</h1>
         <div id="favorites">
             <table>
                 <tr>
@@ -330,7 +393,7 @@
                 {% for p in favorite_props %}
                     <tr>
                         <td>{{ p.propId }}</td>
-                        <td><img class="property-thumbnail" src="{{ url_for('static', filename='/images/property_images/' + p.image_filename) }}" alt="Property image"></td>
+                        <td><img class="favorite-thumbnail" src="{{ url_for('static', filename='/images/property_images/' + p.image_filename) }}" alt="Property image"></td>
                         <td><a href="{{ p.propUrl }}" target="_blank" class="street-link">{{ p.street }}</a></td>
                         <td>{{ p.city }}</td>
                         <td>{{ p.state }}</td>
@@ -354,7 +417,10 @@
     document.addEventListener("DOMContentLoaded", function () {
         const imagePath = "{{ url_for('static', filename='images/') }}";
         initSlideshow(imagePath);
+
     });
+
+
 </script>
 
 
