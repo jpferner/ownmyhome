@@ -1,8 +1,21 @@
 from flask_login import UserMixin
 from sqlalchemy import PrimaryKeyConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
+
+from app import db
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from app import db, app
+
+
+class CalendarEvents(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    notes = db.Column(db.String(500), nullable=True)
+    time = db.Column(db.DateTime, default=datetime.utcnow)
+    end_time = db.Column(db.DateTime, default=datetime.utcnow)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+
 
 
 class ChecklistItems(db.Model):
