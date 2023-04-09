@@ -36,6 +36,19 @@ function validateAll(event){
     }
 }
 
+function updateLoanAmt() {
+    const homeVal = parseFloat(document.getElementById("HomeVal").value);
+    const downPay = parseFloat(document.getElementById("DownPay").value);
+    const loanAmt = homeVal - downPay;
+    document.getElementById("LoanAmt").value = loanAmt;
+        }
+
+        // Call the updateLoanAmt function when the HomeVal and DownPay fields are changed
+        window.onload = function() {
+            document.getElementById("HomeVal").addEventListener("input", updateLoanAmt);
+            document.getElementById("DownPay").addEventListener("input", updateLoanAmt);
+        };
+
 function validateInput(input) {
   const valid = input.checkValidity();
   if (!valid) {
