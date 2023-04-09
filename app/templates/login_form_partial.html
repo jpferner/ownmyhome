@@ -1,8 +1,28 @@
+<head>
+    <title>Own My Home</title>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles/login.css') }}"
+    />
+</head>
+
 {% if login_form %}
     <form method="POST" action="{{ url_for('login') }}">
+
         {{ login_form.csrf_token }}
         <span style="color: white">{{ login_form.email.label }}</span> <br> {{ login_form.email() }}<br>
-        <span style="color: white">{{ login_form.password_hash.label }}</span> <br> {{ login_form.password_hash() }}<br>
+        <span style="color: white">{{ login_form.password_hash.label }}</span>
+        <span id="toggle-password" class="toggle-password">👁</span> <br> {{ login_form.password_hash() }} <br>
+        <span style="color: white">{{ login_form.remember_me.label }}</span> <br> {{ login_form.remember_me() }}<br>
         {{ login_form.submit() }}
     </form>
 {% endif %}
+
+<script src="{{ url_for('static', filename='scripts/eye.js') }}"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const passwordFieldId = "{{ login_form.password_hash.id }}";
+        initTogglePassword(passwordFieldId);
+    });
+</script>
