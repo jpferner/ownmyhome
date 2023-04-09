@@ -1,9 +1,19 @@
-.calculator1 {
+.calc-form {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+.calculator {
     background-color: #cccccc;
     width: 25%;
     border: 1px solid black;
     margin: auto;
     text-align: left;
+}
+.outputs {
+    width: 25%;
+    margin: auto;
 }
 .info {
     border: 1px solid black;
@@ -17,17 +27,50 @@ td {
 }
 
 @media screen and (max-width: 1800px) {
-    .calculator1{width: 30%}
+    .calc-form{}
+    .calculator{width: 30%}
+    .outputs{width: 30%}
 }
 
 @media screen and (max-width: 1525px) {
-    .calculator1{width:35%}
+    .calc-form{}
+    .calculator{width:35%}
+    .outputs{width: 35%}
 }
 
 @media screen and (max-width: 1325px) {
-    .calculator1{width:42%}
+    .calc-form{}
+    .calculator{width:40%}
+    .outputs{width: 40%}
 }
 
-@media screen and (max-width: 1150px) {
-    .calculator1{width:50%}
+@media screen and (max-width: 1190px) {
+    .calc-form{}
+    .calculator{width:50%}
+    .outputs{width: 50%}
+}
+@media screen and (max-width: 1000px) {
+    .calc-form{}
+    .calculator{width:60%}
+    .outputs{width: 60%}
+}
+@media screen and (max-width: 870px) {
+    .calc-form{}
+    .calculator{width:70%}
+    .outputs{width: 70%}
+}
+@media screen and (max-width: 770px) {
+    .calc-form{}
+    .calculator{width:80%}
+    .outputs{width: 80%}
+}
+@media screen and (max-width: 700px) {
+    .calc-form{}
+    .calculator{width:90%}
+    .outputs{width: 90%}
+}
+@media screen and (max-width: 650px) {
+    .calc-form{}
+    .calculator{width:100%}
+    .outputs{width: 100%}
 }
