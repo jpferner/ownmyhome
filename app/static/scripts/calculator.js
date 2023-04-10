@@ -1,3 +1,7 @@
+/**
+ * Validates all input fields and calls the calculation function if all fields are valid.
+ * @param {Event} event - The event object representing the form submission.
+ */
 function validateAll(event){
     event.preventDefault()
 
@@ -36,6 +40,9 @@ function validateAll(event){
     }
 }
 
+/**
+ * Updates the loan amount field based on the values of the home value and down payment fields.
+ */
 function updateLoanAmt() {
     const homeVal = parseFloat(document.getElementById("HomeVal").value);
     const downPay = parseFloat(document.getElementById("DownPay").value);
@@ -43,18 +50,29 @@ function updateLoanAmt() {
     document.getElementById("LoanAmt").value = loanAmt;
         }
 
-        // Call the updateLoanAmt function when the HomeVal and DownPay fields are changed
+        /**
+         * Attaches event listeners to the HomeVal and DownPay fields on window load.
+         * These event listeners will call the updateLoanAmt function when their values change.
+         */
         window.onload = function() {
             document.getElementById("HomeVal").addEventListener("input", updateLoanAmt);
             document.getElementById("DownPay").addEventListener("input", updateLoanAmt);
         };
 
+/**
+ * Validates a given input field and reports its validity status.
+ * @param {HTMLElement} input - The input field to be validated.
+ */
 function validateInput(input) {
   const valid = input.checkValidity();
   if (!valid) {
     input.reportValidity();
   }
 }
+
+/**
+ * Performs mortgage calculations based on user input, updates the UI with calculated values.
+ */
 function calculation(){
 
     const home = document.getElementById('HomeVal').value;

@@ -14,6 +14,12 @@ $(document).ready(function () {
     });
 });
 
+/**
+ * Fetches search results for the given query, zip code, and starting index.
+ * @param {string} searchQuery - The search query to filter the results.
+ * @param {string} zipCode - The zip code to search around.
+ * @param {number} startIndex - The starting index for the search results.
+ */
 function fetchResults(searchQuery, zipCode, startIndex) {
     $('html, body').scrollTop(0);
     const radius = 20 * 1609.34;  // Convert miles to meters
@@ -35,6 +41,14 @@ function fetchResults(searchQuery, zipCode, startIndex) {
     });
 }
 
+/**
+ * Displays the fetched search results and creates pagination for the results.
+ * @param {Array} results - An array of search results.
+ * @param {number} totalResults - The total number of search results.
+ * @param {number} startIndex - The starting index for the current displayed results.
+ * @param {string} searchQuery - The search query used to filter the results.
+ * @param {string} zipCode - The zip code used to search around.
+ */
 function displayResults(results, totalResults, startIndex, searchQuery, zipCode) {
     const resultsDiv = $('#search-results');
     resultsDiv.empty();
@@ -124,6 +138,10 @@ function displayResults(results, totalResults, startIndex, searchQuery, zipCode)
     }
 }
 
+/**
+ * Creates a combined map with markers for the given search results.
+ * @param {Array} results - An array of search results.
+ */
 function createCombinedMap(results) {
     const markers = results
         .filter((result) => result.lat && result.lng)
@@ -147,6 +165,11 @@ function createCombinedMap(results) {
     $('#combined-map').empty().append(combinedMap);
 }
 
+/**
+ * Returns the bounding box for the given search results.
+ * @param {Array} results - An array of search results.
+ * @returns {Object} - An object representing the bounding box with south, west, north, and east properties.
+ */
 function getBoundingBox(results) {
     let minLat = Infinity;
     let minLng = Infinity;
@@ -168,6 +191,11 @@ function getBoundingBox(results) {
     };
 }
 
+/**
+ * Fetches search suggestions for the given request and provides them to the response callback.
+ * @param {Object} request - An object representing the request, with a "term" property containing the search term.
+ * @param {Function} response - A callback function to provide the fetched search suggestions to.
+ */
 function autoComplete(request, response) {
     $.ajax({
         url: '/search_suggestions',

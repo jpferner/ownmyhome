@@ -42,6 +42,11 @@ $(document).ready(function () {
     loadEvents();
 });
 
+/**
+ * Loads events from the server using an AJAX GET request. On a successful response,
+ * it processes the returned events, converts them into the required format, and stores
+ * them in the events object. Finally, it calls updateEventList() to display the events.
+ */
 function loadEvents() {
      $.ajax({
             url: '/calendar/events',
@@ -118,6 +123,11 @@ dataCel.each(function() {
   }
 });
 
+/**
+ *  Displays the event form by adding the isVisible class to the winCreator element and
+ *  the overlay class to the body element. It also populates the form inputs with the data
+ *  from the eventForm object.
+ */
 function openForm() {
 
   $("#event_form_error").text("");
@@ -236,7 +246,11 @@ saveBtn.on("click", function() {
 
 });
 
-
+/**
+ * Updates the event list in the sidebar based on the selectedDay. It first clears
+ * the event list and then adds events for the selected day sorted by time. For each event,
+ * it appends the event information and buttons for removing and editing the event.
+ */
 function updateEventList() {
   $(".c-aside__eventList").empty();
   const currentDate = selectedDay;
@@ -272,6 +286,11 @@ function updateEventList() {
 
 }
 
+/**
+ * Removes an event with the given eventId and eventDate from both the server using an AJAX DELETE
+ * request and the events object. After removal, it calls updateEventList() to update the displayed events.
+ * @param element
+ */
 function removeEvent(element) {
     var eventId = parseInt(element.getAttribute("data-id"));
     var eventDate = element.getAttribute("data-date");
@@ -294,6 +313,12 @@ function removeEvent(element) {
 
 }
 
+/**
+ * Prepares the event form for editing an event with the given eventId and eventDate.
+ * It sets the eventForm object with the event's information and then calls openForm()
+ * to display the event form.
+ * @param element
+ */
 function editEvent(element) {
     var eventId = parseInt(element.getAttribute("data-id"));
     var eventDate = element.getAttribute("data-date");
@@ -343,7 +368,13 @@ dataCel.on("click", function() {
 
 });
 
-//function for move the months
+/**
+ * Moves the calendar view to the next month(s) by sliding the calendar to the left.
+ * It takes two arguments: the number of months to move (fakeClick) and a boolean indicating
+ * whether to update the indexMonth (indexNext).
+ * @param fakeClick
+ * @param indexNext
+ */
 function moveNext(fakeClick, indexNext) {
   for (var i = 0; i < fakeClick; i++) {
     $(".c-main").css({
@@ -359,6 +390,14 @@ function moveNext(fakeClick, indexNext) {
     }
   }
 }
+
+/**
+ * Moves the calendar view to the previous month(s) by sliding the calendar to the right.
+ * It takes two arguments: the number of months to move (fakeClick) and a boolean indicating
+ * whether to update the indexMonth (indexPrev).
+ * @param fakeClick
+ * @param indexPrev
+ */
 function movePrev(fakeClick, indexPrev) {
   for (var i = 0; i < fakeClick; i++) {
     $(".c-main").css({
@@ -375,7 +414,17 @@ function movePrev(fakeClick, indexPrev) {
   }
 }
 
-//months paginator
+/**
+ * Sets up event listeners for the calendar paginator buttons. It takes five arguments:
+ * the button's ID (buttonId), the main calendar class (mainClass), the paginator month class (monthClass),
+ * and two booleans indicating whether the button is for moving to the next month (next) or the previous
+ * month (prev).
+ * @param buttonId
+ * @param mainClass
+ * @param monthClass
+ * @param next
+ * @param prev
+ */
 function buttonsPaginator(buttonId, mainClass, monthClass, next, prev) {
   switch (true) {
     case next:
