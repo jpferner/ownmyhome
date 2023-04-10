@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module app.routes</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="app.html"><font color="#ffffff">app</font></a>.routes</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Ccsc450-sp23-project-team6%5Capp%5Croutes.py">c:\csc450-sp23-project-team6\app\routes.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="bleach.html">bleach</a><br>
+</td><td width="25%" valign=top><a href="requests.html">requests</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-add_checklist_items"><strong>add_checklist_items</strong></a>(user_id)</dt><dd><tt>Adds&nbsp;checklist&nbsp;items&nbsp;for&nbsp;a&nbsp;user&nbsp;to&nbsp;the&nbsp;database.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user_id&nbsp;(int):&nbsp;The&nbsp;ID&nbsp;of&nbsp;the&nbsp;user&nbsp;to&nbsp;add&nbsp;checklist&nbsp;items&nbsp;for.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-add_properties"><strong>add_properties</strong></a>(user_id)</dt><dd><tt>This&nbsp;function&nbsp;injects&nbsp;the&nbsp;data&nbsp;for&nbsp;the&nbsp;properties&nbsp;when&nbsp;a&nbsp;new&nbsp;user&nbsp;is&nbsp;created&nbsp;using&nbsp;a&nbsp;for&nbsp;loop.<br>
+&nbsp;<br>
+It&nbsp;takes&nbsp;in&nbsp;the&nbsp;parameter&nbsp;user_id.</tt></dd></dl>
+ <dl><dt><a name="-calculator"><strong>calculator</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;calculator.html&nbsp;template&nbsp;and&nbsp;handles&nbsp;POST&nbsp;requests.&nbsp;If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid,&nbsp;the&nbsp;function<br>
+will&nbsp;calculate&nbsp;and&nbsp;display&nbsp;the&nbsp;mortgage&nbsp;total&nbsp;on&nbsp;the&nbsp;page.<br>
+&nbsp;<br>
+GET&nbsp;request:&nbsp;The&nbsp;function&nbsp;renders&nbsp;the&nbsp;calculator.html&nbsp;template&nbsp;with&nbsp;default&nbsp;values&nbsp;for&nbsp;the&nbsp;inputs.<br>
+&nbsp;<br>
+POST&nbsp;request:&nbsp;The&nbsp;function&nbsp;calculates&nbsp;the&nbsp;mortgage&nbsp;total&nbsp;using&nbsp;the&nbsp;user's&nbsp;input&nbsp;data&nbsp;and&nbsp;displays&nbsp;the<br>
+result&nbsp;on&nbsp;the&nbsp;calculator.html&nbsp;template.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;the&nbsp;rendered&nbsp;calculator.html&nbsp;template.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request:&nbsp;the&nbsp;rendered&nbsp;calculator.html&nbsp;template&nbsp;with&nbsp;the&nbsp;mortgage&nbsp;total&nbsp;displayed.</tt></dd></dl>
+ <dl><dt><a name="-calendar"><strong>calendar</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;calendar&nbsp;page&nbsp;of&nbsp;the&nbsp;website.<br>
+&nbsp;<br>
+GET&nbsp;request:<br>
+-&nbsp;Renders&nbsp;the&nbsp;calendar.html&nbsp;template.<br>
+&nbsp;<br>
+POST&nbsp;request:<br>
+-&nbsp;Redirects&nbsp;the&nbsp;user&nbsp;to&nbsp;the&nbsp;index&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;the&nbsp;rendered&nbsp;calendar.html&nbsp;template.<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request:&nbsp;a&nbsp;redirect&nbsp;to&nbsp;the&nbsp;index&nbsp;page.</tt></dd></dl>
+ <dl><dt><a name="-checklist"><strong>checklist</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;checklist&nbsp;page&nbsp;of&nbsp;the&nbsp;website.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;request&nbsp;method&nbsp;is&nbsp;GET,&nbsp;fetches&nbsp;all&nbsp;the&nbsp;checklist&nbsp;items&nbsp;for&nbsp;the&nbsp;current&nbsp;user&nbsp;from&nbsp;the&nbsp;database,&nbsp;orders<br>
+them&nbsp;by&nbsp;their&nbsp;order_no,&nbsp;and&nbsp;renders&nbsp;the&nbsp;checklist&nbsp;page&nbsp;with&nbsp;the&nbsp;items&nbsp;passed&nbsp;as&nbsp;an&nbsp;argument&nbsp;to&nbsp;the&nbsp;template.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;request&nbsp;method&nbsp;is&nbsp;POST,&nbsp;updates&nbsp;the&nbsp;status&nbsp;of&nbsp;the&nbsp;checklist&nbsp;item&nbsp;with&nbsp;the&nbsp;given&nbsp;order_no&nbsp;for&nbsp;the&nbsp;current<br>
+user&nbsp;in&nbsp;the&nbsp;database&nbsp;to&nbsp;the&nbsp;new&nbsp;status&nbsp;provided&nbsp;in&nbsp;the&nbsp;JSON&nbsp;payload&nbsp;of&nbsp;the&nbsp;request.&nbsp;Returns&nbsp;a&nbsp;JSON&nbsp;response<br>
+with&nbsp;a&nbsp;success&nbsp;key&nbsp;set&nbsp;to&nbsp;True.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;request&nbsp;method&nbsp;is&nbsp;neither&nbsp;GET&nbsp;nor&nbsp;POST,&nbsp;redirects&nbsp;the&nbsp;user&nbsp;to&nbsp;the&nbsp;index&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+The&nbsp;rendered&nbsp;checklist&nbsp;page&nbsp;HTML&nbsp;if&nbsp;the&nbsp;request&nbsp;method&nbsp;is&nbsp;GET.<br>
+A&nbsp;JSON&nbsp;response&nbsp;with&nbsp;a&nbsp;success&nbsp;key&nbsp;set&nbsp;to&nbsp;True&nbsp;if&nbsp;the&nbsp;request&nbsp;method&nbsp;is&nbsp;POST.<br>
+A&nbsp;redirect&nbsp;response&nbsp;to&nbsp;the&nbsp;index&nbsp;page&nbsp;if&nbsp;the&nbsp;request&nbsp;method&nbsp;is&nbsp;neither&nbsp;GET&nbsp;nor&nbsp;POST.</tt></dd></dl>
+ <dl><dt><a name="-edit_remove_event"><strong>edit_remove_event</strong></a>(id)</dt></dl>
+ <dl><dt><a name="-events"><strong>events</strong></a>()</dt></dl>
+ <dl><dt><a name="-favorites_table"><strong>favorites_table</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;favorites_table.html&nbsp;template,&nbsp;which&nbsp;displays&nbsp;a&nbsp;table&nbsp;of&nbsp;properties&nbsp;marked&nbsp;as<br>
+"favorite"&nbsp;by&nbsp;the&nbsp;user.<br>
+&nbsp;<br>
+Returns:<br>
+-&nbsp;The&nbsp;rendered&nbsp;favorites_table.html&nbsp;template.</tt></dd></dl>
+ <dl><dt><a name="-get_lat_lng_from_zip"><strong>get_lat_lng_from_zip</strong></a>(zip_code)</dt><dd><tt>Given&nbsp;a&nbsp;zip&nbsp;code,&nbsp;sends&nbsp;a&nbsp;request&nbsp;to&nbsp;the&nbsp;Google&nbsp;Geocoding&nbsp;API&nbsp;to&nbsp;get&nbsp;the&nbsp;latitude&nbsp;and&nbsp;longitude&nbsp;of&nbsp;the&nbsp;location<br>
+associated&nbsp;with&nbsp;the&nbsp;zip&nbsp;code.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;zip_code&nbsp;(str):&nbsp;A&nbsp;string&nbsp;representing&nbsp;a&nbsp;zip&nbsp;code.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;tuple:&nbsp;A&nbsp;tuple&nbsp;containing&nbsp;the&nbsp;latitude&nbsp;and&nbsp;longitude&nbsp;of&nbsp;the&nbsp;location&nbsp;associated&nbsp;with&nbsp;the&nbsp;given&nbsp;zip&nbsp;code.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;the&nbsp;zip&nbsp;code&nbsp;is&nbsp;invalid&nbsp;or&nbsp;the&nbsp;Google&nbsp;Geocoding&nbsp;API&nbsp;does&nbsp;not&nbsp;return&nbsp;a&nbsp;valid&nbsp;response,&nbsp;the&nbsp;function<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns&nbsp;a&nbsp;tuple&nbsp;of&nbsp;None&nbsp;values.</tt></dd></dl>
+ <dl><dt><a name="-get_page_token"><strong>get_page_token</strong></a>(offset, url, params)</dt><dd><tt>Given&nbsp;an&nbsp;offset,&nbsp;url,&nbsp;and&nbsp;parameters&nbsp;for&nbsp;a&nbsp;Google&nbsp;Places&nbsp;API&nbsp;request,&nbsp;retrieves&nbsp;the&nbsp;page&nbsp;token&nbsp;associated&nbsp;with<br>
+the&nbsp;corresponding&nbsp;page&nbsp;of&nbsp;results.&nbsp;Page&nbsp;tokens&nbsp;are&nbsp;used&nbsp;by&nbsp;the&nbsp;API&nbsp;to&nbsp;allow&nbsp;pagination&nbsp;of&nbsp;results,&nbsp;and&nbsp;each&nbsp;page<br>
+token&nbsp;corresponds&nbsp;to&nbsp;a&nbsp;specific&nbsp;set&nbsp;of&nbsp;20&nbsp;results.&nbsp;This&nbsp;function&nbsp;iterates&nbsp;through&nbsp;the&nbsp;pages&nbsp;of&nbsp;results&nbsp;until&nbsp;it<br>
+reaches&nbsp;the&nbsp;page&nbsp;corresponding&nbsp;to&nbsp;the&nbsp;given&nbsp;offset,&nbsp;and&nbsp;returns&nbsp;the&nbsp;page&nbsp;token&nbsp;associated&nbsp;with&nbsp;that&nbsp;page.<br>
+&nbsp;<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;offset&nbsp;(int):&nbsp;The&nbsp;1-based&nbsp;index&nbsp;of&nbsp;the&nbsp;page&nbsp;of&nbsp;results&nbsp;to&nbsp;retrieve&nbsp;the&nbsp;page&nbsp;token&nbsp;for.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;url&nbsp;(str):&nbsp;The&nbsp;URL&nbsp;of&nbsp;the&nbsp;Google&nbsp;Places&nbsp;API&nbsp;endpoint&nbsp;to&nbsp;send&nbsp;the&nbsp;request&nbsp;to.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;params&nbsp;(dict):&nbsp;The&nbsp;parameters&nbsp;to&nbsp;include&nbsp;in&nbsp;the&nbsp;request,&nbsp;including&nbsp;any&nbsp;search&nbsp;parameters&nbsp;and&nbsp;API&nbsp;key.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;str:&nbsp;The&nbsp;page&nbsp;token&nbsp;for&nbsp;the&nbsp;specified&nbsp;page&nbsp;of&nbsp;results,&nbsp;or&nbsp;None&nbsp;if&nbsp;no&nbsp;such&nbsp;page&nbsp;exists.</tt></dd></dl>
+ <dl><dt><a name="-home"><strong>home</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;home&nbsp;page&nbsp;of&nbsp;the&nbsp;website,&nbsp;which&nbsp;includes&nbsp;a&nbsp;login&nbsp;form&nbsp;and&nbsp;a&nbsp;checklist&nbsp;of&nbsp;items<br>
+for&nbsp;authenticated&nbsp;users.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;user&nbsp;is&nbsp;authenticated,&nbsp;the&nbsp;first&nbsp;incomplete&nbsp;item&nbsp;in&nbsp;the&nbsp;user's&nbsp;checklist&nbsp;is&nbsp;retrieved<br>
+from&nbsp;the&nbsp;database&nbsp;and&nbsp;displayed&nbsp;on&nbsp;the&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;str:&nbsp;The&nbsp;rendered&nbsp;HTML&nbsp;for&nbsp;the&nbsp;home&nbsp;page.</tt></dd></dl>
+ <dl><dt><a name="-index"><strong>index</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;index.html&nbsp;template&nbsp;and&nbsp;handles&nbsp;POST&nbsp;requests.<br>
+POST&nbsp;requests&nbsp;are&nbsp;not&nbsp;currently&nbsp;used&nbsp;and&nbsp;will&nbsp;simply&nbsp;redirect&nbsp;the&nbsp;user&nbsp;to&nbsp;the&nbsp;index&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;the&nbsp;rendered&nbsp;index.html&nbsp;template.<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request:&nbsp;a&nbsp;redirect&nbsp;to&nbsp;the&nbsp;index&nbsp;page.</tt></dd></dl>
+ <dl><dt><a name="-login"><strong>login</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;login&nbsp;page&nbsp;of&nbsp;the&nbsp;website&nbsp;and&nbsp;handles&nbsp;user&nbsp;login&nbsp;form&nbsp;submissions.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid,&nbsp;the&nbsp;user&nbsp;is&nbsp;logged&nbsp;in&nbsp;and&nbsp;redirected&nbsp;to&nbsp;the&nbsp;home&nbsp;page.<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;invalid,&nbsp;an&nbsp;error&nbsp;message&nbsp;is&nbsp;flashed&nbsp;and&nbsp;the&nbsp;user&nbsp;is&nbsp;redirected&nbsp;back&nbsp;to&nbsp;the&nbsp;login&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;The&nbsp;rendered&nbsp;login&nbsp;page&nbsp;HTML.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid:&nbsp;A&nbsp;redirect&nbsp;to&nbsp;the&nbsp;home&nbsp;page.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;invalid:&nbsp;The&nbsp;rendered&nbsp;login&nbsp;page&nbsp;HTML&nbsp;with<br>
+&nbsp;&nbsp;&nbsp;&nbsp;error&nbsp;messages.</tt></dd></dl>
+ <dl><dt><a name="-logout"><strong>logout</strong></a>()</dt><dd><tt>Logs&nbsp;the&nbsp;user&nbsp;out&nbsp;by&nbsp;calling&nbsp;the&nbsp;logout_user()&nbsp;function&nbsp;and&nbsp;flashes&nbsp;a&nbsp;success&nbsp;message&nbsp;to&nbsp;the&nbsp;user<br>
+before&nbsp;redirecting&nbsp;to&nbsp;the&nbsp;home&nbsp;page.<br>
+&nbsp;<br>
+Returns:&nbsp;A&nbsp;redirect&nbsp;to&nbsp;the&nbsp;home&nbsp;page.</tt></dd></dl>
+ <dl><dt><a name="-map_events"><strong>map_events</strong></a>(event)</dt></dl>
+ <dl><dt><a name="-properties"><strong>properties</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;properties&nbsp;page&nbsp;of&nbsp;the&nbsp;website.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;request&nbsp;method&nbsp;is&nbsp;POST,&nbsp;redirects&nbsp;the&nbsp;user&nbsp;to&nbsp;the&nbsp;index&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;rendered&nbsp;properties&nbsp;page&nbsp;HTML.</tt></dd></dl>
+ <dl><dt><a name="-reset_password_request"><strong>reset_password_request</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;Password&nbsp;Rest&nbsp;Request&nbsp;page&nbsp;of&nbsp;the&nbsp;website&nbsp;and&nbsp;handles<br>
+password&nbsp;reset&nbsp;request&nbsp;submissions.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid,&nbsp;the&nbsp;send_password_reset_email&nbsp;is&nbsp;called&nbsp;and&nbsp;the&nbsp;user<br>
+is&nbsp;sent&nbsp;a&nbsp;password&nbsp;reset&nbsp;email&nbsp;with&nbsp;a&nbsp;link.&nbsp;The&nbsp;user&nbsp;is&nbsp;shown&nbsp;a&nbsp;successful&nbsp;message<br>
+and&nbsp;redirected&nbsp;to&nbsp;the&nbsp;login&nbsp;page.<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;invalid,&nbsp;an&nbsp;error&nbsp;message&nbsp;is&nbsp;flashed&nbsp;and&nbsp;the&nbsp;user&nbsp;is&nbsp;redirected&nbsp;back&nbsp;to&nbsp;the<br>
+password&nbsp;reset&nbsp;page<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;The&nbsp;rendered&nbsp;password&nbsp;reset&nbsp;request&nbsp;page&nbsp;HTML.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid:&nbsp;A&nbsp;redirect&nbsp;to&nbsp;the&nbsp;login&nbsp;page&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;password&nbsp;reset&nbsp;email&nbsp;is&nbsp;sent.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;invalid:&nbsp;The&nbsp;rendered&nbsp;password&nbsp;reset&nbsp;request&nbsp;HTML<br>
+&nbsp;&nbsp;&nbsp;&nbsp;with&nbsp;error&nbsp;messages.</tt></dd></dl>
+ <dl><dt><a name="-reset_token"><strong>reset_token</strong></a>(token)</dt><dd><tt>Renders&nbsp;the&nbsp;change&nbsp;password&nbsp;page&nbsp;of&nbsp;the&nbsp;website&nbsp;and&nbsp;handles&nbsp;user&nbsp;password&nbsp;submissions.<br>
+Also,&nbsp;responsible&nbsp;for&nbsp;generating&nbsp;a&nbsp;valid&nbsp;token&nbsp;for&nbsp;the&nbsp;password&nbsp;reset&nbsp;link.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;token&nbsp;is&nbsp;valid,&nbsp;the&nbsp;user&nbsp;clicks&nbsp;the&nbsp;reset&nbsp;link&nbsp;and&nbsp;&nbsp;is&nbsp;redirected&nbsp;to&nbsp;the&nbsp;change&nbsp;password&nbsp;page.<br>
+If&nbsp;the&nbsp;token&nbsp;is&nbsp;expired,&nbsp;an&nbsp;error&nbsp;message&nbsp;is&nbsp;flashed&nbsp;and&nbsp;the&nbsp;user&nbsp;is&nbsp;redirected&nbsp;back&nbsp;to&nbsp;the<br>
+&nbsp;password&nbsp;reset&nbsp;request&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;The&nbsp;rendered&nbsp;change&nbsp;password&nbsp;page&nbsp;HTML.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;token&nbsp;is&nbsp;valid:&nbsp;A&nbsp;redirect&nbsp;to&nbsp;the&nbsp;Change&nbsp;Password<br>
+&nbsp;&nbsp;&nbsp;&nbsp;page&nbsp;where&nbsp;the&nbsp;user&nbsp;is&nbsp;prompted&nbsp;to&nbsp;change&nbsp;their&nbsp;password.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid:&nbsp;A&nbsp;redirect&nbsp;to&nbsp;the&nbsp;login&nbsp;page&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;user&nbsp;is&nbsp;prompted&nbsp;to&nbsp;log&nbsp;in.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;token&nbsp;is&nbsp;invalid:&nbsp;An&nbsp;error&nbsp;message&nbsp;is&nbsp;shown&nbsp;and&nbsp;the<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;user&nbsp;is&nbsp;redirect&nbsp;to&nbsp;the&nbsp;Password&nbsp;Reset&nbsp;Request&nbsp;page<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request&nbsp;and&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;invalid:&nbsp;User&nbsp;is&nbsp;shown&nbsp;an&nbsp;error&nbsp;message&nbsp;and<br>
+&nbsp;&nbsp;&nbsp;&nbsp;the&nbsp;Change&nbsp;Password&nbsp;page&nbsp;is&nbsp;reloaded&nbsp;(while&nbsp;the&nbsp;token&nbsp;is&nbsp;valid).</tt></dd></dl>
+ <dl><dt><a name="-search"><strong>search</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;search&nbsp;results&nbsp;page&nbsp;of&nbsp;the&nbsp;website,&nbsp;using&nbsp;the&nbsp;Google&nbsp;Places&nbsp;API&nbsp;to&nbsp;search&nbsp;for&nbsp;locations<br>
+based&nbsp;on&nbsp;a&nbsp;user-provided&nbsp;query&nbsp;and&nbsp;zip&nbsp;code.<br>
+&nbsp;<br>
+Returns:&nbsp;A&nbsp;JSON&nbsp;object&nbsp;containing&nbsp;search&nbsp;results&nbsp;and&nbsp;the&nbsp;total&nbsp;number&nbsp;of&nbsp;results.</tt></dd></dl>
+ <dl><dt><a name="-send_password_reset_email"><strong>send_password_reset_email</strong></a>(user)</dt><dd><tt>Sends&nbsp;the&nbsp;password&nbsp;reset&nbsp;email&nbsp;to&nbsp;user&nbsp;that&nbsp;includes&nbsp;the&nbsp;link&nbsp;for&nbsp;a&nbsp;new&nbsp;password.<br>
+&nbsp;<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid,&nbsp;the&nbsp;user&nbsp;is&nbsp;sent&nbsp;a&nbsp;password&nbsp;reset&nbsp;email.<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;invalid,&nbsp;an&nbsp;error&nbsp;message&nbsp;is&nbsp;flashed&nbsp;and&nbsp;the&nbsp;user&nbsp;is&nbsp;redirected&nbsp;back&nbsp;to<br>
+the&nbsp;Password&nbsp;Reset&nbsp;Request&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;None</tt></dd></dl>
+ <dl><dt><a name="-services"><strong>services</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;services.html&nbsp;template&nbsp;and&nbsp;handles&nbsp;POST&nbsp;requests.<br>
+POST&nbsp;requests&nbsp;are&nbsp;not&nbsp;currently&nbsp;used&nbsp;and&nbsp;will&nbsp;simply&nbsp;redirect&nbsp;the&nbsp;user&nbsp;to&nbsp;the&nbsp;index&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;the&nbsp;rendered&nbsp;services.html&nbsp;template.<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request:&nbsp;a&nbsp;redirect&nbsp;to&nbsp;the&nbsp;index&nbsp;page.</tt></dd></dl>
+ <dl><dt><a name="-sign_up"><strong>sign_up</strong></a>()</dt><dd><tt>Renders&nbsp;the&nbsp;sign-up&nbsp;page&nbsp;of&nbsp;the&nbsp;website&nbsp;and&nbsp;handles&nbsp;POST&nbsp;requests.<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;valid,&nbsp;the&nbsp;function&nbsp;will&nbsp;create&nbsp;a&nbsp;new&nbsp;user&nbsp;and&nbsp;add&nbsp;them&nbsp;to&nbsp;the&nbsp;database.&nbsp;It&nbsp;will&nbsp;then&nbsp;add<br>
+checklist&nbsp;items&nbsp;for&nbsp;the&nbsp;new&nbsp;user,&nbsp;flash&nbsp;a&nbsp;success&nbsp;message&nbsp;and&nbsp;redirect&nbsp;them&nbsp;to&nbsp;the&nbsp;login&nbsp;page.<br>
+If&nbsp;the&nbsp;form&nbsp;data&nbsp;is&nbsp;invalid,&nbsp;the&nbsp;function&nbsp;will&nbsp;flash&nbsp;an&nbsp;error&nbsp;message&nbsp;and&nbsp;redirect&nbsp;them&nbsp;to&nbsp;the&nbsp;sign-up&nbsp;page.<br>
+&nbsp;<br>
+Returns:<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;GET&nbsp;request:&nbsp;the&nbsp;rendered&nbsp;sign_up.html&nbsp;template.<br>
+-&nbsp;If&nbsp;the&nbsp;request&nbsp;is&nbsp;a&nbsp;POST&nbsp;request:&nbsp;either&nbsp;a&nbsp;redirect&nbsp;to&nbsp;the&nbsp;login&nbsp;page&nbsp;with&nbsp;a&nbsp;success&nbsp;message&nbsp;or&nbsp;a&nbsp;redirect<br>
+to&nbsp;the&nbsp;sign-up&nbsp;page&nbsp;with&nbsp;error&nbsp;messages,&nbsp;depending&nbsp;on&nbsp;the&nbsp;validity&nbsp;of&nbsp;the&nbsp;form&nbsp;data.</tt></dd></dl>
+ <dl><dt><a name="-update_favorites"><strong>update_favorites</strong></a>()</dt><dd><tt>Updates&nbsp;the&nbsp;favorite&nbsp;status&nbsp;of&nbsp;a&nbsp;property&nbsp;based&nbsp;on&nbsp;user&nbsp;input&nbsp;from&nbsp;the&nbsp;frontend.<br>
+Expects&nbsp;the&nbsp;following&nbsp;POST&nbsp;parameters:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;csrf_token:&nbsp;A&nbsp;CSRF&nbsp;token&nbsp;to&nbsp;protect&nbsp;against&nbsp;cross-site&nbsp;request&nbsp;forgery&nbsp;attacks.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;propId:&nbsp;The&nbsp;ID&nbsp;of&nbsp;the&nbsp;property&nbsp;to&nbsp;update.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;checked:&nbsp;A&nbsp;string&nbsp;representation&nbsp;of&nbsp;a&nbsp;boolean&nbsp;value&nbsp;indicating&nbsp;whether&nbsp;the&nbsp;property&nbsp;should<br>
+&nbsp;&nbsp;&nbsp;&nbsp;be&nbsp;favorite&nbsp;or&nbsp;not.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;A&nbsp;JSON&nbsp;object&nbsp;containing&nbsp;the&nbsp;rendered&nbsp;HTML&nbsp;for&nbsp;the&nbsp;updated&nbsp;properties&nbsp;table&nbsp;and&nbsp;favorites&nbsp;table.</tt></dd></dl>
+</td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>app</strong> = &lt;Flask 'app'&gt;<br>
+<strong>current_user</strong> = None<br>
+<strong>db</strong> = &lt;SQLAlchemy&gt;<br>
+<strong>mail</strong> = &lt;flask_mail.Mail object&gt;<br>
+<strong>request</strong> = &lt;LocalProxy unbound&gt;</td></tr></table>
+</body></html>

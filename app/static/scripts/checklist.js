@@ -1,3 +1,8 @@
+/**
+ * The code attaches event listeners to the .complete-btn and .undo-btn buttons within the table elements.
+ * When the buttons are clicked, AJAX requests are made to the server to update the item's status, and the
+ * table rows are moved between the "to-do" and "completed" lists accordingly.
+ */
 $(document).ready(function () {
     // Get the CSRF token from the meta tag in the header
     const csrf_token = $('meta[name=csrf-token]').attr('content');

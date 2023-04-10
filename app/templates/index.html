@@ -49,10 +49,15 @@
         </div>
         <div class="aside-box">
             <h3>Upcoming Event</h3>
-            {% if calendar %}
-                <p>{{ calendar.detail }}</p>
+            {% if current_user.is_authenticated %}
+                {% if calendar and calendar.end_time > current_time %}
+                    <h3>{{ calendar.name }} - {{ calendar.time.strftime('%Y-%m-%d %H:%M') }}</h3>
+                    <p>{{ calendar.notes }}</p>
+                {% else %}
+                    <p>No Upcoming Event.</p>
+                {% endif %}
             {% else %}
-                <p>No Upcoming Event.</p>
+                <p>Please log in to view upcoming events.</p>
             {% endif %}
         </div>
         <div class="aside-box" id="login">
