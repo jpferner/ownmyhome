@@ -81,32 +81,6 @@ function loadEvents() {
 
 }
 
-//
-//function defaultEvents(dataDay,dataName,dataNotes,dataTime){
-//
-//  var event = $('*[data-day='+dataDay+']');
-//
-//  event.attr("data-name", dataName);
-//  event.attr("data-notes", dataNotes);
-//  event.attr("data-date", dataDay);
-//  //date.addClass("event");
-//  event.attr("data-time", dataTime)
-//  event.attr("data-end-time"), dataE
-//  //date.addClass("event--" + classTag);
-//  fillEventSidebar(event);
-//  updateEventList();
-//}
-
-//defaultEvents(today, 'YEAH!','Today is your day','important');
-//defaultEvents('2022-12-25', 'MERRY CHRISTMAS','A lot of gift!!!!','festivity');
-//defaultEvents('2022-05-04', "LUCA'S BIRTHDAY",'Another gifts...?','birthday');
-
-//defaultEvents('2023-03-25', "event2",'these are my notes for buying this house.', '04:30:00');
-//defaultEvents('2023-03-25', "buying the house",'these are my notes for buying this house.', '05:30:00');
-
-
-
-
 // ------ functions control -------
 
 //button of the current day
@@ -262,72 +236,6 @@ saveBtn.on("click", function() {
 
 });
 
-////fill sidebar event info
-//function fillEventSidebar(self) {
-//  $(".c-aside__event").remove();
-//  var thisName = self.attr("data-name");
-//  var thisNotes = self.attr("data-notes");
-//  var thisEvent = self.hasClass("event");
-//  var thisDate = self.attr("data-date");
-//  var thisTime = self.attr("data-time");
-//  var thisEndTime = self.attr("data-end-time");
-////  console.log(thisDate);
-//
-//  if (!(thisDate in events)) {
-//    events[thisDate] = [];
-//
-//  }
-//  events[thisDate].push({
-//    name: thisName,
-//    notes: thisNotes,
-//    date: thisDate,
-//    time: thisTime,
-//    endTime: thisEndTime,
-//    id: currentEventId
-//  });
-//  currentEventId += 1;
-//  console.log(events);
-//  updateEventList();
-
-//  switch (true) {
-//    case thisImportant:
-//      $(".c-aside__eventList").append(
-//        "<p class='c-aside__event c-aside__event--important'>" +
-//        thisName +
-//        " <span> • " +
-//        thisNotes +
-//        "</span></p>"
-//      );
-//      break;
-//    case thisBirthday:
-//      $(".c-aside__eventList").append(
-//        "<p class='c-aside__event c-aside__event--birthday'>" +
-//        thisName +
-//        " <span> • " +
-//        thisNotes +
-//        "</span></p>"
-//      );
-//      break;
-//    case thisFestivity:
-//      $(".c-aside__eventList").append(
-//        "<p class='c-aside__event c-aside__event--festivity'>" +
-//        thisName +
-//        " <span> • " +
-//        thisNotes +
-//        "</span></p>"
-//      );
-//      break;
-//    case thisEvent:
-//      $(".c-aside__eventList").append(
-//        "<p class='c-aside__event'>" +
-//        thisName +
-//        " <span> • " +
-//        thisNotes +
-//        "</span></p>"
-//      );
-//      break;
-//   }
-//};
 
 function updateEventList() {
   $(".c-aside__eventList").empty();
@@ -336,14 +244,6 @@ function updateEventList() {
 
   if (currentDate in events) {
     events[currentDate].sort(function(a, b) {
-//        var time1 = a.time;
-//        var time2 = b.time;
-//        console.log(a.time, "\t", b.time);
-//
-//        if (time1 > time2) {
-//            return time2;
-//        }
-//        else return time1;
         return a.time.localeCompare(b.time);
     });
 
@@ -352,7 +252,7 @@ function updateEventList() {
             "<div class='c-aside__event'>" +
             event.name +
             " <span> @ " +
-            moment(event.time, 'HH:mm:ss').format('h:mm A') +
+            moment(event.time, 'HH:mm:ss').format('h:mm A') + " - " + moment(event.endTime, 'HH:mm:ss').format('h:mm A') +
             "<p>" +
             event.notes +
             "</p>" +
