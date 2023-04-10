@@ -37,15 +37,23 @@ def home():
     login_form = LoginForm()
 
     first_incomplete_item = None
+    calendar = None
     if current_user.is_authenticated:
         first_incomplete_item = ChecklistItems.query.filter_by(user_id=current_user.id, status=False).order_by(
             ChecklistItems.order_no).first()
 
+        # Query the next event on the calendar for the current user
+        calendar = CalendarEvents.query.filter(
+            CalendarEvents.time > datetime.utcnow(),
+            CalendarEvents.user_id == current_user.id
+        ).order_by(CalendarEvents.time).first()
+
     all_properties = Property.query.all()
     random_property = choice(all_properties) if all_properties else None
+    current_time = datetime.utcnow()
 
     return render_template('index.html', login_form=login_form, first_incomplete_item=first_incomplete_item,
-                           random_property=random_property)
+                           random_property=random_property, calendar=calendar, current_time=current_time)
 
 
 @app.route('/index', methods=['GET', 'POST'])
