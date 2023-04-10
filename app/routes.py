@@ -9,11 +9,15 @@ import requests
 
 from app import app
 
-from app.forms import SignUpForm, LoginForm  # used for sign_up() view and login() view
+from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
 from datetime import date, timedelta
 
 import bleach
+
+# required import for password reset
+from flask_mail import Message
+from app import mail
 
 
 # Define routes
@@ -339,7 +343,8 @@ def login():
         login_form.email.data = bleach.clean(login_form.email.data, strip=True)
         login_form.password_hash.data = bleach.clean(login_form.password_hash.data, strip=True)
 
-        user = Users.query.filter_by(email=login_form.email.data).first()
+        # check for the user in the database with email in lowercase
+        user = Users.query.filter_by(email=login_form.email.data.lower()).first()
 
         # True if Remember_me checkbox is checked and false otherwise
         remember_me = True if request.form.get('remember_me') else False
@@ -390,6 +395,16 @@ def sign_up():
         signup_form.password_hash.data = bleach.clean(signup_form.password_hash.data, strip=True)
         signup_form.confirm_password_hash.data = bleach.clean(signup_form.confirm_password_hash.data, strip=True)
 
+        # strip all whitespace from beginning and end of the sting
+        signup_form.first_name.data = signup_form.first_name.data.strip()
+        signup_form.last_name.data = signup_form.last_name.data.strip()
+
+        # convert email field to lowercase before being stored in the db and strip
+        signup_form.email.data = signup_form.email.data.lower().strip()
+
+        # password is entered into db as entered due to case sensitivity and is stripped
+        signup_form.password_hash.data = signup_form.password_hash.data.strip()
+
         # hash the new user's password
         hashed_password = generate_password_hash(signup_form.password_hash.data, "sha256")
 
@@ -434,6 +449,119 @@ def logout():
     return redirect(url_for('login'))
 
 
+def send_password_reset_email(user):
+    """
+           Sends the password reset email to user that includes the link for a new password.
+
+           If the form data is valid, the user is sent a password reset email.
+           If the form data is invalid, an error message is flashed and the user is redirected back to
+           the Password Reset Request page.
+
+           Returns:
+               None
+    """
+
+    token = user.get_reset_token()
+    message = Message('Password Reset Request',
+                      sender=app.config['MAIL_USERNAME'],
+                      recipients=[user.email])
+
+    # _external=True will send an absolute URL
+    message.body = f"""To reset your password, please follow this link:"
+                   
+                   {url_for('reset_token', token=token, _external=True)}
+                   
+                   If you ignore this email, no changes will be made regarding your account.
+                   Thank you!
+                   """
+    mail.send(message)
+
+
+@app.route('/reset_password', methods=['GET', 'POST'])
+def reset_password_request():
+    """
+           Renders the Password Rest Request page of the website and handles
+           password reset request submissions.
+
+           If the form data is valid, the send_password_reset_email is called and the user
+           is sent a password reset email with a link. The user is shown a successful message
+           and redirected to the login page.
+           If the form data is invalid, an error message is flashed and the user is redirected back to the
+           password reset page
+
+           Returns:
+               - If the request is a GET request: The rendered password reset request page HTML.
+               - If the request is a POST request and the form data is valid: A redirect to the login page and
+               password reset email is sent.
+               - If the request is a POST request and the form data is invalid: The rendered password reset request HTML
+               with error messages.
+    """
+    password_reset_form = ResetPasswordRequestForm()
+    if password_reset_form.validate_on_submit():
+        user = Users.query.filter_by(email=password_reset_form.email.data.lower()).first()
+
+        # if the user exists
+        if user:
+            send_password_reset_email(user)
+            flash('Password reset request has been sent.\nPlease check your email for instructions'
+                  ' on how how to reset your password.\n\n'
+                  'Important: Password reset link expires in 5 minutes.', category='success')
+            return redirect(url_for('login'))
+        else:
+            flash("We're sorry. There is no account associated with the email provided.", category='error')
+    return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form, )
+
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_token(token):
+    """
+           Renders the change password page of the website and handles user password submissions.
+           Also, responsible for generating a valid token for the password reset link.
+
+           If the token is valid, the user clicks the reset link and  is redirected to the change password page.
+           If the token is expired, an error message is flashed and the user is redirected back to the
+            password reset request page.
+
+           Returns:
+               - If the request is a GET request: The rendered change password page HTML.
+               - If the request is a POST request and the token is valid: A redirect to the Change Password
+               page where the user is prompted to change their password.
+               - If the request is a POST request and the form data is valid: A redirect to the login page and
+               user is prompted to log in.
+               - If the request is a POST request and the token is invalid: An error message is shown and the
+                user is redirect to the Password Reset Request page
+               - If the request is a POST request and the form data is invalid: User is shown an error message and
+               the Change Password page is reloaded (while the token is valid).
+    """
+
+    user = Users.verify_reset_token(token)
+    if user is None:  # redirect the user to the request password reset page
+        flash("Invalid or expired token. Please try again.")
+        return redirect(url_for('reset_password_request'))
+
+    form = ResetPasswordForm()
+    if form.validate_on_submit():
+        # sanitize/clean all fields on the sign-up form before storing in database
+        form.password_hash.data = bleach.clean(form.password_hash.data, strip=True)
+        form.confirm_password_hash.data = bleach.clean(form.confirm_password_hash.data, strip=True)
+
+        # password is entered into db as entered due to case sensitivity
+        form.password_hash.data = form.password_hash.data.strip()
+
+        # hash the new password
+        hashed_password = generate_password_hash(form.password_hash.data, "sha256")
+
+        # make the user's new password the hashed password
+        user.password_hash = hashed_password
+
+        # commit the password change to the database
+        db.session.commit()
+        flash('Password change successful! Please log into your account.', category='success')
+
+        return redirect(url_for('login'))
+    return render_template('change_password.html', title="Reset Password", form=form)
+
+
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
     """
@@ -453,8 +581,8 @@ def calculator():
         return render_template('calculator.html')
     return render_template('calculator.html', HomeVal=500000, DownPay=150000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
-                           StartDate=date.today(), PropTax=2400,
-                           MortTotal=0)
+                           StartDate=date.today(), PropTax=2400, Income=60000, Credit=500, CarPay=350, StudentPay=400,
+                           HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350, MortTotal=0)
 
 
 @app.route('/services', methods=['GET', 'POST'])

@@ -7,54 +7,120 @@
     <div class="slideshow">
     </div>
 </section>
+
 <aside>
-    <form>
-        <table style="margin: auto; width: 20%">
-            <tr>
-                <td>Monthly Mortgage Total: $<label id="MortTotal">{{ MortTotal }}</label></td>
+    <form class="calc-form">
+        <table class="calculator">
+            <tr class="info">
+                <td><label for="Income">Annual Income:</label></td>
+                <td><input type="number" id="Income" placeholder="60000" value="{{ Income }}" min="1" required
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
             </tr>
-        </table>
-        <table class="calculator1">
             <tr class="info">
                 <td><label for="HomeVal">Home Value:</label></td>
-                <td><input type="number" id="HomeVal" placeholder="500000" value="{{ HomeVal }}" min="0" required><br></td>
+                <td><input type="number" id="HomeVal" placeholder="500000" value="{{ HomeVal }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
             </tr>
             <tr class="info">
                 <td><label for="DownPay">Down Payment:</label></td>
-                <td><input type="number" id="DownPay" placeholder="80000" value="{{ DownPay }}" min="1" required><br></td>
+                <td><input type="number" id="DownPay" placeholder="80000" value="{{ DownPay }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
             </tr>
             <tr class="info">
                 <td><label for="LoanAmt">Loan Amount:</label></td>
-                <td><input type="number" id="LoanAmt" placeholder="350000" value="{{ LoanAmt }}" min="1" required><br></td>
+                <td><input type="number" id="LoanAmt" placeholder="350000" value="{{ LoanAmt }}" min="1" readonly></td>
             </tr>
             <tr class="info">
                 <td><label for="InterestRate">Interest Rate:</label></td>
-                <td><input type="number" id="InterestRate" step="0.1" placeholder="6.5" value="{{ InterestRate }}" min="0.1" max="50" required><br></td>
+                <td><input type="number" id="InterestRate" step="0.1" placeholder="6.5" value="{{ InterestRate }}"
+                           min="0.1" max="50" required oninput="validateInput(this)"
+                           onblur="if(!this.value) this.value='0';"></td>
             </tr>
             <tr class="info">
                 <td><label for="LoanTerm">Loan Term:</label></td>
-                <td><input type="number" id="LoanTerm" placeholder="30" value="{{ LoanTerm }}" min="0" max="50" required><br></td>
-            </tr>
-            <tr class="info">
-                <td><label for="StartDate">Start Date:</label></td>
-                <td><input type="date" id="StartDate" value="{{ StartDate }}" min="1985-01-01" required><br></td>
+                <td><input type="number" id="LoanTerm" placeholder="30" value="{{ LoanTerm }}" min="1" max="50" required
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
             </tr>
             <tr class="info">
                 <td><label for="PropTax">Property Tax:</label></td>
-                <td><input type="number" id="PropTax" placeholder="2400" value="{{ PropTax }}" min="0" required><br></td>
+                <td><input type="number" id="PropTax" placeholder="2400" value="{{ PropTax }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
+                <td>$/yr</td>
             </tr>
             <tr class="info">
-                <td><label for="LoanType">Loan Type</label></td>
+                <td><label for="HomeInsurance">Home Insurance:</label></td>
+                <td><input type="number" id="HomeInsurance" placeholder="2400" value="{{ HomeInsurance }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
+                <td>$/yr</td>
+            </tr>
+            <tr class="info">
+                <td><label for="HOA">Monthly HOA:</label></td>
+                <td><input type="number" id="HOA" placeholder="350" value="{{ HOA }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
+            </tr>
+            <tr class="info">
+                <td><label for="PrivateMortInsurance">PMI:</label></td>
+                <td><input type="number" id="PrivateMortInsurance" placeholder="0.5" value="{{ PrivateMortInsurance }}"
+                           min="0" max="50" step="0.1" oninput="validateInput(this)"
+                           onblur="if(!this.value) this.value='0';"></td>
+            </tr>
+            <tr class="info">
+                <td><label for="LoanType">Loan Type:</label></td>
                 <td><select id="LoanType">
                     <option value="Conventional">Conventional</option>
                     <option value="loan2">loan2</option>
                     <option value="loan3">loan3</option>
                 </select></td>
             </tr>
+            <tr class="info">
+                <td><label for="Credit">Monthly Credit Card Payments:</label></td>
+                <td><input type="number" id="Credit" placeholder="500" value="{{ Credit }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
+            </tr>
+            <tr class="info">
+                <td><label for="CarPay">Monthly Car Payment:</label></td>
+                <td><input type="number" id="CarPay" placeholder="350" value="{{ CarPay }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
+            </tr>
+            <tr class="info">
+                <td><label for="StudentPay">Monthly Student Loan:</label></td>
+                <td><input type="number" id="StudentPay" placeholder="400" value="{{ StudentPay }}" min="0"
+                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
+            </tr>
+            <tr>
+                <td>
+                    <button class="calculateButton" type="submit" onclick="validateAll(event)" value="Submit">
+                        Calculate
+                    </button>
+                </td>
+            </tr>
         </table>
-        <p>
-        <button class="calculateButton" onclick="return calculation()" value="Submit">Calculate</button>
-        </p>
+        <table class="outputs">
+            <tr>
+                <td>Monthly Payments Total: $<label id="MonPayTotal">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Monthly Mortgage: $<label id="MortMonTotal">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Total Mortgage: $<label id="TotalMort">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Total Interest: $<label id="TotalInterest">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Debt to Income Ratio: <label id="Debt">{{ MortTotal }}</label>%</td>
+            </tr>
+            <tr>
+                <td>Monthly Income after Debt: $<label id="DebtBudget">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Debt to Income Ratio with Mortgage: <label id="DebtMort">{{ MortTotal }}</label>%</td>
+            </tr>
+            <tr>
+                <td>Monthly Income after Debt and Mortgage: $<label id="DebtMortBudget">{{ MortTotal }}</label></td>
+            </tr>
+        </table>
     </form>
 </aside>
 
@@ -62,6 +128,7 @@
 
 <link href="../static/styles/calculator.css" rel="stylesheet">
 <script src="../static/scripts/calculator.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
 <script>
