@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: calendar.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: calendar.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>let container = document.querySelector(".container");
+
+//global variables
+var monthEl = $(".c-main");
+var dataCel = $(".c-cal__cel");
+var dateObj = new Date();
+var month = dateObj.getMonth() + 1;
+var day = dateObj.getDate();
+var year = dateObj.getFullYear();
+var monthText = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December"
+];
+var indexMonth = month;
+var todayBtn = $(".c-today__btn");
+var addBtn = $(".js-event__add");
+var saveBtn = $(".js-event__save");
+var closeBtn = $(".js-event__close");
+var winCreator = $(".js-event__creator");
+var inputDate = $(this).data();
+today = moment().format("YYYY-MM-DD");
+var events = {};
+var eventForm = {};
+var selectedDay = moment().format("YYYY-MM-DD");
+var currentEventId = 0;
+const csrf_token = $('meta[name=csrf-token]').attr('content');
+
+
+// ------ set default events -------
+
+$(document).ready(function () {
+    loadEvents();
+});
+
+/**
+ * Loads events from the server using an AJAX GET request. On a successful response,
+ * it processes the returned events, converts them into the required format, and stores
+ * them in the events object. Finally, it calls updateEventList() to display the events.
+ */
+function loadEvents() {
+     $.ajax({
+            url: '/calendar/events',
+            type: 'GET',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            success: function (response) {
+                events = {};
+
+                response.forEach(function (event) {
+                    var datetime = moment(event.time)
+                    var date = datetime.format("YYYY-MM-DD");
+                    var time = datetime.format("HH:mm:ss");
+
+                    var endDatetime = moment(event.endTime);
+                    var endTime = endDatetime.format("HH:mm:ss");
+
+                    if (!(date in events)) {
+                        events[date] = [];
+
+                    }
+                    events[date].push({
+                        id: event.id,
+                        name: event.name,
+                        notes: event.notes,
+                        date: date,
+                        time: time,
+                        endTime: endTime
+                    });
+
+                });
+                console.log(response);
+                updateEventList();
+            }
+        });
+
+}
+
+// ------ functions control -------
+
+//button of the current day
+todayBtn.on("click", function() {
+  if (month &lt; indexMonth) {
+    var step = indexMonth % month;
+    movePrev(step, true);
+  } else if (month > indexMonth) {
+    var step = month - indexMonth;
+    moveNext(step, true);
+  }
+  selectedDay = moment().format("YYYY-MM-DD");
+  updateEventList();
+
+  $(".c-aside__num").text(selectedDay.slice(8));
+  $(".c-aside__month").text(monthText[month - 1]);
+
+  dataCel.each(function() {
+  if ($(this).data("day") === selectedDay) {
+    $(this).addClass("isSelected");
+    //fillEventSidebar($(this));
+  }
+  else {
+    $(this).removeClass("isSelected");
+  }
+});
+});
+
+//highlight the cel of current day
+dataCel.each(function() {
+  if ($(this).data("day") === today) {
+    $(this).addClass("isToday");
+    $(this).addClass("isSelected");
+    //fillEventSidebar($(this));
+  }
+});
+
+/**
+ *  Displays the event form by adding the isVisible class to the winCreator element and
+ *  the overlay class to the body element. It also populates the form inputs with the data
+ *  from the eventForm object.
+ */
+function openForm() {
+
+  $("#event_form_error").text("");
+  $("#event_form_error").removeClass("isVisible");
+    winCreator.addClass("isVisible");
+  $("body").addClass("overlay");
+  document.querySelector('input[name="date"]').value = eventForm.date;
+  document.querySelector('input[name="name"]').value = eventForm.name;
+  document.querySelector('textarea[name="notes"]').value = eventForm.notes;
+  document.querySelector('input[name="time"]').value = eventForm.time;
+  document.querySelector('input[name="end_time"]').value = eventForm.endTime;
+
+}
+
+//window event creator
+addBtn.on("click", function() {
+  dataCel.each(function() {
+    if ($(this).hasClass("isSelected")) {
+      today = $(this).data("day");
+
+    }
+  });
+
+  eventForm = {
+  id: undefined,
+  date: today,
+  notes: "",
+  name: "",
+  time: "",
+  endTime: ""
+  }
+
+  openForm();
+
+});
+
+closeBtn.on("click", function() {
+  winCreator.removeClass("isVisible");
+  $("body").removeClass("overlay");
+});
+saveBtn.on("click", function() {
+  var inputName = $("input[name=name]").val();
+  var inputDate = $("input[name=date]").val();
+  var inputTime = $("input[name=time]").val();
+  var inputEndTime = $('input[name=end_time]').val();
+  var inputNotes = $("textarea[name=notes]").val();
+
+  console.log(inputEndTime);
+
+
+  $.ajax({
+
+            url: eventForm.id !== undefined ? "/calendar/events/" + eventForm.id : "/calendar/events",
+            type: eventForm.id !== undefined ? 'PUT' : 'POST',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            contentType: 'application/json',
+            data: JSON.stringify({
+                name: inputName,
+                notes: inputNotes,
+                time: inputDate + 'T' + inputTime + ".000000",
+                endTime: inputDate + 'T' + inputEndTime + ".000000"
+            }),
+            success: function (response) {
+                if (eventForm.id !== undefined) {
+                    events[eventForm.date] = events[eventForm.date].filter(function (event) {
+                        return event.id !== response.id;
+                    });
+
+                }
+                var datetime = moment(response.time);
+                var date = datetime.format("YYYY-MM-DD");
+                var time = datetime.format("HH:mm:ss");
+
+                var endDatetime = moment(response.endTime);
+                var endTime = endDatetime.format("HH:mm:ss");
+
+
+                if (!(date in events)) {
+                    events[date] = [];
+
+                }
+                events[date].push({
+                    id: response.id,
+                    name: response.name,
+                    notes: response.notes,
+                    date: date,
+                    time: time,
+                    endTime: endTime
+                });
+                updateEventList();
+
+                winCreator.removeClass("isVisible");
+                $("body").removeClass("overlay");
+                $("#addEvent")[0].reset();
+            },
+
+            error: function (xhr, status, error) {
+
+
+                console.log(xhr.responseJSON);
+                var errorMessage = "";
+                if (xhr.responseJSON.code === "OVERLAPPING_TIMES") {
+                    errorMessage = "Event times overlap with another event.";
+                } else if (xhr.responseJSON.code === "INVALID_END_TIME") {
+                    errorMessage = "End time is before the start time.";
+                    console.log(errorMessage);
+                } else {
+                    errorMessage = "Unknown error occurred, please try again."
+                }
+                $("#event_form_error").addClass("isVisible");
+                $("#event_form_error").text(errorMessage);
+            }
+  });
+
+});
+
+/**
+ * Updates the event list in the sidebar based on the selectedDay. It first clears
+ * the event list and then adds events for the selected day sorted by time. For each event,
+ * it appends the event information and buttons for removing and editing the event.
+ */
+function updateEventList() {
+  $(".c-aside__eventList").empty();
+  const currentDate = selectedDay;
+
+
+  if (currentDate in events) {
+    events[currentDate].sort(function(a, b) {
+        return a.time.localeCompare(b.time);
+    });
+
+    events[currentDate].forEach(function (event) {
+        $(".c-aside__eventList").append(
+            "&lt;div class='c-aside__event'>" +
+            event.name +
+            " &lt;span> @ " +
+            moment(event.time, 'HH:mm:ss').format('h:mm A') + " - " + moment(event.endTime, 'HH:mm:ss').format('h:mm A') +
+            "&lt;p>" +
+            event.notes +
+            "&lt;/p>" +
+            "&lt;a class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event &lt;span class='fa fa-trash-o'>&lt;/span>&lt;/a>" +
+            "&lt;a class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>edit event &lt;span class='fa fa-trash-o'>&lt;/span>&lt;/a>" +
+
+            "&lt;/span> &lt;/div>"
+
+        );
+
+
+
+    });
+    console.log(events[currentDate]);
+  }
+  console.log(currentDate);
+
+}
+
+/**
+ * Removes an event with the given eventId and eventDate from both the server using an AJAX DELETE
+ * request and the events object. After removal, it calls updateEventList() to update the displayed events.
+ * @param element
+ */
+function removeEvent(element) {
+    var eventId = parseInt(element.getAttribute("data-id"));
+    var eventDate = element.getAttribute("data-date");
+
+    $.ajax({
+            url: '/calendar/events/' + eventId,
+            type: 'DELETE',
+            headers: {
+                'X-CSRFToken': csrf_token
+            },
+            success: function (response) {
+                events[eventDate] = events[eventDate].filter(function (event) {
+                    return event.id !== eventId;
+                });
+                updateEventList();
+            }
+        });
+
+
+
+}
+
+/**
+ * Prepares the event form for editing an event with the given eventId and eventDate.
+ * It sets the eventForm object with the event's information and then calls openForm()
+ * to display the event form.
+ * @param element
+ */
+function editEvent(element) {
+    var eventId = parseInt(element.getAttribute("data-id"));
+    var eventDate = element.getAttribute("data-date");
+
+    events[eventDate].forEach(function (event) {
+        if (eventId === event.id) {
+            eventForm = {
+                id: event.id,
+                name: event.name,
+                notes: event.notes,
+                date: event.date,
+                time: event.time.substring(0, 5),
+                endTime: event.endTime.substring(0,5)
+            };
+        }
+    });
+    openForm();
+}
+
+dataCel.on("click", function() {
+  var thisEl = $(this);
+  var thisDay = $(this)
+  .attr("data-day")
+  .slice(8);
+  var thisMonth = $(this)
+  .attr("data-day")
+  .slice(5, 7);
+
+//  fillEventSidebar($(this));
+  selectedDay = year + "-" + thisMonth + "-" + thisDay;
+
+  if (selectedDay &lt; today) {
+    $(".js-event__add").hide();
+    $(".js-event__remove").hide();
+  } else {
+    $(".js-event__add").show();
+    $(".js-event__remove").show();
+  }
+
+  updateEventList();
+
+  $(".c-aside__num").text(thisDay);
+  $(".c-aside__month").text(monthText[thisMonth - 1]);
+
+  dataCel.removeClass("isSelected");
+  thisEl.addClass("isSelected");
+
+});
+
+/**
+ * Moves the calendar view to the next month(s) by sliding the calendar to the left.
+ * It takes two arguments: the number of months to move (fakeClick) and a boolean indicating
+ * whether to update the indexMonth (indexNext).
+ * @param fakeClick
+ * @param indexNext
+ */
+function moveNext(fakeClick, indexNext) {
+  for (var i = 0; i &lt; fakeClick; i++) {
+    $(".c-main").css({
+      left: "-=100%"
+    });
+    $(".c-paginator__month").css({
+      left: "-=100%"
+    });
+    switch (true) {
+      case indexNext:
+        indexMonth += 1;
+        break;
+    }
+  }
+}
+
+/**
+ * Moves the calendar view to the previous month(s) by sliding the calendar to the right.
+ * It takes two arguments: the number of months to move (fakeClick) and a boolean indicating
+ * whether to update the indexMonth (indexPrev).
+ * @param fakeClick
+ * @param indexPrev
+ */
+function movePrev(fakeClick, indexPrev) {
+  for (var i = 0; i &lt; fakeClick; i++) {
+    $(".c-main").css({
+      left: "+=100%"
+    });
+    $(".c-paginator__month").css({
+      left: "+=100%"
+    });
+    switch (true) {
+      case indexPrev:
+        indexMonth -= 1;
+        break;
+    }
+  }
+}
+
+/**
+ * Sets up event listeners for the calendar paginator buttons. It takes five arguments:
+ * the button's ID (buttonId), the main calendar class (mainClass), the paginator month class (monthClass),
+ * and two booleans indicating whether the button is for moving to the next month (next) or the previous
+ * month (prev).
+ * @param buttonId
+ * @param mainClass
+ * @param monthClass
+ * @param next
+ * @param prev
+ */
+function buttonsPaginator(buttonId, mainClass, monthClass, next, prev) {
+  switch (true) {
+    case next:
+      $(buttonId).on("click", function() {
+        if (indexMonth >= 2) {
+          $(mainClass).css({
+            left: "+=100%"
+          });
+          $(monthClass).css({
+            left: "+=100%"
+          });
+          indexMonth -= 1;
+        }
+        return indexMonth;
+      });
+      break;
+    case prev:
+      $(buttonId).on("click", function() {
+        if (indexMonth &lt;= 11) {
+          $(mainClass).css({
+            left: "-=100%"
+          });
+          $(monthClass).css({
+            left: "-=100%"
+          });
+          indexMonth += 1;
+        }
+        return indexMonth;
+      });
+      break;
+  }
+}
+
+buttonsPaginator("#next", monthEl, ".c-paginator__month", false, true);
+buttonsPaginator("#prev", monthEl, ".c-paginator__month", true, false);
+
+//launch function to set the current month
+moveNext(indexMonth - 1, false);
+
+//fill the sidebar with current day
+$(".c-aside__num").text(day);
+$(".c-aside__month").text(monthText[month - 1]);
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#buttonsPaginator">buttonsPaginator</a></li><li><a href="global.html#editEvent">editEvent</a></li><li><a href="global.html#loadEvents">loadEvents</a></li><li><a href="global.html#moveNext">moveNext</a></li><li><a href="global.html#movePrev">movePrev</a></li><li><a href="global.html#openForm">openForm</a></li><li><a href="global.html#removeEvent">removeEvent</a></li><li><a href="global.html#updateEventList">updateEventList</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 10 2023 16:35:27 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

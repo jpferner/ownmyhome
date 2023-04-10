@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: search.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: search.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>$(document).ready(function () {
+    $('#search-form').on('submit', function (event) {
+        event.preventDefault();
+        const searchQuery = $('#search-input').val();
+        const zipCode = $('#zip-input').val();
+        fetchResults(searchQuery, zipCode, 0);
+    });
+
+    $('#search-results').on('click', '.pagination-btn', function () {
+        const searchQuery = $('#search-input').val();
+        const zipCode = $('#zip-input').val();
+        const startIndex = $(this).data('start');
+        fetchResults(searchQuery, zipCode, startIndex);
+    });
+});
+
+/**
+ * Fetches search results for the given query, zip code, and starting index.
+ * @param {string} searchQuery - The search query to filter the results.
+ * @param {string} zipCode - The zip code to search around.
+ * @param {number} startIndex - The starting index for the search results.
+ */
+function fetchResults(searchQuery, zipCode, startIndex) {
+    $('html, body').scrollTop(0);
+    const radius = 20 * 1609.34;  // Convert miles to meters
+    $.ajax({
+        url: '/search',
+        data: {
+            query: searchQuery,
+            zip: zipCode,
+            start: startIndex,
+            radius: radius
+        },
+        method: 'GET',
+        success: function (data) {
+            displayResults(data.results, data.totalResults, startIndex, searchQuery, zipCode);
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        },
+    });
+}
+
+/**
+ * Displays the fetched search results and creates pagination for the results.
+ * @param {Array} results - An array of search results.
+ * @param {number} totalResults - The total number of search results.
+ * @param {number} startIndex - The starting index for the current displayed results.
+ * @param {string} searchQuery - The search query used to filter the results.
+ * @param {string} zipCode - The zip code used to search around.
+ */
+function displayResults(results, totalResults, startIndex, searchQuery, zipCode) {
+    const resultsDiv = $('#search-results');
+    resultsDiv.empty();
+    createCombinedMap(results);
+
+    if (results.length === 0) {
+        resultsDiv.append('&lt;p>No results found.&lt;/p>');
+        return;
+    }
+
+    const list = $('&lt;ol>&lt;/ol>');
+    const defaultImageUrl = resultsDiv.data('default-image');
+    results.slice(startIndex, startIndex + 9).forEach(function (result, index) {
+        if (index &lt; 9) { // Only display 9 results at a time
+            const listItem = $('&lt;li>&lt;/li>');
+            const title = $('&lt;h4>&lt;/h4>', {text: result.title});
+            const mapsLink = $('&lt;a>&lt;/a>', {
+                href: result.maps_link,
+                text: 'View on Google Maps',
+                target: '_blank',
+            });
+            const snippet = $('&lt;p>&lt;/p>', {text: result.snippet});
+
+            listItem.append(title, mapsLink, snippet);
+
+            if (result.photo_reference) {
+                const imageUrl = `https://maps.googleapis.com/maps/api/place/photo?maxwidth=100&amp;photoreference=${result.photo_reference}&amp;key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
+                const image = $('&lt;img>', {
+                    src: imageUrl,
+                    alt: result.title,
+                    width: 100,
+                    height: 100,
+                });
+                listItem.append(image);
+            } else {
+                const defaultImage = $('&lt;img>', {
+                    src: defaultImageUrl,
+                    alt: 'Default Image',
+                    width: 100,
+                    height: 100,
+                });
+                listItem.append(defaultImage);
+            }
+            list.append(listItem);
+        }
+    });
+
+    resultsDiv.append(list);
+
+    const parsedTotalResults = parseInt(totalResults, 10);
+    const numPages = Math.ceil(parsedTotalResults / 9);
+    const currentPage = Math.ceil(startIndex / 9);
+
+    if (numPages > 1) {
+        const pagination = $('&lt;div class="pagination">&lt;/div>');
+
+        const maxVisiblePages = 10;
+        const previousButton = $('&lt;button class="btn btn-primary">&amp;lt;&lt;/button>');
+        previousButton.prop('disabled', currentPage === 1);
+        previousButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage - 1) * 9));
+        pagination.append(previousButton);
+
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = Math.min(numPages, startPage + maxVisiblePages - 1);
+
+        if (endPage - startPage &lt; maxVisiblePages - 1) {
+            startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i &lt;= endPage; i++) {
+            const pageButton = $('&lt;button class="btn btn-primary pagination-btn">&lt;/button>').text(i);
+            pageButton.data('start', (i - 1) * 9);
+            pageButton.toggleClass('active', i === (currentPage + 1));
+            pageButton.on('click', function () {
+                const startIndex = $(this).data('start');
+                fetchResults(searchQuery, zipCode, startIndex);
+            });
+            pagination.append(pageButton);
+        }
+
+        const nextButton = $('&lt;button class="btn btn-primary">&amp;gt;&lt;/button>');
+        nextButton.prop('disabled', currentPage === numPages);
+        nextButton.on('click', () => fetchResults(searchQuery, zipCode, (currentPage + 1) * 9));
+        pagination.append(nextButton);
+
+        resultsDiv.append(pagination);
+    }
+}
+
+/**
+ * Creates a combined map with markers for the given search results.
+ * @param {Array} results - An array of search results.
+ */
+function createCombinedMap(results) {
+    const markers = results
+        .filter((result) => result.lat &amp;&amp; result.lng)
+        .slice(0, 9)
+        .map(
+            (result, index) => `markers=color:red%7Clabel:${index + 1}%7C${result.lat},${result.lng}`
+        )
+        .join('&amp;');
+
+    const boundingBox = getBoundingBox(results);
+    const visible = `visible=${boundingBox.south},${boundingBox.west}|${boundingBox.north},${boundingBox.east}`;
+    const mapImageUrl = `https://maps.googleapis.com/maps/api/staticmap?size=600x400&amp;${visible}&amp;${markers}&amp;key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU`;
+
+    const combinedMap = $('&lt;img>', {
+        src: mapImageUrl,
+        alt: 'Combined Map',
+        width: 600,
+        height: 400,
+    });
+
+    $('#combined-map').empty().append(combinedMap);
+}
+
+/**
+ * Returns the bounding box for the given search results.
+ * @param {Array} results - An array of search results.
+ * @returns {Object} - An object representing the bounding box with south, west, north, and east properties.
+ */
+function getBoundingBox(results) {
+    let minLat = Infinity;
+    let minLng = Infinity;
+    let maxLat = -Infinity;
+    let maxLng = -Infinity;
+
+    results.forEach((result) => {
+        minLat = Math.min(minLat, result.lat);
+        minLng = Math.min(minLng, result.lng);
+        maxLat = Math.max(maxLat, result.lat);
+        maxLng = Math.max(maxLng, result.lng);
+    });
+
+    return {
+        south: minLat,
+        west: minLng,
+        north: maxLat,
+        east: maxLng,
+    };
+}
+
+/**
+ * Fetches search suggestions for the given request and provides them to the response callback.
+ * @param {Object} request - An object representing the request, with a "term" property containing the search term.
+ * @param {Function} response - A callback function to provide the fetched search suggestions to.
+ */
+function autoComplete(request, response) {
+    $.ajax({
+        url: '/search_suggestions',
+        data: {
+            query: request.term,
+        },
+        method: 'GET',
+        success: function (data) {
+            response(data.suggestions);
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        },
+    });
+}
+
+// Autocomplete setup
+$(function () {
+    $('#search-input').autocomplete({
+        source: autoComplete,
+        minLength: 2,
+        delay: 300,
+    });
+});
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#autoComplete">autoComplete</a></li><li><a href="global.html#createCombinedMap">createCombinedMap</a></li><li><a href="global.html#displayResults">displayResults</a></li><li><a href="global.html#fetchResults">fetchResults</a></li><li><a href="global.html#getBoundingBox">getBoundingBox</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Mon Apr 10 2023 16:36:05 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

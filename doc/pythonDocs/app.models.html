@@ -1,0 +1,545 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module app.models</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong><a href="app.html"><font color="#ffffff">app</font></a>.models</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:c%3A%5Ccsc450-sp23-project-team6%5Capp%5Cmodels.py">c:\csc450-sp23-project-team6\app\models.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="flask_login.mixins.html#UserMixin">flask_login.mixins.UserMixin</a>(<a href="builtins.html#object">builtins.object</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="app.models.html#Users">Users</a>(sqlalchemy.orm.decl_api.Model, <a href="flask_login.mixins.html#UserMixin">flask_login.mixins.UserMixin</a>)
+</font></dt></dl>
+</dd>
+<dt><font face="helvetica, arial">sqlalchemy.orm.decl_api.Model(<a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>)
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="app.models.html#CalendarEvents">CalendarEvents</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.models.html#ChecklistItems">ChecklistItems</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.models.html#Property">Property</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.models.html#UserFavorite">UserFavorite</a>
+</font></dt><dt><font face="helvetica, arial"><a href="app.models.html#Users">Users</a>(sqlalchemy.orm.decl_api.Model, <a href="flask_login.mixins.html#UserMixin">flask_login.mixins.UserMixin</a>)
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="CalendarEvents">class <strong>CalendarEvents</strong></a>(sqlalchemy.orm.decl_api.Model)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#CalendarEvents">CalendarEvents</a>(**kwargs)<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.models.html#CalendarEvents">CalendarEvents</a></dd>
+<dd>sqlalchemy.orm.decl_api.Model</dd>
+<dd><a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="CalendarEvents-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>A&nbsp;simple&nbsp;constructor&nbsp;that&nbsp;allows&nbsp;initialization&nbsp;from&nbsp;kwargs.<br>
+&nbsp;<br>
+Sets&nbsp;attributes&nbsp;on&nbsp;the&nbsp;constructed&nbsp;instance&nbsp;using&nbsp;the&nbsp;names&nbsp;and<br>
+values&nbsp;in&nbsp;``kwargs``.<br>
+&nbsp;<br>
+Only&nbsp;keys&nbsp;that&nbsp;are&nbsp;present&nbsp;as<br>
+attributes&nbsp;of&nbsp;the&nbsp;instance's&nbsp;class&nbsp;are&nbsp;allowed.&nbsp;These&nbsp;could&nbsp;be,<br>
+for&nbsp;example,&nbsp;any&nbsp;mapped&nbsp;columns&nbsp;or&nbsp;relationships.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>end_time</strong></dt>
+</dl>
+<dl><dt><strong>id</strong></dt>
+</dl>
+<dl><dt><strong>name</strong></dt>
+</dl>
+<dl><dt><strong>notes</strong></dt>
+</dl>
+<dl><dt><strong>time</strong></dt>
+</dl>
+<dl><dt><strong>user_id</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__mapper__</strong> = &lt;Mapper at 0x20fcadfdea0; CalendarEvents&gt;</dl>
+
+<dl><dt><strong>__table__</strong> = Table('calendar_events', MetaData(), Column('id'...=&lt;calendar_events&gt;, nullable=False), schema=None)</dl>
+
+<dl><dt><strong>__tablename__</strong> = 'calendar_events'</dl>
+
+<hr>
+Methods inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>query</strong></dt>
+</dl>
+
+<hr>
+Data and other attributes inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>__abstract__</strong> = True</dl>
+
+<dl><dt><strong>__fsa__</strong> = &lt;SQLAlchemy&gt;</dl>
+
+<dl><dt><strong>metadata</strong> = MetaData()</dl>
+
+<dl><dt><strong>query_class</strong> = &lt;class 'flask_sqlalchemy.query.Query'&gt;<dd><tt>SQLAlchemy&nbsp;:class:`~sqlalchemy.orm.query.Query`&nbsp;subclass&nbsp;with&nbsp;some&nbsp;extra&nbsp;methods<br>
+useful&nbsp;for&nbsp;querying&nbsp;in&nbsp;a&nbsp;web&nbsp;application.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;default&nbsp;query&nbsp;class&nbsp;for&nbsp;:attr:`.Model.query`.<br>
+&nbsp;<br>
+..&nbsp;versionchanged::&nbsp;3.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Renamed&nbsp;to&nbsp;``Query``&nbsp;from&nbsp;``BaseQuery``.</tt></dl>
+
+<dl><dt><strong>registry</strong> = &lt;sqlalchemy.orm.decl_api.registry object&gt;</dl>
+
+<hr>
+Methods inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><a name="CalendarEvents-__repr__"><strong>__repr__</strong></a>(self) -&gt; 'str'</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__annotations__</strong> = {'__fsa__': 't.ClassVar[SQLAlchemy]', 'query': 't.ClassVar[Query]', 'query_class': 't.ClassVar[type[Query]]'}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="ChecklistItems">class <strong>ChecklistItems</strong></a>(sqlalchemy.orm.decl_api.Model)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#ChecklistItems">ChecklistItems</a>(**kwargs)<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.models.html#ChecklistItems">ChecklistItems</a></dd>
+<dd>sqlalchemy.orm.decl_api.Model</dd>
+<dd><a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="ChecklistItems-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>A&nbsp;simple&nbsp;constructor&nbsp;that&nbsp;allows&nbsp;initialization&nbsp;from&nbsp;kwargs.<br>
+&nbsp;<br>
+Sets&nbsp;attributes&nbsp;on&nbsp;the&nbsp;constructed&nbsp;instance&nbsp;using&nbsp;the&nbsp;names&nbsp;and<br>
+values&nbsp;in&nbsp;``kwargs``.<br>
+&nbsp;<br>
+Only&nbsp;keys&nbsp;that&nbsp;are&nbsp;present&nbsp;as<br>
+attributes&nbsp;of&nbsp;the&nbsp;instance's&nbsp;class&nbsp;are&nbsp;allowed.&nbsp;These&nbsp;could&nbsp;be,<br>
+for&nbsp;example,&nbsp;any&nbsp;mapped&nbsp;columns&nbsp;or&nbsp;relationships.</tt></dd></dl>
+
+<dl><dt><a name="ChecklistItems-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>detail</strong></dt>
+</dl>
+<dl><dt><strong>order_no</strong></dt>
+</dl>
+<dl><dt><strong>status</strong></dt>
+</dl>
+<dl><dt><strong>user</strong></dt>
+</dl>
+<dl><dt><strong>user_id</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__mapper__</strong> = &lt;Mapper at 0x20fcadfea70; ChecklistItems&gt;</dl>
+
+<dl><dt><strong>__table__</strong> = Table('checklist_items', MetaData(), Column('sta..., primary_key=True, nullable=False), schema=None)</dl>
+
+<dl><dt><strong>__table_args__</strong> = (PrimaryKeyConstraint(Column('order_no', Integer(...cklist_items&gt;, primary_key=True, nullable=False)),)</dl>
+
+<dl><dt><strong>__tablename__</strong> = 'checklist_items'</dl>
+
+<hr>
+Methods inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>query</strong></dt>
+</dl>
+
+<hr>
+Data and other attributes inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>__abstract__</strong> = True</dl>
+
+<dl><dt><strong>__fsa__</strong> = &lt;SQLAlchemy&gt;</dl>
+
+<dl><dt><strong>metadata</strong> = MetaData()</dl>
+
+<dl><dt><strong>query_class</strong> = &lt;class 'flask_sqlalchemy.query.Query'&gt;<dd><tt>SQLAlchemy&nbsp;:class:`~sqlalchemy.orm.query.Query`&nbsp;subclass&nbsp;with&nbsp;some&nbsp;extra&nbsp;methods<br>
+useful&nbsp;for&nbsp;querying&nbsp;in&nbsp;a&nbsp;web&nbsp;application.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;default&nbsp;query&nbsp;class&nbsp;for&nbsp;:attr:`.Model.query`.<br>
+&nbsp;<br>
+..&nbsp;versionchanged::&nbsp;3.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Renamed&nbsp;to&nbsp;``Query``&nbsp;from&nbsp;``BaseQuery``.</tt></dl>
+
+<dl><dt><strong>registry</strong> = &lt;sqlalchemy.orm.decl_api.registry object&gt;</dl>
+
+<hr>
+Data descriptors inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__annotations__</strong> = {'__fsa__': 't.ClassVar[SQLAlchemy]', 'query': 't.ClassVar[Query]', 'query_class': 't.ClassVar[type[Query]]'}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Property">class <strong>Property</strong></a>(sqlalchemy.orm.decl_api.Model)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Property">Property</a>(**kwargs)<br>
+&nbsp;<br>
+Creates&nbsp;the&nbsp;property&nbsp;table&nbsp;and&nbsp;needed&nbsp;relationships<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.models.html#Property">Property</a></dd>
+<dd>sqlalchemy.orm.decl_api.Model</dd>
+<dd><a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Property-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>A&nbsp;simple&nbsp;constructor&nbsp;that&nbsp;allows&nbsp;initialization&nbsp;from&nbsp;kwargs.<br>
+&nbsp;<br>
+Sets&nbsp;attributes&nbsp;on&nbsp;the&nbsp;constructed&nbsp;instance&nbsp;using&nbsp;the&nbsp;names&nbsp;and<br>
+values&nbsp;in&nbsp;``kwargs``.<br>
+&nbsp;<br>
+Only&nbsp;keys&nbsp;that&nbsp;are&nbsp;present&nbsp;as<br>
+attributes&nbsp;of&nbsp;the&nbsp;instance's&nbsp;class&nbsp;are&nbsp;allowed.&nbsp;These&nbsp;could&nbsp;be,<br>
+for&nbsp;example,&nbsp;any&nbsp;mapped&nbsp;columns&nbsp;or&nbsp;relationships.</tt></dd></dl>
+
+<dl><dt><a name="Property-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>city</strong></dt>
+</dl>
+<dl><dt><strong>county</strong></dt>
+</dl>
+<dl><dt><strong>favorite</strong></dt>
+</dl>
+<dl><dt><strong>favorited_by</strong></dt>
+</dl>
+<dl><dt><strong>image_filename</strong></dt>
+</dl>
+<dl><dt><strong>numBaths</strong></dt>
+</dl>
+<dl><dt><strong>numBeds</strong></dt>
+</dl>
+<dl><dt><strong>price</strong></dt>
+</dl>
+<dl><dt><strong>propId</strong></dt>
+</dl>
+<dl><dt><strong>propUrl</strong></dt>
+</dl>
+<dl><dt><strong>state</strong></dt>
+</dl>
+<dl><dt><strong>street</strong></dt>
+</dl>
+<dl><dt><strong>user</strong></dt>
+</dl>
+<dl><dt><strong>user_id</strong></dt>
+</dl>
+<dl><dt><strong>yearBuilt</strong></dt>
+</dl>
+<dl><dt><strong>zcode</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__mapper__</strong> = &lt;Mapper at 0x20fcadfe7a0; Property&gt;</dl>
+
+<dl><dt><strong>__table__</strong> = Table('property', MetaData(), Column('propId', I..., table=&lt;property&gt;, nullable=False), schema=None)</dl>
+
+<dl><dt><strong>__tablename__</strong> = 'property'</dl>
+
+<hr>
+Methods inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>query</strong></dt>
+</dl>
+
+<hr>
+Data and other attributes inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>__abstract__</strong> = True</dl>
+
+<dl><dt><strong>__fsa__</strong> = &lt;SQLAlchemy&gt;</dl>
+
+<dl><dt><strong>metadata</strong> = MetaData()</dl>
+
+<dl><dt><strong>query_class</strong> = &lt;class 'flask_sqlalchemy.query.Query'&gt;<dd><tt>SQLAlchemy&nbsp;:class:`~sqlalchemy.orm.query.Query`&nbsp;subclass&nbsp;with&nbsp;some&nbsp;extra&nbsp;methods<br>
+useful&nbsp;for&nbsp;querying&nbsp;in&nbsp;a&nbsp;web&nbsp;application.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;default&nbsp;query&nbsp;class&nbsp;for&nbsp;:attr:`.Model.query`.<br>
+&nbsp;<br>
+..&nbsp;versionchanged::&nbsp;3.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Renamed&nbsp;to&nbsp;``Query``&nbsp;from&nbsp;``BaseQuery``.</tt></dl>
+
+<dl><dt><strong>registry</strong> = &lt;sqlalchemy.orm.decl_api.registry object&gt;</dl>
+
+<hr>
+Data descriptors inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__annotations__</strong> = {'__fsa__': 't.ClassVar[SQLAlchemy]', 'query': 't.ClassVar[Query]', 'query_class': 't.ClassVar[type[Query]]'}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="UserFavorite">class <strong>UserFavorite</strong></a>(sqlalchemy.orm.decl_api.Model)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#UserFavorite">UserFavorite</a>(**kwargs)<br>
+&nbsp;<br>
+Creates&nbsp;a&nbsp;table&nbsp;and&nbsp;relationship&nbsp;for&nbsp;the&nbsp;favorites&nbsp;list<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.models.html#UserFavorite">UserFavorite</a></dd>
+<dd>sqlalchemy.orm.decl_api.Model</dd>
+<dd><a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="UserFavorite-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>A&nbsp;simple&nbsp;constructor&nbsp;that&nbsp;allows&nbsp;initialization&nbsp;from&nbsp;kwargs.<br>
+&nbsp;<br>
+Sets&nbsp;attributes&nbsp;on&nbsp;the&nbsp;constructed&nbsp;instance&nbsp;using&nbsp;the&nbsp;names&nbsp;and<br>
+values&nbsp;in&nbsp;``kwargs``.<br>
+&nbsp;<br>
+Only&nbsp;keys&nbsp;that&nbsp;are&nbsp;present&nbsp;as<br>
+attributes&nbsp;of&nbsp;the&nbsp;instance's&nbsp;class&nbsp;are&nbsp;allowed.&nbsp;These&nbsp;could&nbsp;be,<br>
+for&nbsp;example,&nbsp;any&nbsp;mapped&nbsp;columns&nbsp;or&nbsp;relationships.</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>property</strong></dt>
+</dl>
+<dl><dt><strong>property_id</strong></dt>
+</dl>
+<dl><dt><strong>user</strong></dt>
+</dl>
+<dl><dt><strong>user_id</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__mapper__</strong> = &lt;Mapper at 0x20fcae80ee0; UserFavorite&gt;</dl>
+
+<dl><dt><strong>__table__</strong> = Table('user_favorite', MetaData(), Column('user_..., primary_key=True, nullable=False), schema=None)</dl>
+
+<dl><dt><strong>__tablename__</strong> = 'user_favorite'</dl>
+
+<hr>
+Methods inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>query</strong></dt>
+</dl>
+
+<hr>
+Data and other attributes inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>__abstract__</strong> = True</dl>
+
+<dl><dt><strong>__fsa__</strong> = &lt;SQLAlchemy&gt;</dl>
+
+<dl><dt><strong>metadata</strong> = MetaData()</dl>
+
+<dl><dt><strong>query_class</strong> = &lt;class 'flask_sqlalchemy.query.Query'&gt;<dd><tt>SQLAlchemy&nbsp;:class:`~sqlalchemy.orm.query.Query`&nbsp;subclass&nbsp;with&nbsp;some&nbsp;extra&nbsp;methods<br>
+useful&nbsp;for&nbsp;querying&nbsp;in&nbsp;a&nbsp;web&nbsp;application.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;default&nbsp;query&nbsp;class&nbsp;for&nbsp;:attr:`.Model.query`.<br>
+&nbsp;<br>
+..&nbsp;versionchanged::&nbsp;3.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Renamed&nbsp;to&nbsp;``Query``&nbsp;from&nbsp;``BaseQuery``.</tt></dl>
+
+<dl><dt><strong>registry</strong> = &lt;sqlalchemy.orm.decl_api.registry object&gt;</dl>
+
+<hr>
+Methods inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><a name="UserFavorite-__repr__"><strong>__repr__</strong></a>(self) -&gt; 'str'</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<hr>
+Data descriptors inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__annotations__</strong> = {'__fsa__': 't.ClassVar[SQLAlchemy]', 'query': 't.ClassVar[Query]', 'query_class': 't.ClassVar[type[Query]]'}</dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Users">class <strong>Users</strong></a>(sqlalchemy.orm.decl_api.Model, <a href="flask_login.mixins.html#UserMixin">flask_login.mixins.UserMixin</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt><a href="#Users">Users</a>(**kwargs)<br>
+&nbsp;<br>
+<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%"><dl><dt>Method resolution order:</dt>
+<dd><a href="app.models.html#Users">Users</a></dd>
+<dd>sqlalchemy.orm.decl_api.Model</dd>
+<dd><a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a></dd>
+<dd><a href="flask_login.mixins.html#UserMixin">flask_login.mixins.UserMixin</a></dd>
+<dd><a href="builtins.html#object">builtins.object</a></dd>
+</dl>
+<hr>
+Methods defined here:<br>
+<dl><dt><a name="Users-__init__"><strong>__init__</strong></a>(self, **kwargs)</dt><dd><tt>A&nbsp;simple&nbsp;constructor&nbsp;that&nbsp;allows&nbsp;initialization&nbsp;from&nbsp;kwargs.<br>
+&nbsp;<br>
+Sets&nbsp;attributes&nbsp;on&nbsp;the&nbsp;constructed&nbsp;instance&nbsp;using&nbsp;the&nbsp;names&nbsp;and<br>
+values&nbsp;in&nbsp;``kwargs``.<br>
+&nbsp;<br>
+Only&nbsp;keys&nbsp;that&nbsp;are&nbsp;present&nbsp;as<br>
+attributes&nbsp;of&nbsp;the&nbsp;instance's&nbsp;class&nbsp;are&nbsp;allowed.&nbsp;These&nbsp;could&nbsp;be,<br>
+for&nbsp;example,&nbsp;any&nbsp;mapped&nbsp;columns&nbsp;or&nbsp;relationships.</tt></dd></dl>
+
+<dl><dt><a name="Users-__repr__"><strong>__repr__</strong></a>(self)</dt><dd><tt>Return&nbsp;repr(self).</tt></dd></dl>
+
+<dl><dt><a name="Users-get_reset_token"><strong>get_reset_token</strong></a>(self, expires_secs=300)</dt><dd><tt>This&nbsp;method&nbsp;creates&nbsp;the&nbsp;token,&nbsp;using&nbsp;itsdangerous,&nbsp;that&nbsp;will&nbsp;verify<br>
+the&nbsp;person&nbsp;and&nbsp;account&nbsp;that&nbsp;will&nbsp;have&nbsp;their&nbsp;password&nbsp;reset<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;expires_secs:&nbsp;integer&nbsp;number&nbsp;of&nbsp;seconds&nbsp;for&nbsp;expiration<br>
+&nbsp;<br>
+Returns:&nbsp;a&nbsp;signed&nbsp;string&nbsp;serialized&nbsp;with&nbsp;the&nbsp;internal&nbsp;serializer</tt></dd></dl>
+
+<dl><dt><a name="Users-is_authenticated"><strong>is_authenticated</strong></a>(self)</dt><dd><tt>Return&nbsp;True&nbsp;if&nbsp;user&nbsp;authenticated</tt></dd></dl>
+
+<dl><dt><a name="Users-verify_password"><strong>verify_password</strong></a>(self, password)</dt><dd><tt>Takes&nbsp;the&nbsp;users&nbsp;plaintext&nbsp;password&nbsp;and&nbsp;will&nbsp;use&nbsp;it&nbsp;to&nbsp;pass&nbsp;to&nbsp;the&nbsp;check_password_hash&nbsp;function&nbsp;to<br>
+check&nbsp;the&nbsp;user&nbsp;entered&nbsp;password&nbsp;(at&nbsp;login)&nbsp;against&nbsp;the&nbsp;hashed&nbsp;password&nbsp;value&nbsp;stored&nbsp;in&nbsp;the&nbsp;database<br>
+Args:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;password:&nbsp;the&nbsp;plaintext&nbsp;password&nbsp;to&nbsp;compare&nbsp;against&nbsp;the&nbsp;hash.<br>
+&nbsp;<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;True&nbsp;if&nbsp;the&nbsp;password&nbsp;matched,&nbsp;False&nbsp;otherwise</tt></dd></dl>
+
+<hr>
+Static methods defined here:<br>
+<dl><dt><a name="Users-verify_reset_token"><strong>verify_reset_token</strong></a>(token)</dt></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>email</strong></dt>
+</dl>
+<dl><dt><strong>favorite_properties</strong></dt>
+</dl>
+<dl><dt><strong>first_name</strong></dt>
+</dl>
+<dl><dt><strong>id</strong></dt>
+</dl>
+<dl><dt><strong>last_name</strong></dt>
+</dl>
+<dl><dt><strong>password</strong></dt>
+<dd><tt>Checks&nbsp;for&nbsp;valid&nbsp;attribute&nbsp;reference<br>
+Returns:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Invalid&nbsp;attribute&nbsp;error&nbsp;message</tt></dd>
+</dl>
+<dl><dt><strong>password_hash</strong></dt>
+</dl>
+<hr>
+Data and other attributes defined here:<br>
+<dl><dt><strong>__mapper__</strong> = &lt;Mapper at 0x20fcadff730; Users&gt;</dl>
+
+<dl><dt><strong>__table__</strong> = Table('users', MetaData(), Column('id', Integer(... String(length=150), table=&lt;users&gt;), schema=None)</dl>
+
+<dl><dt><strong>__tablename__</strong> = 'users'</dl>
+
+<hr>
+Methods inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>query</strong></dt>
+</dl>
+
+<hr>
+Data and other attributes inherited from sqlalchemy.orm.decl_api.Model:<br>
+<dl><dt><strong>__abstract__</strong> = True</dl>
+
+<dl><dt><strong>__fsa__</strong> = &lt;SQLAlchemy&gt;</dl>
+
+<dl><dt><strong>metadata</strong> = MetaData()</dl>
+
+<dl><dt><strong>query_class</strong> = &lt;class 'flask_sqlalchemy.query.Query'&gt;<dd><tt>SQLAlchemy&nbsp;:class:`~sqlalchemy.orm.query.Query`&nbsp;subclass&nbsp;with&nbsp;some&nbsp;extra&nbsp;methods<br>
+useful&nbsp;for&nbsp;querying&nbsp;in&nbsp;a&nbsp;web&nbsp;application.<br>
+&nbsp;<br>
+This&nbsp;is&nbsp;the&nbsp;default&nbsp;query&nbsp;class&nbsp;for&nbsp;:attr:`.Model.query`.<br>
+&nbsp;<br>
+..&nbsp;versionchanged::&nbsp;3.0<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Renamed&nbsp;to&nbsp;``Query``&nbsp;from&nbsp;``BaseQuery``.</tt></dl>
+
+<dl><dt><strong>registry</strong> = &lt;sqlalchemy.orm.decl_api.registry object&gt;</dl>
+
+<hr>
+Data descriptors inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__dict__</strong></dt>
+<dd><tt>dictionary&nbsp;for&nbsp;instance&nbsp;variables&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<dl><dt><strong>__weakref__</strong></dt>
+<dd><tt>list&nbsp;of&nbsp;weak&nbsp;references&nbsp;to&nbsp;the&nbsp;object&nbsp;(if&nbsp;defined)</tt></dd>
+</dl>
+<hr>
+Data and other attributes inherited from <a href="flask_sqlalchemy.model.html#Model">flask_sqlalchemy.model.Model</a>:<br>
+<dl><dt><strong>__annotations__</strong> = {'__fsa__': 't.ClassVar[SQLAlchemy]', 'query': 't.ClassVar[Query]', 'query_class': 't.ClassVar[type[Query]]'}</dl>
+
+<hr>
+Methods inherited from <a href="flask_login.mixins.html#UserMixin">flask_login.mixins.UserMixin</a>:<br>
+<dl><dt><a name="Users-__eq__"><strong>__eq__</strong></a>(self, other)</dt><dd><tt>Checks&nbsp;the&nbsp;equality&nbsp;of&nbsp;two&nbsp;`<a href="flask_login.mixins.html#UserMixin">UserMixin</a>`&nbsp;objects&nbsp;using&nbsp;`get_id`.</tt></dd></dl>
+
+<dl><dt><a name="Users-__hash__"><strong>__hash__</strong></a>(self, /)</dt><dd><tt>Return&nbsp;hash(self).</tt></dd></dl>
+
+<dl><dt><a name="Users-__ne__"><strong>__ne__</strong></a>(self, other)</dt><dd><tt>Checks&nbsp;the&nbsp;inequality&nbsp;of&nbsp;two&nbsp;`<a href="flask_login.mixins.html#UserMixin">UserMixin</a>`&nbsp;objects&nbsp;using&nbsp;`get_id`.</tt></dd></dl>
+
+<dl><dt><a name="Users-get_id"><strong>get_id</strong></a>(self)</dt></dl>
+
+<hr>
+Readonly properties inherited from <a href="flask_login.mixins.html#UserMixin">flask_login.mixins.UserMixin</a>:<br>
+<dl><dt><strong>is_active</strong></dt>
+</dl>
+<dl><dt><strong>is_anonymous</strong></dt>
+</dl>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#55aa55">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Data</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#55aa55"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><strong>app</strong> = &lt;Flask 'app'&gt;<br>
+<strong>db</strong> = &lt;SQLAlchemy&gt;</td></tr></table>
+</body></html>
