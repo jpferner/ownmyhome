@@ -44,13 +44,13 @@ def home():
 
         # Query the next event on the calendar for the current user
         calendar = CalendarEvents.query.filter(
-            CalendarEvents.time > datetime.utcnow(),
+            CalendarEvents.time > datetime.now(),
             CalendarEvents.user_id == current_user.id
         ).order_by(CalendarEvents.time).first()
 
     all_properties = Property.query.all()
     random_property = choice(all_properties) if all_properties else None
-    current_time = datetime.utcnow()
+    current_time = datetime.now()
 
     return render_template('index.html', login_form=login_form, first_incomplete_item=first_incomplete_item,
                            random_property=random_property, calendar=calendar, current_time=current_time)
