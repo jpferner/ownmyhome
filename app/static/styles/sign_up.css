@@ -1,32 +1,126 @@
-form label{
-    width: 45%;
+/*form label{*/
+/*    width: 45%;*/
+/*}*/
+
+/*#sign-up-form {*/
+/*    background-color: gray;*/
+/*    color: black;*/
+/*    width: 25%;*/
+/*    margin: auto;*/
+/*}*/
+
+/*#sign-up-form input {*/
+/*    margin-bottom: .5em;*/
+/*    width: 75%;*/
+/*}*/
+
+/*.toggle-password, .toggle-confirm-password {*/
+/*    right: 5px; !* Adjust the distance from the right edge *!*/
+/*    top: 50%;*/
+/*    transform: translateY(-50%);*/
+/*    cursor: pointer;*/
+/*    z-index: 10;*/
+/*    font-size: 1.2em;*/
+/*    color: darkorange;*/
+/*}*/
+
+/*#tos:link, #tos:visited, #tos:hover, #tos:active {*/
+/*    text-decoration: none;*/
+/*    color: blue;*/
+/*}*/
+
+#signup {
+    width: 80%;
+    margin: 0 auto;
 }
 
 #sign-up-form {
-    background-color: gray;
-    color: black;
-    width: 25%;
+    margin: 0 auto;
+    width: 90%;
+}
+
+#title {
+    color: teal;
+    /*font-family: 'Ubuntu', sans-serif;*/
+    font-size: 35px;
+    text-align: center;
     margin: auto;
 }
 
-#sign-up-form input {
-    margin-bottom: .5em;
-    width: 75%;
+.signup-input-field, .create-account-field {
+    width: 80%;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 1px;
+    padding: 10px 20px;
+    /*border: none;*/
+    border-radius: 20px;
+    outline: none;
+    box-sizing: border-box;
+    border: 2px solid rgba(0, 0, 0, 0.02);
+    /*margin-bottom: 50px;*/
+    /*margin-left: 46px;*/
+    text-align: left;
+    margin: 0 auto;
+    font-family: 'Ubuntu', sans-serif;
+
 }
 
-.toggle-password, .toggle-confirm-password {
-    right: 5px; /* Adjust the distance from the right edge */
-    top: 50%;
-    transform: translateY(-50%);
+.pw-container { /* allow the input field for password and confirm password to start at same place as other inputs */
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Make the width 100 again so everything lines up correctly*/
+.signup-input-field {
+    width: 100%;
+}
+
+/* Allow the eye to fill up the space after the password and confirm password fields and align it with other inputs */
+.eye-icon {
+    position: absolute;
+    right: 10px;
     cursor: pointer;
-    z-index: 10;
-    font-size: 1.2em;
-    color: darkorange;
 }
 
-#tos:link, #tos:visited, #tos:hover, #tos:active {
-    text-decoration: none;
-    color: blue;
+#eye1, #eye2 {
+    color: teal;
+    cursor: pointer;
+    top: 28%;
+    right: 4%;
+}
+
+#tos-label, #tos-checkbox {
+    border: none;
+}
+
+.create-account-field{
+    cursor: pointer;
+    color: #fff;
+    background: linear-gradient(to right, #008081, #34A798);
+    /*padding: 10px 40px;*/
+    /*font-family: 'Ubuntu', sans-serif;*/
+    /*margin: 0 auto;*/
+    font-size: 0.8125em;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    width: 40%;
+}
+
+a {
+    text-shadow: 0 0 3px rgba(117, 117, 117, 0.12);
+    color: #57C3AD;
+    text-decoration: none
+}
+
+.errors, .error {
+    font-size: small;
+    color: red;
+}
+
+.success {
+    font-size: small;
+    color: green;
 }
 
 @media screen and (max-width: 1724px) {

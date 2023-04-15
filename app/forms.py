@@ -14,29 +14,29 @@ from flask import Markup
 
 
 class SignUpForm(FlaskForm):
-    first_name = StringField("First Name:",
+    first_name = StringField("First Name:", render_kw={"placeholder": "First name"},
                              validators=[InputRequired(), Length(min=2, max=25, message="First name must be"
                                                                                         "between 2 and 25 characters"
                                                                                         "in length."),
                                          Regexp("^[^\s\[\.<>/\\\\]*$",
-                                                message="Invalid character in first name.")])
-    last_name = StringField("Last Name:",
+                                                message="Invalid character in first name."),])
+    last_name = StringField("Last Name:", render_kw={"placeholder": "Last name"},
                             validators=[InputRequired(), Length(min=2, max=25, message="First name must be"
                                                                                        "between 2 and 25 characters"
                                                                                        "in length."),
                                         Regexp("^[^\s\[\.<>/\\\\]*$",
                                                message="Invalid character in last name.")
                                         ])
-    email = StringField("Email:",
+    email = StringField("Email:", render_kw={"placeholder": "Email"},
                         validators=[InputRequired(), Email('Valid email address required.'),
                                     Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
                                            message="Invalid character in email address.")
                                     ])
 
-    confirm_email = StringField("Confirm Email:",
+    confirm_email = StringField("Confirm Email:", render_kw={"placeholder": "Confirm email"},
                                 validators=[InputRequired(), EqualTo("email", message='Emails do not match. Please '
                                                                                       'try again.')])
-    password_hash = PasswordField("Password:",
+    password_hash = PasswordField("Password:", render_kw={"placeholder": "Password"},
                                   validators=[InputRequired(),
                                               Length(min=8,
                                                      message='Password should be at least %(min)d characters long'),
@@ -55,7 +55,7 @@ class SignUpForm(FlaskForm):
     # checkbox to show the user's password in plain text
     show_password = BooleanField('Show password', id='check')
 
-    confirm_password_hash = PasswordField("Confirm Password:",
+    confirm_password_hash = PasswordField("Confirm Password:", render_kw={"placeholder": "Confirm password"},
                                           validators=[InputRequired(), EqualTo("password_hash",
                                                                                message="Passwords do not match. "
                                                                                        "Please try "

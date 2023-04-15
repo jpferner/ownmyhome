@@ -9,6 +9,9 @@
             type="text/css"
             href="{{ url_for('static', filename='styles/sign_up.css') }}"
     />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 <section>
     <div class="homepage">
@@ -29,99 +32,225 @@
 <aside id="signup">
     <div id="sign-up-form">
 
-        <h1>Sign Up</h1>
+        <h1 id="title">Sign Up</h1>
         <h5>Create a free account!<br>Already have one? <a href="{{ url_for('login') }}">Login</a></h5>
 
-        <!-- Capture and displays all the error messages at top of Sign-Up form -->
-
-        <!-- Error message for First Name field -->
-        {% if form.first_name.errors %}
-            {% for error in form.first_name.errors %}
-                <pre class="error">{{ error }}</pre>
-            {% endfor %}
-
-        {% endif %}
-
-        {% if form.last_name.errors %}
-            {% for error in form.last_name.errors %}
-                <pre class="error">{{ error }}</pre>
-            {% endfor %}
-
-        {% endif %}
-    
-
-        <!-- Error message for  Email field -->
-        {% if form.email.errors %}
-            <span class="errors" style="background-color: red; color: white">
-                    {% for error in form.email.errors %}
-                        {{ error }}
-                        <br>
-                    {% endfor %}
-                </span>
-        {% endif %}
-
-        <!-- Error message for Confirm Email field -->
-        {% if form.confirm_email.errors %}
-            <span class="errors" style="background-color: red; color: white">
-                    {% for error in form.confirm_email.errors %}
-                        {{ error }}
-                        <br>
-                    {% endfor %}
-                </span>
-        {% endif %}
-
-        <!-- Error message for Password field -->
-        {% if form.password_hash.errors %}
-            <span class="errors" style="background-color: red; color: white;">
-                    {% for error in form.password_hash.errors %}
-                        {{ error }}
-                        <br>
-                    {% endfor %}
-                </span>
-        {% endif %}
-
-        <!-- Error message for Confirm Password field -->
-        {% if form.confirm_password_hash.errors %}
-            <span class="errors" style="background-color: red; color: white;">
-                    {% for error in form.confirm_password_hash.errors %}
-                        {{ error }}
-                        <br>
-                    {% endfor %}
-                </span>
-        {% endif %}
-
-        <!-- Email already exists in database error using FLASH MESSAGES-->
-{#        {% for category, message in get_flashed_messages(with_categories=true) %}#}
-{#            <p class="{{ category }}" style="background-color: red;#}
-{#            color: white">{{ message }}or return to the <a href="{{ url_for('login') }}">login page.</a>#}
-{#               .</p>#}
-{#        {% endfor %}#}
-
-    <!-- Password reset request email success message using flash messages-->
+        <!-- Sign Up for success/error message using flash messages-->
+        <!-- Email already exists in the database error-->
         {% for category, message in get_flashed_messages(with_categories=true) %}
             <pre class="{{ category }}">{{ message }} or return to <br>the <a href="{{ url_for('login') }}">login page.</a></pre>
         {% endfor %}
 
+        <!-- Error Message for First Name field -->
+        {% if form.first_name.errors %}
+            {% for error in form.first_name.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+        {% endif %}
+
+    <!-- Error Message for Last Name field -->
+        {% if form.last_name.errors %}
+            {% for error in form.last_name.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+        {% endif %}
+
+    <!-- Error Message for Email field -->
+        {% if form.email.errors %}
+            {% for error in form.email.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+        {% endif %}
+
+    <!-- Error Message for Confirm Email field -->
+        {% if form.confirm_email.errors %}
+            {% for error in form.confirm_email.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+        {% endif %}
+
+    <!-- Error Message for Password field -->
+        {% if form.password_hash.errors %}
+            {% for error in form.password_hash.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+        {% endif %}
+
+    <!-- Error Message for Confirm Password field -->
+        {% if form.confirm_password_hash.errors %}
+            {% for error in form.confirm_password_hash.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+
+        {% endif %}
 
         <form method="POST">
             {{ form.hidden_tag() }}  <!-- creates CSRF token -->
 
             <p>
-                {{ form.first_name.label }} <br>
-                {{ form.first_name() }}  <!-- input box for label above -->
-            </p>
-
-
-            <p>
-                {{ form.last_name.label }} <br>
-                {{ form.last_name() }}
+                {{ form.first_name(class='signup-input-field') }}
             </p>
 
             <p>
-                {{ form.email.label }} <br>
-                {{ form.email() }}
+                {{ form.last_name(class='signup-input-field') }}
             </p>
 
+            <p>
+                {{ form.email(class='signup-input-field') }}
+            </p>
+
+            <p>
+                {{ form.confirm_email(class='signup-input-field') }}
+            </p>
+
+            <p class="pw-container">
+                {{ form.password_hash(class='signup-input-field', id='pw1') }}
+                <i class='fa-solid fa-eye' id='eye1'></i>
+            </p>
+
+            <p class="pw-container">
+                {{ form.confirm_password_hash(class='signup-input-field', id='confirm-password-field') }}
+                <i class='fa-solid fa-eye' id='eye2'></i>
+            </p>
+
+            <p>
+                {{ form.accept_tos.label (class='signup-input-field', id='tos-label') }} <br>
+                {{ form.accept_tos(class='signup-input-field', id='tos-checkbox') }}
+            </p>
+
+            <p>
+                {{ form.create_account(class='create-account-field') }}
+            </p>
+
+        </form>
+    </div>
+</aside>
+
+{% include 'footer.html' %}
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+
+<!-- Javascript for implement show password feature with eye icon on Change Password page -->
+<script>
+    const passwordInput = document.querySelector("#pw1")
+    const confirmPasswordInput = document.querySelector("#confirm-password-field")
+    const eye1 = document.querySelector("#eye1")
+    const eye2 = document.querySelector("#eye2")
+
+    eye1.addEventListener("click", function(){
+        this.classList.toggle("fa-eye-slash")
+        const type1 = passwordInput.getAttribute("type") === "password" ? "text" : "password"
+        passwordInput.setAttribute("type", type1)
+        })
+    eye2.addEventListener("click", function () {
+        this.classList.toggle("fa-eye-slash")
+        const type2 = confirmPasswordInput.getAttribute("type") === "password" ? "text" : "password"
+        confirmPasswordInput.setAttribute("type", type2)
+    })
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const imagePath = "{{ url_for('static', filename='images/') }}";
+        initSlideshow(imagePath);
+    });
+</script>
+
+{#<aside id="signup">#}
+{#    <div id="sign-up-form">#}
+{##}
+{#        <h1>Sign Up</h1>#}
+{#        <h5>Create a free account!<br>Already have one? <a href="{{ url_for('login') }}">Login</a></h5>#}
+{##}
+{#        <!-- Capture and displays all the error messages at top of Sign-Up form -->#}
+{##}
+{#        <!-- Error message for First Name field -->#}
+{#        {% if form.first_name.errors %}#}
+{#            {% for error in form.first_name.errors %}#}
+{#                <pre class="error">{{ error }}</pre>#}
+{#            {% endfor %}#}
+{##}
+{#        {% endif %}#}
+{##}
+{#        {% if form.last_name.errors %}#}
+{#            {% for error in form.last_name.errors %}#}
+{#                <pre class="error">{{ error }}</pre>#}
+{#            {% endfor %}#}
+{##}
+{#        {% endif %}#}
+{##}
+{##}
+{#        <!-- Error message for  Email field -->#}
+{#        {% if form.email.errors %}#}
+{#            <span class="errors" style="background-color: red; color: white">#}
+{#                    {% for error in form.email.errors %}#}
+{#                        {{ error }}#}
+{#                        <br>#}
+{#                    {% endfor %}#}
+{#                </span>#}
+{#        {% endif %}#}
+{##}
+{#        <!-- Error message for Confirm Email field -->#}
+{#        {% if form.confirm_email.errors %}#}
+{#            <span class="errors" style="background-color: red; color: white">#}
+{#                    {% for error in form.confirm_email.errors %}#}
+{#                        {{ error }}#}
+{#                        <br>#}
+{#                    {% endfor %}#}
+{#                </span>#}
+{#        {% endif %}#}
+{##}
+{#        <!-- Error message for Password field -->#}
+{#        {% if form.password_hash.errors %}#}
+{#            <span class="errors" style="background-color: red; color: white;">#}
+{#                    {% for error in form.password_hash.errors %}#}
+{#                        {{ error }}#}
+{#                        <br>#}
+{#                    {% endfor %}#}
+{#                </span>#}
+{#        {% endif %}#}
+{##}
+{#        <!-- Error message for Confirm Password field -->#}
+{#        {% if form.confirm_password_hash.errors %}#}
+{#            <span class="errors" style="background-color: red; color: white;">#}
+{#                    {% for error in form.confirm_password_hash.errors %}#}
+{#                        {{ error }}#}
+{#                        <br>#}
+{#                    {% endfor %}#}
+{#                </span>#}
+{#        {% endif %}#}
+{##}
+{#        <!-- Email already exists in database error using FLASH MESSAGES-->#}
+{#        {% for category, message in get_flashed_messages(with_categories=true) %}#}
+{#            <p class="{{ category }}" style="background-color: red;#}
+{#            color: white">{{ message }}or return to the <a href="{{ url_for('login') }}">login page.</a>#}
+{#               .</p>#}
+{#        {% endfor %}#}
+{##}
+{#    <!-- Password reset request email success message using flash messages-->#}
+{#        {% for category, message in get_flashed_messages(with_categories=true) %}#}
+{#            <pre class="{{ category }}">{{ message }} or return to <br>the <a href="{{ url_for('login') }}">login page.</a></pre>#}
+{#        {% endfor %}#}
+{##}
+{##}
+{#        <form method="POST">#}
+{#            {{ form.hidden_tag() }}  <!-- creates CSRF token -->#}
+{##}
+{#            <p>#}
+{#                {{ form.first_name.label }} <br>#}
+{#                {{ form.first_name() }}  <!-- input box for label above -->#}
+{#            </p>#}
+{##}
+{##}
+{#            <p>#}
+{#                {{ form.last_name.label }} <br>#}
+{#                {{ form.last_name() }}#}
+{#            </p>#}
+{##}
+{#            <p>#}
+{#                {{ form.email.label }} <br>#}
+{#                {{ form.email() }}#}
+{#            </p>#}
+{##}
             {#            <!-- Error message for Confirm Email field -->#}
             {#            {% if form.confirm_email.errors %}#}
             {#                <span class="errors" style="background-color: red" >#}
@@ -130,17 +259,17 @@
             {#                    {% endfor %}#}
             {#                </span>#}
             {#            {% endif %}#}
-
-            <p>
-                {{ form.confirm_email.label }} <br>
-                {{ form.confirm_email() }}
-            </p>
-
-            <div class="password-container">
-                {{ form.password_hash.label }} <span id="toggle-password" class="toggle-password">👁</span> <br>
-                {{ form.password_hash() }}
-            </div>
-
+{##}
+{#            <p>#}
+{#                {{ form.confirm_email.label }} <br>#}
+{#                {{ form.confirm_email() }}#}
+{#            </p>#}
+{##}
+{#            <div class="password-container">#}
+{#                {{ form.password_hash.label }} <span id="toggle-password" class="toggle-password">👁</span> <br>#}
+{#                {{ form.password_hash() }}#}
+{#            </div>#}
+{##}
             {#            <!-- Error message for Confirm Password field -->#}
             {#            {% if form.confirm_password_hash.errors %}#}
             {#                <span class="errors" style="background-color: red" >#}
@@ -149,36 +278,36 @@
             {#                    {% endfor %}#}
             {#                </span>#}
             {#            {% endif %}#}
-
-            <div class="password-container">
-                {{ form.confirm_password_hash.label }} <span id="toggle-confirm-password"
-                                                             class="toggle-confirm-password">👁</span> <br>
-                {{ form.confirm_password_hash() }}
-            </div>
-
-            <p>
-                {{ form.accept_tos.label }} <br>
-                {{ form.accept_tos() }}
-            </p>
-
-            <p>
-                {{ form.create_account() }}
-            </p>
-
-        </form>
-    </div>
-</aside>
-{% include 'footer.html' %}
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const imagePath = "{{ url_for('static', filename='images/') }}";
-        initSlideshow(imagePath);
-
-        const passwordFieldId = "{{ form.password_hash.id }}";
-        const confirmPasswordFieldId = "{{ form.confirm_password_hash.id }}";
-        initTogglePassword(passwordFieldId, confirmPasswordFieldId);
-    });
-</script>
-<script src="{{ url_for('static', filename='scripts/eye.js') }}"></script>
+{##}
+{#            <div class="password-container">#}
+{#                {{ form.confirm_password_hash.label }} <span id="toggle-confirm-password"#}
+{#                                                             class="toggle-confirm-password">👁</span> <br>#}
+{#                {{ form.confirm_password_hash() }}#}
+{#            </div>#}
+{##}
+{#            <p>#}
+{#                {{ form.accept_tos.label }} <br>#}
+{#                {{ form.accept_tos() }}#}
+{#            </p>#}
+{##}
+{#            <p>#}
+{#                {{ form.create_account() }}#}
+{#            </p>#}
+{##}
+{#        </form>#}
+{#    </div>#}
+{#</aside>#}
+{#{% include 'footer.html' %}#}
+{#<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>#}
+{#<script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>#}
+{#<script>#}
+{#    document.addEventListener("DOMContentLoaded", function () {#}
+{#        const imagePath = "{{ url_for('static', filename='images/') }}";#}
+{#        initSlideshow(imagePath);#}
+{##}
+{#        const passwordFieldId = "{{ form.password_hash.id }}";#}
+{#        const confirmPasswordFieldId = "{{ form.confirm_password_hash.id }}";#}
+{#        initTogglePassword(passwordFieldId, confirmPasswordFieldId);#}
+{#    });#}
+{#</script>#}
+{#<script src="{{ url_for('static', filename='scripts/eye.js') }}"></script>#}
