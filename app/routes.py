@@ -7,7 +7,6 @@ from flask_wtf.csrf import validate_csrf
 
 import requests
 
-from app import app
 
 from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
@@ -428,10 +427,11 @@ def sign_up():
             # Add checklist items for the new user
             add_checklist_items(user.id)
 
-            flash('Account created! Please use your credentials to log in.', category='success')
+            flash('Account created!\n\nPlease use your credentials to log in.', category='success')
             return redirect(url_for('login'))
         else:  # redirect user to the sign-up page, so they can create a new account
-            flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            # flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            flash('Sign up unsuccessful.\n\n Please try again using a different email address ', category='error')
             return redirect(url_for('sign_up'))
 
     # current_users = Users.query.order_by(Users.id)  # query current db of Users
@@ -511,12 +511,17 @@ def reset_password_request():
         # if the user exists
         if user:
             send_password_reset_email(user)
-            flash('Password reset request has been sent.\nPlease check your email for instructions'
-                  ' on how how to reset your password.\n\n'
+            flash('Thank you for submitting your email address.\nIf an account is associated with this email, '
+                  'a password reset link will be sent to your inbox shortly.\n'
+                  ' Please check your email and follow the instructions to reset your password."\n\n'
                   'Important: Password reset link expires in 5 minutes.', category='success')
             return redirect(url_for('login'))
         else:
-            flash("We're sorry. There is no account associated with the email provided.", category='error')
+            # flash("We're sorry. There is no account associated with the email provided.", category='error')
+            flash('Thank you for submitting your email address.\n\nIf an account is associated with this email, '
+                  'a password reset link will be sent to your inbox shortly.\n\n'
+                  ' Please check your email and follow the instructions to reset your password.\n\n'
+                  'Important: Password reset link expires in 5 minutes.', category='success')
     return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form, )
 
 

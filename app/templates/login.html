@@ -35,13 +35,20 @@
             <pre class="{{ category }}">{{ message }}</pre>
         {% endfor %}
 
-        <!-- Error message for Confirm Email field -->
+        <!-- Error message for  Email field -->
         {% if form.email.errors %}
-            <span class="errors" style="background-color: red; color: white">
-                {% for error in form.email.errors %}
-                    {{ error }}
-                {% endfor %}
-            </span>
+            {% for error in form.email.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+
+        {% endif %}
+
+    <!-- Error message for Password field -->
+        {% if form.password_hash.errors %}
+            {% for error in form.password_hash.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+
         {% endif %}
 
 
@@ -61,6 +68,8 @@
             </p>
             <p>
                 {{ form.submit }}
+            </p>
+            <p>
                 <a href="{{ url_for('reset_password_request') }}" id="forgot-password">Forgot Password?</a>
             </p>
         </form>

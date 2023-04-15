@@ -15,7 +15,10 @@
         <span style="color: white">{{ login_form.password_hash.label }}</span>
         <span id="toggle-password" class="toggle-password">👁</span> <br> {{ login_form.password_hash() }} <br>
         <span style="color: white">{{ login_form.remember_me.label }}</span> <br> {{ login_form.remember_me() }}<br>
-        {{ login_form.submit() }}
+        {{ login_form.submit() }} <br>
+        <span>
+            <a href="{{ url_for('reset_password_request') }}" id="forgot-password">Forgot Password?</a>
+        </span>
     </form>
 {% endif %}
 

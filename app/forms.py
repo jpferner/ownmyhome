@@ -17,13 +17,21 @@ class SignUpForm(FlaskForm):
     first_name = StringField("First Name:",
                              validators=[InputRequired(), Length(min=2, max=25, message="First name must be"
                                                                                         "between 2 and 25 characters"
-                                                                                        "in length.")])
+                                                                                        "in length."),
+                                         Regexp("^[^\s\[\.<>/\\\\]*$",
+                                                message="Invalid character in first name.")])
     last_name = StringField("Last Name:",
                             validators=[InputRequired(), Length(min=2, max=25, message="First name must be"
                                                                                        "between 2 and 25 characters"
-                                                                                       "in length.")])
+                                                                                       "in length."),
+                                        Regexp("^[^\s\[\.<>/\\\\]*$",
+                                               message="Invalid character in last name.")
+                                        ])
     email = StringField("Email:",
-                        validators=[InputRequired(), Email('Valid email address required.')])
+                        validators=[InputRequired(), Email('Valid email address required.'),
+                                    Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
+                                           message="Invalid character in email address.")
+                                    ])
 
     confirm_email = StringField("Confirm Email:",
                                 validators=[InputRequired(), EqualTo("email", message='Emails do not match. Please '
@@ -40,8 +48,8 @@ class SignUpForm(FlaskForm):
                                               Regexp("(?=.*[@$!_%*#?&])",
                                                      message="Password must contain at least one special character"
                                                      ),
-                                              Regexp("(?!.*[.<>/\s])",
-                                                     message="Password cannot contain ., <, >, /, or spaces.")
+                                              Regexp("^[^\s\[\.<>/\\\\]*$",
+                                                     message="Password cannot contain ., <, >, /, \, or spaces.")
                                               ], id='password_hash')
 
     # checkbox to show the user's password in plain text
@@ -59,7 +67,8 @@ class SignUpForm(FlaskForm):
 
     # url label for Terms of Service
     url_label = Markup(
-        "<a id='tos' target='_blank' href='https://www.termsandconditionsgenerator.com/live.php?token=WHZDugV9ku8Yfxs8mVwMZIhx12VmZHpr'>Terms of Service.</a>")
+        "<a id='tos' target='_blank' href='https://www.termsandconditionsgenerator.com/live.php?token"
+        "=WHZDugV9ku8Yfxs8mVwMZIhx12VmZHpr'>Terms of Service.</a>")
 
     accept_tos = BooleanField("I accept the " + url_label, validators=[InputRequired()])
 
@@ -68,10 +77,17 @@ class SignUpForm(FlaskForm):
 
 class LoginForm(FlaskForm):
     email = StringField("Email:",
-                        validators=[InputRequired(), Email('Valid email address required.')])
+                        validators=[InputRequired(), Email('Valid email address required.'),
+                                    Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
+                                           message="Invalid character in email address.")
+                                    ])
 
     # did not set password validators for login page; will flash message if invalid password
-    password_hash = PasswordField("Password:", validators=[InputRequired()], id='password_hash')
+    password_hash = PasswordField("Password:", validators=[InputRequired(),
+                                                           Regexp("^[^\s\[\.<>/\\\\]*$",
+                                                                  message="Password cannot contain ., <, >, /, \, "
+                                                                          "or spaces.")
+                                                           ], id='password_hash')
 
     # checkbox to show the user's password in plain text
     show_password = BooleanField('Show password', id='check')
@@ -84,7 +100,10 @@ class LoginForm(FlaskForm):
 
 class ResetPasswordRequestForm(FlaskForm):
     email = StringField("Email:", render_kw={"placeholder": "Email"},
-                        validators=[InputRequired(), Email('Valid email address required.')])
+                        validators=[InputRequired(), Email('Valid email address required.'),
+                                    Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
+                                           message="Invalid character in email address.")
+                                    ])
 
     submit = SubmitField('Reset Password')
 
@@ -101,8 +120,8 @@ class ResetPasswordForm(FlaskForm):
                                               Regexp("(?=.*[@$!_%*#?&])",
                                                      message="Password must contain at least one special character."
                                                      ),
-                                              Regexp("(?!.*[.<>/\s])",
-                                                     message="Password cannot contain ., <, >, /, or spaces.")
+                                              Regexp("^[^\s\[\.<>/\\\\]*$",
+                                                     message="Password cannot contain ., <, >, /, \, or spaces.")
                                               ], id='password_hash')
 
     # checkbox to show the user's password in plain text

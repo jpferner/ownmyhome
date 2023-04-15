@@ -34,16 +34,31 @@
 
         <!-- Capture and displays all the error messages at top of Sign-Up form -->
 
+        <!-- Error message for First Name field -->
+        {% if form.first_name.errors %}
+            {% for error in form.first_name.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+
+        {% endif %}
+
+        {% if form.last_name.errors %}
+            {% for error in form.last_name.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+
+        {% endif %}
+    
 
         <!-- Error message for  Email field -->
-            {% if form.email.errors %}
-                <span class="errors" style="background-color: red; color: white" >
+        {% if form.email.errors %}
+            <span class="errors" style="background-color: red; color: white">
                     {% for error in form.email.errors %}
                         {{ error }}
                         <br>
                     {% endfor %}
                 </span>
-            {% endif %}
+        {% endif %}
 
         <!-- Error message for Confirm Email field -->
         {% if form.confirm_email.errors %}
@@ -76,10 +91,15 @@
         {% endif %}
 
         <!-- Email already exists in database error using FLASH MESSAGES-->
+{#        {% for category, message in get_flashed_messages(with_categories=true) %}#}
+{#            <p class="{{ category }}" style="background-color: red;#}
+{#            color: white">{{ message }}or return to the <a href="{{ url_for('login') }}">login page.</a>#}
+{#               .</p>#}
+{#        {% endfor %}#}
+
+    <!-- Password reset request email success message using flash messages-->
         {% for category, message in get_flashed_messages(with_categories=true) %}
-            <p class="{{ category }}" style="background-color: red;
-            color: white">{{ message }}Go to the <a href="{{ url_for('login') }}">login page</a>
-                or try using a different email address.</p>
+            <pre class="{{ category }}">{{ message }} or return to <br>the <a href="{{ url_for('login') }}">login page.</a></pre>
         {% endfor %}
 
 
