@@ -571,6 +571,7 @@ def reset_token(token):
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
+#@login_required
 def calculator():
     """
         Renders the calculator.html template and handles POST requests. If the form data is valid, the function
@@ -586,7 +587,8 @@ def calculator():
             - If the request is a POST request: the rendered calculator.html template with the mortgage total displayed.
     """
     if request.method == 'POST':
-        return render_template('calculator.html')
+        print("test")
+        return redirect(url_for('index'))
     return render_template('calculator.html', HomeVal=500000, DownPay=150000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
                            StartDate=date.today(), PropTax=2400, Income=60000, Credit=500, CarPay=350, StudentPay=400,

@@ -1,10 +1,10 @@
+const csrf_token = $('meta[name=csrf-token]').attr('content');
 /**
  * Validates all input fields and calls the calculation function if all fields are valid.
  * @param {Event} event - The event object representing the form submission.
  */
 function validateAll(event){
     event.preventDefault()
-
     let check;
     let test = true;
 
@@ -37,6 +37,9 @@ function validateAll(event){
 
     if (test) {
         calculation()
+        $.ajax({
+            url: '/calculator', type: 'POST', headers: {'X-CSRFToken': csrf_token}
+        })
     }
 }
 
