@@ -1,34 +1,3 @@
-/*form label{*/
-/*    width: 45%;*/
-/*}*/
-
-/*#sign-up-form {*/
-/*    background-color: gray;*/
-/*    color: black;*/
-/*    width: 25%;*/
-/*    margin: auto;*/
-/*}*/
-
-/*#sign-up-form input {*/
-/*    margin-bottom: .5em;*/
-/*    width: 75%;*/
-/*}*/
-
-/*.toggle-password, .toggle-confirm-password {*/
-/*    right: 5px; !* Adjust the distance from the right edge *!*/
-/*    top: 50%;*/
-/*    transform: translateY(-50%);*/
-/*    cursor: pointer;*/
-/*    z-index: 10;*/
-/*    font-size: 1.2em;*/
-/*    color: darkorange;*/
-/*}*/
-
-/*#tos:link, #tos:visited, #tos:hover, #tos:active {*/
-/*    text-decoration: none;*/
-/*    color: blue;*/
-/*}*/
-
 #signup {
     width: 80%;
     margin: 0 auto;
