@@ -131,7 +131,7 @@ class Property(db.Model):
 
     __table_args__ = (
         PrimaryKeyConstraint('propId', 'user_id'),
-        db.UniqueConstraint('propId', 'user_id', name='unique_propId_user_id'),  # Add this line
+        db.UniqueConstraint('propId', name='unique_propId'),
     )
     favorited_by = db.relationship('UserFavorite', back_populates='property', lazy='dynamic',
                                    cascade='all, delete-orphan')
