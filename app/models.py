@@ -18,7 +18,6 @@ class CalendarEvents(db.Model):
 
 
 class CalculatorUserInputs(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
     income = db.Column(db.Integer, nullable=False)
     home_val = db.Column(db.Integer)
     down_pay = db.Column(db.Integer)
@@ -32,7 +31,7 @@ class CalculatorUserInputs(db.Model):
     credit_card_payments = db.Column(db.Integer)
     car_payments = db.Column(db.Integer)
     student_payments = db.Column(db.Integer)
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
 
 class ChecklistItems(db.Model):
     status = db.Column(db.Boolean, default=False)
