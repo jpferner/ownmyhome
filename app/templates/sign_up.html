@@ -84,7 +84,7 @@
 
 
         <form method="POST">
-            <input type="hidden" name="csrf_token" value="{{ form.csrf_token._value() }}">
+            {{ form.hidden_tag() }}  <!-- creates CSRF token -->
 
             <p>
                 {{ form.first_name.label }} <br>
