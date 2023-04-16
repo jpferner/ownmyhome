@@ -3,7 +3,7 @@ const csrf_token = $('meta[name=csrf-token]').attr('content');
  * Validates all input fields and calls the calculation function if all fields are valid.
  * @param {Event} event - The event object representing the form submission.
  */
-function validateAll(event){
+$(document).submit(function(event){
     event.preventDefault()
     let check;
     let test = true;
@@ -37,11 +37,15 @@ function validateAll(event){
 
     if (test) {
         calculation()
+        //form_data = $(this).serialize()
         $.ajax({
-            url: '/calculator', type: 'POST', headers: {'X-CSRFToken': csrf_token}
+            url: '/calculator',
+            type: 'POST',
+            headers: {'X-CSRFToken': csrf_token},
+            //data: form_data
         })
     }
-}
+})
 
 /**
  * Updates the loan amount field based on the values of the home value and down payment fields.
@@ -54,13 +58,29 @@ function updateLoanAmt() {
         }
 
         /**
+         * Calls the calculation function on window load to prime outputs.
          * Attaches event listeners to the HomeVal and DownPay fields on window load.
          * These event listeners will call the updateLoanAmt function when their values change.
          */
         window.onload = function() {
+            calculation()
             document.getElementById("HomeVal").addEventListener("input", updateLoanAmt);
             document.getElementById("DownPay").addEventListener("input", updateLoanAmt);
+            document.getElementById("DownPay").addEventListener("input", validateDownPayment);
+
         };
+
+/**
+ * Validates that down payment is not greater than home value.
+ */
+function validateDownPayment() {
+    const homeVal = parseFloat(document.getElementById("HomeVal").value);
+    const downPay = parseFloat(document.getElementById("DownPay").value);
+    const downAlert = document.querySelector('input[id="DownPay"]');
+    if (downPay > homeVal) {
+        downAlert.setCustomValidity("Cannot be greater than home value.");
+    }
+}
 
 /**
  * Validates a given input field and reports its validity status.

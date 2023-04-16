@@ -588,6 +588,10 @@ def calculator():
     """
     if request.method == 'POST':
         print("test")
+        print(request.form.get('Income'))
+        user_data = CalculatorUserInputs(income=request.form.get('Income'))
+        #db.session.add(user_data)
+        #db.session.commit()
         return redirect(url_for('index'))
     return render_template('calculator.html', HomeVal=500000, DownPay=150000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
