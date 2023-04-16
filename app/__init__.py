@@ -21,7 +21,7 @@ from flask_mail import Mail  # for password reset to send the email
 from config import Config
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 # CSRF TOKEN
 csrf = CSRFProtect(app)
 
