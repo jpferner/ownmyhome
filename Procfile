@@ -1,1 +1,1 @@
-web: flask db upgrade; gunicorn ownmyhome:app
+web: flask db upgrade; flask db migrate; gunicorn ownmyhome:app
