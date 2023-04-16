@@ -17,11 +17,18 @@
     margin: auto;
 }
 
+h5 a {
+    /*color: #34A798 ;*/
+    /*color: rgba(52, 167, 152, 1.9);*/
+    color: lightslategray;
+
+}
+
 .signup-input-field, .create-account-field {
     width: 80%;
     font-weight: 700;
     font-size: 14px;
-    letter-spacing: 1px;
+    /*letter-spacing: 1px;*/
     padding: 10px 20px;
     /*border: none;*/
     border-radius: 20px;
@@ -75,11 +82,13 @@
     font-size: 0.8125em;
     box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
     width: 40%;
+    text-align: center;
 }
 
 a {
     text-shadow: 0 0 3px rgba(117, 117, 117, 0.12);
-    color: #57C3AD;
+    /*color: #57C3AD;*/
+    color: lightslategray;
     text-decoration: none
 }
 

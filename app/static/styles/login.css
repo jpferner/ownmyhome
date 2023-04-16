@@ -17,6 +17,11 @@
     margin: auto;
 }
 
+h5 a {
+    color: lightslategray;
+
+}
+
 .login-field, .submit-field {
     width: 100%;
     font-weight: 700;
@@ -71,11 +76,13 @@
     font-size: 0.8125em;
     box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
     width: 25%;
+    text-align: center;
 }
 
 a {
     text-shadow: 0 0 3px rgba(117, 117, 117, 0.12);
-    color: #57C3AD;
+    /*color: #57C3AD;*/
+    color: lightslategray;
     text-decoration: none
 }
 

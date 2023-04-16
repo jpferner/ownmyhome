@@ -26,7 +26,7 @@
     <div id="login-form">
 
         <h1 id="title">Login</h1>
-    <h5>New user? <a href="{{ url_for('sign_up') }}">Create a free account!</a></h5>
+        <h5>New user? <a href="{{ url_for('sign_up') }}">Create a free account!</a></h5>
 
         <!-- Login error message using flash messages-->
         {% for category, message in get_flashed_messages(with_categories=true) %}
