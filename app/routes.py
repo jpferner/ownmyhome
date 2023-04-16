@@ -508,17 +508,26 @@ def reset_password_request():
         # if the user exists
         if user:
             send_password_reset_email(user)
-            flash('Thank you for submitting your email address.\nIf an account is associated with this email, '
-                  'a password reset link will be sent to your inbox shortly.\n'
-                  ' Please check your email and follow the instructions to reset your password."\n\n'
+            flash('Thank you for submitting your email address.\n\n'
+                  'If an account is associated with this email, a\n'
+                  'password reset link will be sent to your inbox shortly.\n\n'
+                  'Please check your email and follow the instructions\n'
+                  'to reset your password.\n\n'
                   'Important: Password reset link expires in 5 minutes.', category='success')
             return redirect(url_for('login'))
         else:
             # flash("We're sorry. There is no account associated with the email provided.", category='error')
-            flash('Thank you for submitting your email address.\n\nIf an account is associated with this email, '
-                  'a password reset link will be sent to your inbox shortly.\n\n'
-                  ' Please check your email and follow the instructions to reset your password.\n\n'
+            # flash('Thank you for submitting your email address.\n\nIf an account is associated with this email,\n'
+            #       'a password reset link will be sent to your inbox shortly.\n\n'
+            #       ' Please check your email and follow the instructions\nto reset your password.\n\n'
+            #       'Important: Password reset link expires in 5 minutes.', category='success')
+            flash('Thank you for submitting your email address.\n\n'
+                  'If an account is associated with this email, a\n'
+                  'password reset link will be sent to your inbox shortly.\n\n'
+                  'Please check your email and follow the instructions\n'
+                  'to reset your password.\n\n'
                   'Important: Password reset link expires in 5 minutes.', category='success')
+            return redirect(url_for('login'))
     return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form, )
 
 

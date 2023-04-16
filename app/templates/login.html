@@ -29,9 +29,11 @@
         <h5>New user? <a href="{{ url_for('sign_up') }}">Create a free account!</a></h5>
 
         <!-- Login error message using flash messages-->
-        {% for category, message in get_flashed_messages(with_categories=true) %}
-            <pre class="{{ category }}">{{ message }}</pre>
-        {% endfor %}
+        <div id="flash-messages">
+            {% for category, message in get_flashed_messages(with_categories=true) %}
+                <pre class="{{ category }}">{{ message }}</pre>
+            {% endfor %}
+        </div>
 
         <!-- Error message for Email field on Login page -->
         {% if form.email.errors %}
@@ -100,4 +102,13 @@
         const imagePath = "{{ url_for('static', filename='images/') }}";
         initSlideshow(imagePath);
     });
+
+    // removes the flash message after 15 seconds
+    setTimeout(function () {
+        let flashMessages = document.querySelector("#flash-messages");
+        if (flashMessages) {
+            flashMessages.remove();
+        }
+
+    }, 15000);
 </script>
