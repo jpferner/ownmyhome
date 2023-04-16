@@ -19,7 +19,7 @@ class SignUpForm(FlaskForm):
                                                                                         "between 2 and 25 characters"
                                                                                         "in length."),
                                          Regexp("^[^\s\[\.<>/\\\\]*$",
-                                                message="Invalid character in first name."),])
+                                                message="Invalid character in first name."), ])
     last_name = StringField("Last Name:", render_kw={"placeholder": "Last name"},
                             validators=[InputRequired(), Length(min=2, max=25, message="First name must be"
                                                                                        "between 2 and 25 characters"
@@ -76,18 +76,18 @@ class SignUpForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    email = StringField("Email:",
+    email = StringField("Email:", render_kw={"placeholder": "Email"},
                         validators=[InputRequired(), Email('Valid email address required.'),
                                     Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
                                            message="Invalid character in email address.")
                                     ])
 
     # did not set password validators for login page; will flash message if invalid password
-    password_hash = PasswordField("Password:", validators=[InputRequired(),
-                                                           Regexp("^[^\s\[\.<>/\\\\]*$",
-                                                                  message="Password cannot contain ., <, >, /, \, "
-                                                                          "or spaces.")
-                                                           ], id='password_hash')
+    password_hash = PasswordField("Password:", render_kw={"placeholder": "Password"},
+                                  validators=[InputRequired(),
+                                              Regexp("^[^\s\[\.<>/\\\\]*$",
+                                                     message="Password cannot contain ., <, >, /, \, "
+                                                             "or spaces.")], id='password_hash')
 
     # checkbox to show the user's password in plain text
     show_password = BooleanField('Show password', id='check')
@@ -107,6 +107,7 @@ class ResetPasswordRequestForm(FlaskForm):
 
     submit = SubmitField('Reset Password')
 
+
 class ResetPasswordForm(FlaskForm):
     password_hash = PasswordField("New Password:", render_kw={"placeholder": "new password"},
                                   validators=[InputRequired(),
@@ -116,7 +117,8 @@ class ResetPasswordForm(FlaskForm):
                                                      message="Password must have at least one uppercase character."),
                                               Regexp("^(?=.*[a-z])",
                                                      message="Password must have at least one lowercase character."),
-                                              Regexp("^(?=.*\\d)", message="Password must contain at least one number."),
+                                              Regexp("^(?=.*\\d)",
+                                                     message="Password must contain at least one number."),
                                               Regexp("(?=.*[@$!_%*#?&])",
                                                      message="Password must contain at least one special character."
                                                      ),

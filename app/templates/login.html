@@ -3,10 +3,13 @@
 <head>
     <title>Own My Home | Login</title>
     <link
-            rel="stylesheet"
-            type="text/css"
-            href="{{ url_for('static', filename='styles/login.css') }}"
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='styles/login.css') }}"
     />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
 
 <section>
@@ -18,24 +21,19 @@
     </div>
 </section>
 
-{#<!-- Displays success message at top of screen if user sign up information is valid -->#}
-{#{% for category, message in get_flashed_messages(with_categories=true) %}#}
-{#    <p class="{{ category }}" style="background-color: #4CAF50; font-weight: bold;#}
-{#color: white">{{ message }}</p>#}
-{#{% endfor %}#}
-
 
 <aside id="login">
     <div id="login-form">
-        <h1>Login</h1>
-        <h5>New user? <a href="{{ url_for('sign_up') }}">Create a free account!</a></h5>
 
-        <!-- Displays success message at top of screen if user sign up information is valid -->
+        <h1 id="title">Login</h1>
+    <h5>New user? <a href="{{ url_for('sign_up') }}">Create a free account!</a></h5>
+
+        <!-- Login error message using flash messages-->
         {% for category, message in get_flashed_messages(with_categories=true) %}
             <pre class="{{ category }}">{{ message }}</pre>
         {% endfor %}
 
-        <!-- Error message for  Email field -->
+        <!-- Error message for Email field on Login page -->
         {% if form.email.errors %}
             {% for error in form.email.errors %}
                 <pre class="error">{{ error }}</pre>
@@ -43,7 +41,7 @@
 
         {% endif %}
 
-    <!-- Error message for Password field -->
+        <!-- Error message for Password field on Login page -->
         {% if form.password_hash.errors %}
             {% for error in form.password_hash.errors %}
                 <pre class="error">{{ error }}</pre>
@@ -54,38 +52,52 @@
 
         <form method="POST">
             {{ form.hidden_tag() }}  <!-- creates CSRF token -->
-            <div class="email-container">
-                {{ form.email.label }} <br>
-                {{ form.email() }}
-            </div>
-            <div class="password-container">
-                {{ form.password_hash.label }} <span id="toggle-password" class="toggle-password">👁</span> <br>
-                {{ form.password_hash() }}
-            </div>
+
             <p>
-                {{ form.remember_me.label }} <br>
-                {{ form.remember_me() }}
+                {{ form.email(class='login-field email-field') }}
             </p>
+
+            <p class="pw-container">
+                {{ form.password_hash(class='login-field password-field', id='pw1') }}
+                <i class='fa-solid fa-eye eye-icon' id='eye1'></i>
+            </p>
+
             <p>
-                {{ form.submit }}
+                {{ form.remember_me.label(class='remember-me-field') }}
+                {{ form.remember_me(class='remember-me-field') }}
             </p>
+
+            <p>
+                {{ form.submit(class='submit-field') }}
+            </p>
+
             <p>
                 <a href="{{ url_for('reset_password_request') }}" id="forgot-password">Forgot Password?</a>
             </p>
+
         </form>
     </div>
 </aside>
 
 {% include 'footer.html' %}
-<script src="{{ url_for('static', filename='scripts/eye.js') }}"></script>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
+
+<!-- Javascript for implement show password feature with eye icon on Change Password page -->
 <script>
+    const passwordInput = document.querySelector("#pw1");
+
+    const eye1 = document.querySelector("#eye1");
+
+    eye1.addEventListener("click", function(){
+        this.classList.toggle("fa-eye-slash");
+        const type1 = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type1);
+        });
+
     document.addEventListener("DOMContentLoaded", function () {
         const imagePath = "{{ url_for('static', filename='images/') }}";
         initSlideshow(imagePath);
-
-        const passwordFieldId = "{{ form.password_hash.id }}";
-        initTogglePassword(passwordFieldId);
     });
 </script>

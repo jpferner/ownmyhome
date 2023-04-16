@@ -98,12 +98,12 @@
 
             <p class="pw-container">
                 {{ form.password_hash(class='signup-input-field', id='pw1') }}
-                <i class='fa-solid fa-eye' id='eye1'></i>
+                <i class='fa-solid fa-eye eye-icon' id='eye1'></i>
             </p>
 
             <p class="pw-container">
                 {{ form.confirm_password_hash(class='signup-input-field', id='confirm-password-field') }}
-                <i class='fa-solid fa-eye' id='eye2'></i>
+                <i class='fa-solid fa-eye eye-icon' id='eye2'></i>
             </p>
 
             <p>
@@ -126,20 +126,20 @@
 
 <!-- Javascript for implement show password feature with eye icon on Change Password page -->
 <script>
-    const passwordInput = document.querySelector("#pw1")
-    const confirmPasswordInput = document.querySelector("#confirm-password-field")
-    const eye1 = document.querySelector("#eye1")
-    const eye2 = document.querySelector("#eye2")
+    const passwordInput = document.querySelector("#pw1");
+    const confirmPasswordInput = document.querySelector("#confirm-password-field");
+    const eye1 = document.querySelector("#eye1");
+    const eye2 = document.querySelector("#eye2");
 
     eye1.addEventListener("click", function(){
-        this.classList.toggle("fa-eye-slash")
-        const type1 = passwordInput.getAttribute("type") === "password" ? "text" : "password"
-        passwordInput.setAttribute("type", type1)
+        this.classList.toggle("fa-eye-slash");
+        const type1 = passwordInput.getAttribute("type") === "password" ? "text" : "password";
+        passwordInput.setAttribute("type", type1);
         })
     eye2.addEventListener("click", function () {
-        this.classList.toggle("fa-eye-slash")
-        const type2 = confirmPasswordInput.getAttribute("type") === "password" ? "text" : "password"
-        confirmPasswordInput.setAttribute("type", type2)
+        this.classList.toggle("fa-eye-slash");
+        const type2 = confirmPasswordInput.getAttribute("type") === "password" ? "text" : "password";
+        confirmPasswordInput.setAttribute("type", type2);
     })
 
     document.addEventListener("DOMContentLoaded", function () {

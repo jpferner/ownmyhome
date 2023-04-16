@@ -1,6 +1,7 @@
 #signup {
     width: 80%;
     margin: 0 auto;
+    background-color: white; /* light grey by default */
 }
 
 #sign-up-form {
@@ -26,7 +27,7 @@
     border-radius: 20px;
     outline: none;
     box-sizing: border-box;
-    border: 2px solid rgba(0, 0, 0, 0.02);
+    border: 2px solid rgba(0, 0, 0, 0.09); /* 0.09 opacity looks better against white background. 0.02 is too light */
     /*margin-bottom: 50px;*/
     /*margin-left: 46px;*/
     text-align: left;
@@ -35,18 +36,18 @@
 
 }
 
-.pw-container { /* allow the input field for password and confirm password to start at same place as other inputs */
+.pw-container { /* allows for the eye to be placed inside input field without disturbing formatting */
     display: flex;
     align-items: center;
     position: relative;
 }
 
-/* Make the width 100 again so everything lines up correctly*/
+/* Make the input field width 100% again so everything lines up correctly*/
 .signup-input-field {
     width: 100%;
 }
 
-/* Allow the eye to fill up the space after the password and confirm password fields and align it with other inputs */
+/* Put the eye icon for password and confirm password fields and align it with other inputs */
 .eye-icon {
     position: absolute;
     right: 10px;
