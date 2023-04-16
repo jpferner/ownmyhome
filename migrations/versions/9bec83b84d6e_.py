@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: e053e30ba104
+Revision ID: 9bec83b84d6e
 Revises: 
-Create Date: 2023-04-16 13:13:59.592843
+Create Date: 2023-04-16 13:26:54.145214
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'e053e30ba104'
+revision = '9bec83b84d6e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -61,7 +61,8 @@ def upgrade():
     sa.Column('propUrl', sa.String(length=255), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('propId', 'user_id')
+    sa.PrimaryKeyConstraint('propId', 'user_id'),
+    sa.UniqueConstraint('propId', name='unique_propId')
     )
     with op.batch_alter_table('property', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_property_city'), ['city'], unique=False)
@@ -73,7 +74,7 @@ def upgrade():
     sa.Column('property_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['property_id'], ['property.propId'], ),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('property_id', 'user_id')
+    sa.PrimaryKeyConstraint('user_id', 'property_id')
     )
     # ### end Alembic commands ###
 
