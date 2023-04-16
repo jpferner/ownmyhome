@@ -17,7 +17,6 @@ class CalendarEvents(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
-
 class ChecklistItems(db.Model):
     status = db.Column(db.Boolean, default=False)
     detail = db.Column(db.String(255))
@@ -142,8 +141,12 @@ class Property(db.Model):
 
 class UserFavorite(db.Model):
     """ Creates a table and relationship for the favorites list """
-    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
-    property_id = db.Column(db.Integer, db.ForeignKey('property.propId'), primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    property_id = db.Column(db.Integer, db.ForeignKey('property.propId'))
+
+    __table_args__ = (
+        PrimaryKeyConstraint('property_id', 'user_id'),
+    )
 
     user = db.relationship('Users', back_populates='favorite_properties')
     property = db.relationship('Property', back_populates='favorited_by')
