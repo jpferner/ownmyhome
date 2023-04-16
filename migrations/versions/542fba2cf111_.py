@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 9bf75701ef84
+Revision ID: 542fba2cf111
 Revises: 
-Create Date: 2023-04-16 12:48:22.210905
+Create Date: 2023-04-16 13:07:44.006487
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9bf75701ef84'
+revision = '542fba2cf111'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -46,7 +46,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('order_no', 'user_id')
     )
     op.create_table('property',
-    sa.Column('propId', sa.Integer(), autoincrement=True, nullable=False),
+    sa.Column('propId', sa.Integer(), nullable=False),
     sa.Column('street', sa.String(length=100), nullable=True),
     sa.Column('city', sa.String(length=25), nullable=True),
     sa.Column('state', sa.String(length=2), nullable=True),
@@ -61,7 +61,7 @@ def upgrade():
     sa.Column('propUrl', sa.String(length=255), nullable=True),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
-    sa.PrimaryKeyConstraint('propId')
+    sa.PrimaryKeyConstraint('propId', 'user_id')
     )
     with op.batch_alter_table('property', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_property_city'), ['city'], unique=False)

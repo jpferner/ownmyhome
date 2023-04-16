@@ -113,7 +113,7 @@ class Users(db.Model, UserMixin):
 
 class Property(db.Model):
     """ Creates the property table and needed relationships"""
-    propId = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    propId = db.Column(db.Integer)
     street = db.Column(db.String(100))
     city = db.Column(db.String(25), index=True)
     state = db.Column(db.String(2))
@@ -129,8 +129,12 @@ class Property(db.Model):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user = db.relationship('Users', backref=db.backref('properties', lazy=True))
+
+    __table_args__ = (
+        PrimaryKeyConstraint('propId', 'user_id'),
+    )
     favorited_by = db.relationship('UserFavorite', back_populates='property', lazy='dynamic',
-                                   cascade='all, delete-orphan')  # cascade deletes the related UserFavorite instances when a Property is deleted
+                                   cascade='all, delete-orphan')
 
     def __repr__(self):
         return '<Property {}, {}>'.format(self.propId, self.street)
