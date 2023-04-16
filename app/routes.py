@@ -91,28 +91,26 @@ def properties():
 def add_properties(user_id):
     """
         This function injects the data for the properties when a new user is created using a for loop.
-
         It takes in the parameter user_id.
-
     """
     properties_data = [
-        {'propId': 1, 'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+        {'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
          'county': 'New Hanover', 'price': 299900, 'yearBuilt': 2023, 'numBeds': 2, 'numBaths': 2,
          'image_filename': 'prop1.gif',
          'propUrl': 'https://www.zillow.com/homedetails/1007-Orange-St-Wilmington-NC-28401/54309332_zpid/'},
-        {'propId': 2, 'street': '6604 Whimbrel Ct', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
+        {'street': '6604 Whimbrel Ct', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
          'county': 'New Hanover', 'price': 370000, 'yearBuilt': 1990, 'numBeds': 3, 'numBaths': 3,
          'image_filename': 'prop2.gif',
          'propUrl': 'https://www.zillow.com/homedetails/6604-Whimbrel-Ct-Wilmington-NC-28409/2133943557_zpid/'},
-        {'propId': 3, 'street': '3507 S College Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
+        {'street': '3507 S College Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
          'county': 'New Hanover', 'price': 415000, 'yearBuilt': 1968, 'numBeds': 3, 'numBaths': 2,
          'image_filename': 'prop3.gif',
          'propUrl': 'https://www.zillow.com/homedetails/3507-S-College-Rd-Wilmington-NC-28409/54332506_zpid/'},
-        {'propId': 4, 'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
+        {'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
          'county': 'New Hanover', 'price': 549000, 'yearBuilt': 2017, 'numBeds': 4, 'numBaths': 3,
          'image_filename': 'prop4.gif',
          'propUrl': 'https://www.zillow.com/homedetails/4770-Tupelo-Dr-Wilmington-NC-28411/247832477_zpid/'},
-        {'propId': 5, 'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+        {'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
          'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3,
          'image_filename': 'prop5.gif', 'propUrl': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
         # add more properties as needed
@@ -120,7 +118,6 @@ def add_properties(user_id):
 
     for data in properties_data:
         propertyLst = Property(
-            propId=data['propId'],
             street=data['street'],
             city=data['city'],
             state=data['state'],
