@@ -87,11 +87,9 @@
                 <td><input type="number" id="StudentPay" placeholder="400" value="{{ StudentPay }}" min="0"
                            oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
             </tr>
-            <tr>
-                <td>
-                    <button class="calculateButton" type="submit" onclick="validateAll(event)" value="Submit">
-                        Calculate
-                    </button>
+            <tr >
+                <td colspan="3">
+                    <button class="calculateButton" type="submit"> Calculate </button>
                 </td>
             </tr>
         </table>
