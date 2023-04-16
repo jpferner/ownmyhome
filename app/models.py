@@ -113,7 +113,7 @@ class Users(db.Model, UserMixin):
 
 class Property(db.Model):
     """ Creates the property table and needed relationships"""
-    propId = db.Column(db.Integer, primary_key=True)
+    propId = db.Column(db.Integer, primary_key=True, autoincrement=True)
     street = db.Column(db.String(100))
     city = db.Column(db.String(25), index=True)
     state = db.Column(db.String(2))
