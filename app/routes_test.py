@@ -1,6 +1,10 @@
+from flask_login import login_user
 from werkzeug.security import generate_password_hash
 from app import app, db, Users
 import pytest
+
+from app.models import ChecklistItems
+from app.routes import add_checklist_items
 
 
 @pytest.fixture
@@ -19,6 +23,31 @@ def test_home_page_displayed(test_client):
     response = test_client.get('/index')
     assert response.status_code == 200
     assert b'<h1>Welcome To Own My Home</h1>' in response.data
+
+
+def test_checklist_page_displayed(test_client):
+    # Create a test user in the database
+    hashed_password = generate_password_hash('test_password', "sha256")
+    test_user = Users(first_name='Test2', last_name='User2', email='testuser2@example.com', password_hash=hashed_password)
+    db.session.add(test_user)
+    db.session.commit()
+
+    # simulate logging in with the test user's credentials
+    response = test_client.post('/login', data=dict(
+        email='testuser2@example.com',
+        password_hash='test_password'
+    ), follow_redirects=True)
+
+    # assert that the login was successful and redirected to the home page
+    assert response.status_code == 200
+
+    response = test_client.get('/checklist')
+    assert response.status_code == 200
+    assert b'<h1 class="completed-header">Completed</h1>' in response.data
+
+    # Clean up the test user
+    db.session.delete(test_user)
+    db.session.commit()
 
 
 def test_sign_up_form_displayed(test_client):
@@ -65,7 +94,7 @@ def test_successful_login(test_client):
     # simulate logging in with the test user's credentials
     response = test_client.post('/login', data=dict(
         email='testuser@example.com',
-        password='test_password'
+        password_hash='test_password'
     ), follow_redirects=True)
 
     # assert that the login was successful and redirected to the home page
@@ -89,3 +118,33 @@ def test_incorrect_email_login(test_client):
     #     messages = [sess.get('_flashes', [])]
     #     print(messages)  # Add this line to print out the messages in the session
     #     assert ('error', 'Invalid Email and/or Password. Please try again.') in messages
+
+
+def test_checklist_items_added(test_client):
+    # Create a test user in the database
+    hashed_password = generate_password_hash('test_password', "sha256")
+    test_user = Users(first_name='Test2', last_name='User2', email='testuser2@example.com',
+                      password_hash=hashed_password)
+    db.session.add(test_user)
+    db.session.commit()
+
+    # Call the function to create the checklist items for the test user
+    add_checklist_items(test_user.id)
+
+    # simulate logging in with the test user's credentials
+    response = test_client.post('/login', data=dict(
+        email='testuser2@example.com',
+        password_hash='test_password'
+    ), follow_redirects=True)
+
+    # assert that the login was successful and redirected to the home page
+    assert response.status_code == 200
+    # Check if the checklist items are added to the database
+    items = ChecklistItems.query.filter_by(user_id=test_user.id).order_by(ChecklistItems.order_no).all()
+    assert len(items) == 5
+    # Clean up the checklist items for the test user
+    ChecklistItems.query.filter_by(user_id=test_user.id).delete()
+    db.session.commit()
+    # Clean up the test user
+    db.session.delete(test_user)
+    db.session.commit()
