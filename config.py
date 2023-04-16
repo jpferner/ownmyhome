@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 
 class Config(object):
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or 'sqlite:///' + os.path.join(basedir, 'app.db')
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL').replace('postgres://', 'postgresql://') or 'sqlite:///' + os.path.join(basedir, 'app.db')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     # Random string (key) used to secure the sessions that remember info from one request to another
@@ -18,4 +18,5 @@ class Config(object):
     MAIL_USERNAME = "ownmyhome.csc450@gmail.com"
     # MAIL_PASSWORD = "csc450SoftwareEngineering!"
     MAIL_PASSWORD = "lbuhsobvyoodshlh"
+    LOG_TO_STDOUT = os.environ.get('LOG_TO_STDOUT')
 
