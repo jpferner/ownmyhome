@@ -350,7 +350,7 @@ dataCel.on("click", function() {
 //  fillEventSidebar($(this));
   selectedDay = year + "-" + thisMonth + "-" + thisDay;
 
-  if (selectedDay < today) {
+  if (selectedDay < moment().format("YYYY-MM-DD")) {
     $(".js-event__add").hide();
     $(".js-event__remove").hide();
   } else {
