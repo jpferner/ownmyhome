@@ -7,7 +7,6 @@ from flask_wtf.csrf import validate_csrf
 
 import requests
 
-from app import app
 
 from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
@@ -92,28 +91,26 @@ def properties():
 def add_properties(user_id):
     """
         This function injects the data for the properties when a new user is created using a for loop.
-
         It takes in the parameter user_id.
-
     """
     properties_data = [
-        {'propId': 1, 'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+        {'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
          'county': 'New Hanover', 'price': 299900, 'yearBuilt': 2023, 'numBeds': 2, 'numBaths': 2,
          'image_filename': 'prop1.gif',
          'propUrl': 'https://www.zillow.com/homedetails/1007-Orange-St-Wilmington-NC-28401/54309332_zpid/'},
-        {'propId': 2, 'street': '6604 Whimbrel Ct', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
+        {'street': '6604 Whimbrel Ct', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28409,
          'county': 'New Hanover', 'price': 370000, 'yearBuilt': 1990, 'numBeds': 3, 'numBaths': 3,
          'image_filename': 'prop2.gif',
          'propUrl': 'https://www.zillow.com/homedetails/6604-Whimbrel-Ct-Wilmington-NC-28409/2133943557_zpid/'},
-        {'propId': 3, 'street': '3507 S College Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
+        {'street': '3507 S College Rd', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28412,
          'county': 'New Hanover', 'price': 415000, 'yearBuilt': 1968, 'numBeds': 3, 'numBaths': 2,
          'image_filename': 'prop3.gif',
          'propUrl': 'https://www.zillow.com/homedetails/3507-S-College-Rd-Wilmington-NC-28409/54332506_zpid/'},
-        {'propId': 4, 'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
+        {'street': '4770 Tupelo Dr', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28411,
          'county': 'New Hanover', 'price': 549000, 'yearBuilt': 2017, 'numBeds': 4, 'numBaths': 3,
          'image_filename': 'prop4.gif',
          'propUrl': 'https://www.zillow.com/homedetails/4770-Tupelo-Dr-Wilmington-NC-28411/247832477_zpid/'},
-        {'propId': 5, 'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
+        {'street': '311 S 3rd. St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
          'county': 'New Hanover', 'price': 995000, 'yearBuilt': 1868, 'numBeds': 4, 'numBaths': 3,
          'image_filename': 'prop5.gif', 'propUrl': 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
         # add more properties as needed
@@ -121,7 +118,6 @@ def add_properties(user_id):
 
     for data in properties_data:
         propertyLst = Property(
-            propId=data['propId'],
             street=data['street'],
             city=data['city'],
             state=data['state'],
@@ -428,10 +424,11 @@ def sign_up():
             # Add checklist items for the new user
             add_checklist_items(user.id)
 
-            flash('Account created! Please use your credentials to log in.', category='success')
+            flash('Account created!\n\nPlease use your credentials to log in.', category='success')
             return redirect(url_for('login'))
         else:  # redirect user to the sign-up page, so they can create a new account
-            flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            # flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            flash('Sign up unsuccessful.\n\n Please try again using a different email address ', category='error')
             return redirect(url_for('sign_up'))
 
     # current_users = Users.query.order_by(Users.id)  # query current db of Users
@@ -511,12 +508,26 @@ def reset_password_request():
         # if the user exists
         if user:
             send_password_reset_email(user)
-            flash('Password reset request has been sent.\nPlease check your email for instructions'
-                  ' on how how to reset your password.\n\n'
+            flash('Thank you for submitting your email address.\n\n'
+                  'If an account is associated with this email, a\n'
+                  'password reset link will be sent to your inbox shortly.\n\n'
+                  'Please check your email and follow the instructions\n'
+                  'to reset your password.\n\n'
                   'Important: Password reset link expires in 5 minutes.', category='success')
             return redirect(url_for('login'))
         else:
-            flash("We're sorry. There is no account associated with the email provided.", category='error')
+            # flash("We're sorry. There is no account associated with the email provided.", category='error')
+            # flash('Thank you for submitting your email address.\n\nIf an account is associated with this email,\n'
+            #       'a password reset link will be sent to your inbox shortly.\n\n'
+            #       ' Please check your email and follow the instructions\nto reset your password.\n\n'
+            #       'Important: Password reset link expires in 5 minutes.', category='success')
+            flash('Thank you for submitting your email address.\n\n'
+                  'If an account is associated with this email, a\n'
+                  'password reset link will be sent to your inbox shortly.\n\n'
+                  'Please check your email and follow the instructions\n'
+                  'to reset your password.\n\n'
+                  'Important: Password reset link expires in 5 minutes.', category='success')
+            return redirect(url_for('login'))
     return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form, )
 
 
