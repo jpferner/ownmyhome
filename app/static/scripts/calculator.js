@@ -37,13 +37,7 @@ $(document).submit(function(event){
 
     if (test) {
         calculation()
-        //form_data = $(this).serialize()
-        $.ajax({
-            url: '/calculator',
-            type: 'POST',
-            headers: {'X-CSRFToken': csrf_token},
-            //data: form_data
-        })
+        updateUserDB()
     }
 })
 
@@ -93,6 +87,32 @@ function validateInput(input) {
   }
 }
 
+function updateUserDB(){
+    const home = document.getElementById('HomeVal').value;
+    const down = document.getElementById('DownPay').value;
+    const loan = document.getElementById('LoanAmt').value;
+    const interest = document.getElementById('InterestRate').value;
+    const loanTerm = document.getElementById('LoanTerm').value;
+    const prop = document.getElementById('PropTax').value;
+    const an_income = document.getElementById('Income').value;
+    const credit = document.getElementById('Credit').value;
+    const carPay = document.getElementById('CarPay').value;
+    const studentPay = document.getElementById('StudentPay').value;
+    const PMI = document.getElementById('PrivateMortInsurance').value;
+    const home_insurance = document.getElementById('HomeInsurance').value;
+    const HOA = document.getElementById('HOA').value;
+
+    $.ajax({
+    url: '/calculator',
+    type: 'POST',
+    contentType: "application/json",
+    headers: {'X-CSRFToken': csrf_token},
+    data: JSON.stringify({an_income: an_income, home: home, down: down, loan: loan, interest: interest,
+        loanTerm: loanTerm, prop: prop, credit: credit, carPay: carPay, studentPay: studentPay, PMI: PMI,
+        home_insurance: home_insurance, HOA: HOA})
+    })
+}
+
 /**
  * Performs mortgage calculations based on user input, updates the UI with calculated values.
  */
@@ -104,7 +124,6 @@ function calculation(){
     const interest = document.getElementById('InterestRate').value / 100;
     const loanTerm = document.getElementById('LoanTerm').value;
     const prop = document.getElementById('PropTax').value;
-    const loan_type = document.getElementById('LoanType').value;
     const an_income = document.getElementById('Income').value;
     const credit = document.getElementById('Credit').value;
     const carPay = document.getElementById('CarPay').value;

@@ -423,6 +423,8 @@ def sign_up():
             add_properties(user.id)
             # Add checklist items for the new user
             add_checklist_items(user.id)
+            # Add calculator defaults to new users
+            add_calculator_info(user.id)
 
             flash('Account created!\n\nPlease use your credentials to log in.', category='success')
             return redirect(url_for('login'))
@@ -598,18 +600,47 @@ def calculator():
             - If the request is a POST request: the rendered calculator.html template with the mortgage total displayed.
     """
     if request.method == 'POST':
-        print("test")
-        print(request.form.get('Income'))
-        user_data = CalculatorUserInputs(income=request.form.get('Income'))
-        #db.session.add(user_data)
-        #db.session.commit()
         return redirect(url_for('index'))
     return render_template('calculator.html', HomeVal=500000, DownPay=150000,
                            LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
                            StartDate=date.today(), PropTax=2400, Income=60000, Credit=500, CarPay=350, StudentPay=400,
-                           HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350, MortTotal=0)
+                           HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350)
 
 
+def add_calculator_info(user_id):
+    user_data = CalculatorUserInputs(
+        income=60000, home_val=500000, down_pay=150000,
+        loan_amt=350000, interest_rate=6.5, loan_term=30,
+        property_tax=2400, home_insurance=1000,  monthly_hoa=350,
+        pmi=0.5, credit_card_payments=500, car_payments=350,
+        student_payments=400, user_id=user_id
+    )
+    db.session.add(user_data)
+    db.session.commit()
+
+
+@app.route('/update_calculator_info', methods=['GET', 'POST'])
+def update_calculator_info():
+    income = request.json["an_income"]
+    home = request.json["home"]
+    down = request.json["down"]
+    loan = request.json["loan"]
+    interest = request.json["interest"]
+    loan_term = request.json["loanTerm"]
+    prop = request.json["prop"]
+    credit = request.json["credit"]
+    car_pay = request.json["carPay"]
+    student_pay = request.json["studentPay"]
+    PMI = request.json["PMI"]
+    home_insurance = request.json["home_insurance"]
+    HOA = request.json["HOA"]
+
+    print(income, home)
+
+    # db.session.add(user_data)
+    # db.session.commit()
+
+    
 @app.route('/services', methods=['GET', 'POST'])
 def services():
     """
