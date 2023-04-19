@@ -584,7 +584,7 @@ def reset_token(token):
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
-#@login_required
+@login_required
 def calculator():
     """
         Renders the calculator.html template and handles POST requests. If the form data is valid, the function
@@ -608,6 +608,10 @@ def calculator():
 
 
 def add_calculator_info(user_id):
+    """
+        Injects the initial calculator data into new user accounts.
+        Takes in the parameter user_id.
+    """
     user_data = CalculatorUserInputs(
         income=60000, home_val=500000, down_pay=150000,
         loan_amt=350000, interest_rate=6.5, loan_term=30,
@@ -634,11 +638,12 @@ def update_calculator_info():
     PMI = request.json["PMI"]
     home_insurance = request.json["home_insurance"]
     HOA = request.json["HOA"]
+    print(income)
+    #user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id)
 
-    print(income, home)
+    #user_update.income = income
 
-    # db.session.add(user_data)
-    # db.session.commit()
+    db.session.commit()
 
     
 @app.route('/services', methods=['GET', 'POST'])

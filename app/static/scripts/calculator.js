@@ -103,7 +103,7 @@ function updateUserDB(){
     const HOA = document.getElementById('HOA').value;
 
     $.ajax({
-    url: '/calculator',
+    url: '/update_calculator_info',
     type: 'POST',
     contentType: "application/json",
     headers: {'X-CSRFToken': csrf_token},
