@@ -9,7 +9,7 @@ from app import app, db, Users
 import pytest
 
 from app.models import ChecklistItems
-from app.routes import add_checklist_items
+from app.routes import add_checklist_items, get_page_token
 
 
 @pytest.fixture
@@ -390,3 +390,20 @@ def test_search_pagination(test_client):
         data = json.loads(response.data)
         # print(data)
         assert "results" in data
+
+
+def test_get_page_token():
+    # Test with valid response containing next_page_token
+    response = {
+        "status": "OK",
+        "results": [
+            {"name": "Test Place 1", "place_id": "test_place_id_1"},
+            {"name": "Test Place 2", "place_id": "test_place_id_2"}
+        ],
+        "next_page_token": "test_page_token"
+    }
+    expected_token = "test_page_token"
+    url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+    params = {"query": "test", "key": "test_key", "pagetoken": "test_page_token"}
+    offset = 21
+    assert get_page_token(offset, url, params) == expected_token
