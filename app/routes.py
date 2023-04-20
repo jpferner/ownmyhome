@@ -626,6 +626,7 @@ def add_calculator_info(user_id):
 @app.route('/update_calculator_info', methods=['GET', 'POST'])
 def update_calculator_info():
     if request.method == "POST":
+
         income = request.json["an_income"]
         home = request.json["home"]
         down = request.json["down"]
@@ -639,12 +640,24 @@ def update_calculator_info():
         PMI = request.json["PMI"]
         home_insurance = request.json["home_insurance"]
         HOA = request.json["HOA"]
-        print(income)
-        #user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id)
 
-        #user_update.income = income
+        user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
 
-        #db.session.commit()
+        user_update.income = income
+        user_update.home_val = home
+        user_update.down_pay = down
+        user_update.loan_amt = loan
+        user_update.interest_rate = interest
+        user_update.loan_term = loan_term
+        user_update.property_tax = prop
+        user_update.home_insurance = home_insurance
+        user_update.monthly_hoa = HOA
+        user_update.pmi = PMI
+        user_update.credit_card_payments = credit
+        user_update.car_payments = car_pay
+        user_update.student_payments = student_pay
+
+        db.session.commit()
         return jsonify(success=True)
 
     
