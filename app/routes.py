@@ -601,10 +601,12 @@ def calculator():
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
-    return render_template('calculator.html', HomeVal=500000, DownPay=150000,
-                           LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
-                           StartDate=date.today(), PropTax=2400, Income=60000, Credit=500, CarPay=350, StudentPay=400,
-                           HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350)
+    user = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
+    return render_template('calculator.html', HomeVal=user.home_val, DownPay=user.down_pay,
+                           LoanAmt=user.loan_amt, InterestRate=user.interest_rate, LoanTerm=user.loan_term,
+                           PropTax=user.property_tax, Income=user.income, Credit=user.credit_card_payments,
+                           CarPay=user.car_payments, StudentPay=user.student_payments,
+                           HomeInsurance=user.home_insurance, PrivateMortInsurance=user.pmi, HOA=user.monthly_hoa)
 
 
 def add_calculator_info(user_id):
