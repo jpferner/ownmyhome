@@ -65,14 +65,6 @@
                            onblur="if(!this.value) this.value='0';"></td>
             </tr>
             <tr class="info">
-                <td><label for="LoanType">Loan Type:</label></td>
-                <td><select id="LoanType">
-                    <option value="Conventional">Conventional</option>
-                    <option value="loan2">loan2</option>
-                    <option value="loan3">loan3</option>
-                </select></td>
-            </tr>
-            <tr class="info">
                 <td><label for="Credit">Monthly Credit Card Payments:</label></td>
                 <td><input type="number" id="Credit" placeholder="500" value="{{ Credit }}" min="0"
                            oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
@@ -99,6 +91,9 @@
             </tr>
             <tr>
                 <td>Monthly Mortgage: $<label id="MortMonTotal">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Down Payment %: <label id="DownPayPercent">{{ MortTotal }}</label>%</td>
             </tr>
             <tr>
                 <td>Total Mortgage: $<label id="TotalMort">{{ MortTotal }}</label></td>
