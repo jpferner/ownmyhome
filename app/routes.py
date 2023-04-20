@@ -595,7 +595,7 @@ def calculator():
         POST request: Should never be sent to this function.
 
         Returns:
-            - If the request is a GET request: the rendered calculator.html template with either user info or default
+            - If the request is a GET request: renders the calculator.html template with either user info or default
             info depending on if they are logged in.
             - If the request is a POST request: Redirects user to the home page.
     """
@@ -643,20 +643,6 @@ def update_calculator_info():
         if isinstance(current_user, AnonymousUserMixin):
             return jsonify(success=False)
         else:
-            income = request.json["an_income"]
-            home = request.json["home"]
-            down = request.json["down"]
-            loan = request.json["loan"]
-            interest = request.json["interest"]
-            loan_term = request.json["loanTerm"]
-            prop = request.json["prop"]
-            credit = request.json["credit"]
-            car_pay = request.json["carPay"]
-            student_pay = request.json["studentPay"]
-            PMI = request.json["PMI"]
-            home_insurance = request.json["home_insurance"]
-            HOA = request.json["HOA"]
-
             user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
 
             user_update.income = request.json["an_income"]
