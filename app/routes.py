@@ -2,7 +2,7 @@ import time
 from random import choice
 
 from flask import render_template, flash, redirect, url_for, request, jsonify
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user, AnonymousUserMixin
 from flask_wtf.csrf import validate_csrf
 
 import requests
@@ -584,7 +584,7 @@ def reset_token(token):
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
-@login_required
+#@login_required
 def calculator():
     """
         Renders the calculator.html template and handles POST requests. If the form data is valid, the function
@@ -601,12 +601,20 @@ def calculator():
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
-    user = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
-    return render_template('calculator.html', HomeVal=user.home_val, DownPay=user.down_pay,
-                           LoanAmt=user.loan_amt, InterestRate=user.interest_rate, LoanTerm=user.loan_term,
-                           PropTax=user.property_tax, Income=user.income, Credit=user.credit_card_payments,
-                           CarPay=user.car_payments, StudentPay=user.student_payments,
-                           HomeInsurance=user.home_insurance, PrivateMortInsurance=user.pmi, HOA=user.monthly_hoa)
+
+    if isinstance(current_user, AnonymousUserMixin):
+        return render_template('calculator.html', HomeVal=500000, DownPay=150000,
+                               LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
+                               PropTax=2400, Income=60000, Credit=500,
+                               CarPay=350, StudentPay=400,
+                               HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350)
+    else:
+        user = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
+        return render_template('calculator.html', HomeVal=user.home_val, DownPay=user.down_pay,
+                               LoanAmt=user.loan_amt, InterestRate=user.interest_rate, LoanTerm=user.loan_term,
+                               PropTax=user.property_tax, Income=user.income, Credit=user.credit_card_payments,
+                               CarPay=user.car_payments, StudentPay=user.student_payments,
+                               HomeInsurance=user.home_insurance, PrivateMortInsurance=user.pmi, HOA=user.monthly_hoa)
 
 
 def add_calculator_info(user_id):
@@ -627,42 +635,47 @@ def add_calculator_info(user_id):
 
 @app.route('/update_calculator_info', methods=['GET', 'POST'])
 def update_calculator_info():
+    """
+        Updates the database for the currently signed in user
+    """
     if request.method == "POST":
+        if isinstance(current_user, AnonymousUserMixin):
+            return jsonify(success=False)
+        else:
+            income = request.json["an_income"]
+            home = request.json["home"]
+            down = request.json["down"]
+            loan = request.json["loan"]
+            interest = request.json["interest"]
+            loan_term = request.json["loanTerm"]
+            prop = request.json["prop"]
+            credit = request.json["credit"]
+            car_pay = request.json["carPay"]
+            student_pay = request.json["studentPay"]
+            PMI = request.json["PMI"]
+            home_insurance = request.json["home_insurance"]
+            HOA = request.json["HOA"]
 
-        income = request.json["an_income"]
-        home = request.json["home"]
-        down = request.json["down"]
-        loan = request.json["loan"]
-        interest = request.json["interest"]
-        loan_term = request.json["loanTerm"]
-        prop = request.json["prop"]
-        credit = request.json["credit"]
-        car_pay = request.json["carPay"]
-        student_pay = request.json["studentPay"]
-        PMI = request.json["PMI"]
-        home_insurance = request.json["home_insurance"]
-        HOA = request.json["HOA"]
+            user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
 
-        user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
+            user_update.income = income
+            user_update.home_val = home
+            user_update.down_pay = down
+            user_update.loan_amt = loan
+            user_update.interest_rate = interest
+            user_update.loan_term = loan_term
+            user_update.property_tax = prop
+            user_update.home_insurance = home_insurance
+            user_update.monthly_hoa = HOA
+            user_update.pmi = PMI
+            user_update.credit_card_payments = credit
+            user_update.car_payments = car_pay
+            user_update.student_payments = student_pay
 
-        user_update.income = income
-        user_update.home_val = home
-        user_update.down_pay = down
-        user_update.loan_amt = loan
-        user_update.interest_rate = interest
-        user_update.loan_term = loan_term
-        user_update.property_tax = prop
-        user_update.home_insurance = home_insurance
-        user_update.monthly_hoa = HOA
-        user_update.pmi = PMI
-        user_update.credit_card_payments = credit
-        user_update.car_payments = car_pay
-        user_update.student_payments = student_pay
+            db.session.commit()
+            return jsonify(success=True)
 
-        db.session.commit()
-        return jsonify(success=True)
 
-    
 @app.route('/services', methods=['GET', 'POST'])
 def services():
     """
