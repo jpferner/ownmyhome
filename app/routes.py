@@ -625,25 +625,27 @@ def add_calculator_info(user_id):
 
 @app.route('/update_calculator_info', methods=['GET', 'POST'])
 def update_calculator_info():
-    income = request.json["an_income"]
-    home = request.json["home"]
-    down = request.json["down"]
-    loan = request.json["loan"]
-    interest = request.json["interest"]
-    loan_term = request.json["loanTerm"]
-    prop = request.json["prop"]
-    credit = request.json["credit"]
-    car_pay = request.json["carPay"]
-    student_pay = request.json["studentPay"]
-    PMI = request.json["PMI"]
-    home_insurance = request.json["home_insurance"]
-    HOA = request.json["HOA"]
-    print(income)
-    #user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id)
+    if request.method == "POST":
+        income = request.json["an_income"]
+        home = request.json["home"]
+        down = request.json["down"]
+        loan = request.json["loan"]
+        interest = request.json["interest"]
+        loan_term = request.json["loanTerm"]
+        prop = request.json["prop"]
+        credit = request.json["credit"]
+        car_pay = request.json["carPay"]
+        student_pay = request.json["studentPay"]
+        PMI = request.json["PMI"]
+        home_insurance = request.json["home_insurance"]
+        HOA = request.json["HOA"]
+        print(income)
+        #user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id)
 
-    #user_update.income = income
+        #user_update.income = income
 
-    db.session.commit()
+        #db.session.commit()
+        return jsonify(success=True)
 
     
 @app.route('/services', methods=['GET', 'POST'])
