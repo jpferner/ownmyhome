@@ -32,7 +32,7 @@
             </tr>
             <tr class="info">
                 <td><label for="InterestRate">Interest Rate:</label></td>
-                <td><input type="number" id="InterestRate" step="0.1" placeholder="6.5" value="{{ InterestRate }}"
+                <td><input type="number" id="InterestRate" step=any placeholder="6.5" value="{{ InterestRate }}"
                            min="0.1" max="50" required oninput="validateInput(this)"
                            onblur="if(!this.value) this.value='0';"></td>
             </tr>
@@ -61,7 +61,7 @@
             <tr class="info">
                 <td><label for="PrivateMortInsurance">PMI:</label></td>
                 <td><input type="number" id="PrivateMortInsurance" placeholder="0.5" value="{{ PrivateMortInsurance }}"
-                           min="0" max="50" step="0.1" oninput="validateInput(this)"
+                           min="0" max="50" step=any oninput="validateInput(this)"
                            onblur="if(!this.value) this.value='0';"></td>
             </tr>
             <tr class="info">

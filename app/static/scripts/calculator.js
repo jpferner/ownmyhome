@@ -73,6 +73,9 @@ function validateDownPayment() {
     const downAlert = document.querySelector('input[id="DownPay"]');
     if (downPay > homeVal) {
         downAlert.setCustomValidity("Cannot be greater than home value.");
+        downAlert.reportValidity()
+    } else {
+        downAlert.setCustomValidity("")
     }
 }
 
@@ -87,6 +90,9 @@ function validateInput(input) {
   }
 }
 
+/**
+ * Sends validated data in JSON form to update database for logged-in users.
+ */
 function updateUserDB(){
     const home = document.getElementById('HomeVal').value;
     const down = document.getElementById('DownPay').value;
@@ -102,6 +108,7 @@ function updateUserDB(){
     const home_insurance = document.getElementById('HomeInsurance').value;
     const HOA = document.getElementById('HOA').value;
 
+    // Sends POST request to update user info in the database
     $.ajax({
     url: '/update_calculator_info',
     type: 'POST',
@@ -156,6 +163,7 @@ function calculation(){
     let debt_income_percent_mort = (total_mon_payment / mon_income) * 100
     let debt_income_mort_budget = mon_income - total_mon_payment
 
+    // Downpayment percent
     let downpaypercent = (down / home) * 100
 
     document.getElementById('MonPayTotal').textContent=Number(total_mon_payment.toFixed(2)).toLocaleString()

@@ -587,17 +587,17 @@ def reset_token(token):
 #@login_required
 def calculator():
     """
-        Renders the calculator.html template and handles POST requests. If the form data is valid, the function
-        will calculate and display the mortgage total on the page.
+        Renders the calculator.html template.
 
-        GET request: The function renders the calculator.html template with default values for the inputs.
+        GET request: The function renders the calculator.html template with default values for the inputs or logged-in
+        user data if available.
 
-        POST request: The function calculates the mortgage total using the user's input data and displays the
-        result on the calculator.html template.
+        POST request: Should never be sent to this function.
 
         Returns:
-            - If the request is a GET request: the rendered calculator.html template.
-            - If the request is a POST request: the rendered calculator.html template with the mortgage total displayed.
+            - If the request is a GET request: the rendered calculator.html template with either user info or default
+            info depending on if they are logged in.
+            - If the request is a POST request: Redirects user to the home page.
     """
     if request.method == 'POST':
         return redirect(url_for('index'))
@@ -636,7 +636,8 @@ def add_calculator_info(user_id):
 @app.route('/update_calculator_info', methods=['GET', 'POST'])
 def update_calculator_info():
     """
-        Updates the database for the currently signed in user
+        Updates the database for any currently signed-in user.
+        Does nothing for users not logged-in.
     """
     if request.method == "POST":
         if isinstance(current_user, AnonymousUserMixin):
@@ -658,19 +659,19 @@ def update_calculator_info():
 
             user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
 
-            user_update.income = income
-            user_update.home_val = home
-            user_update.down_pay = down
-            user_update.loan_amt = loan
-            user_update.interest_rate = interest
-            user_update.loan_term = loan_term
-            user_update.property_tax = prop
-            user_update.home_insurance = home_insurance
-            user_update.monthly_hoa = HOA
-            user_update.pmi = PMI
-            user_update.credit_card_payments = credit
-            user_update.car_payments = car_pay
-            user_update.student_payments = student_pay
+            user_update.income = request.json["an_income"]
+            user_update.home_val = request.json["home"]
+            user_update.down_pay = request.json["down"]
+            user_update.loan_amt = request.json["loan"]
+            user_update.interest_rate = request.json["interest"]
+            user_update.loan_term = request.json["loanTerm"]
+            user_update.property_tax = request.json["prop"]
+            user_update.home_insurance = request.json["home_insurance"]
+            user_update.monthly_hoa = request.json["HOA"]
+            user_update.pmi = request.json["PMI"]
+            user_update.credit_card_payments = request.json["credit"]
+            user_update.car_payments = request.json["carPay"]
+            user_update.student_payments = request.json["studentPay"]
 
             db.session.commit()
             return jsonify(success=True)
