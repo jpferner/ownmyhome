@@ -9,7 +9,7 @@
 </section>
 
 <aside>
-    <form class="calc-form">
+    <form class="calc-form" method="POST">
         <table class="calculator">
             <tr class="info">
                 <td><label for="Income">Annual Income:</label></td>
@@ -32,7 +32,7 @@
             </tr>
             <tr class="info">
                 <td><label for="InterestRate">Interest Rate:</label></td>
-                <td><input type="number" id="InterestRate" step="0.1" placeholder="6.5" value="{{ InterestRate }}"
+                <td><input type="number" id="InterestRate" step=any placeholder="6.5" value="{{ InterestRate }}"
                            min="0.1" max="50" required oninput="validateInput(this)"
                            onblur="if(!this.value) this.value='0';"></td>
             </tr>
@@ -61,16 +61,8 @@
             <tr class="info">
                 <td><label for="PrivateMortInsurance">PMI:</label></td>
                 <td><input type="number" id="PrivateMortInsurance" placeholder="0.5" value="{{ PrivateMortInsurance }}"
-                           min="0" max="50" step="0.1" oninput="validateInput(this)"
+                           min="0" max="50" step=any oninput="validateInput(this)"
                            onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="LoanType">Loan Type:</label></td>
-                <td><select id="LoanType">
-                    <option value="Conventional">Conventional</option>
-                    <option value="loan2">loan2</option>
-                    <option value="loan3">loan3</option>
-                </select></td>
             </tr>
             <tr class="info">
                 <td><label for="Credit">Monthly Credit Card Payments:</label></td>
@@ -87,11 +79,9 @@
                 <td><input type="number" id="StudentPay" placeholder="400" value="{{ StudentPay }}" min="0"
                            oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
             </tr>
-            <tr>
-                <td>
-                    <button class="calculateButton" type="submit" onclick="validateAll(event)" value="Submit">
-                        Calculate
-                    </button>
+            <tr >
+                <td colspan="3">
+                    <button class="calculateButton" type="submit"> Calculate </button>
                 </td>
             </tr>
         </table>
@@ -101,6 +91,9 @@
             </tr>
             <tr>
                 <td>Monthly Mortgage: $<label id="MortMonTotal">{{ MortTotal }}</label></td>
+            </tr>
+            <tr>
+                <td>Down Payment %: <label id="DownPayPercent">{{ MortTotal }}</label>%</td>
             </tr>
             <tr>
                 <td>Total Mortgage: $<label id="TotalMort">{{ MortTotal }}</label></td>
@@ -128,7 +121,6 @@
 
 <link href="../static/styles/calculator.css" rel="stylesheet">
 <script src="../static/scripts/calculator.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{ url_for('static', filename='scripts/homepage.js') }}"></script>
 <script>
