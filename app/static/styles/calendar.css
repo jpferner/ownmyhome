@@ -118,7 +118,7 @@ a {
   height: 80px;
   width: 100%;
   z-index: 50;
-  background: #003567;
+  background: #778899;
 }
 .calendar-header > .wrapper {
   display: -webkit-box;
@@ -209,7 +209,7 @@ a {
   width: 30px;
   height: 30px;
   padding: 9px 12px;
-  background-color: #004b8f;
+  background-color: #778899;
   cursor: pointer;
   z-index: 10;
   box-sizing: border-box;
@@ -256,7 +256,7 @@ a {
   padding: 0 10px;
   line-height: 30px;
   height: 30px;
-  background-color: #004b8f;
+  background-color: #778899;
   text-transform: uppercase;
   letter-spacing: 2px;
   border-radius: 15px;
@@ -375,6 +375,11 @@ a {
   transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   -webkit-transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 }
+
+.c-cal__cel__padding {
+  width: 56px;
+}
+
 .c-cal__cel p {
   color: black;
   position: absolute;
@@ -407,13 +412,13 @@ a {
 */
 }
 .c-cal__cel:hover {
-  background-color: #004b8f !important;
+  background-color: #778899 !important;
 }
 .c-cal__cel:hover p {
   /*background: #003b71 !important;*/
 }
 .c-cal__cel.isSelected {
-  background-color: #004b8f;
+  background-color: #778899;
 }
 .c-cal__cel.isSelected p {
   /*background: #003b71;*/
@@ -433,7 +438,7 @@ a {
   display: block;
   width: 10px;
   height: 10px;
-  background-color: #F5F5F5;
+  background-color: #778899;
   z-index: 10;
   padding: 0;
   top: 50%;
@@ -443,15 +448,7 @@ a {
   transform: translate(-50%, calc(50% + 20px/2));
   -webkit-transform: translate(-50%, calc(50% + 20px/2));
 }
-.event--birthday:before {
-  background-color: #FACC2E;
-}
-.event--festivity:before {
-  background-color: #10DDC2;
-}
-.event--important:before {
-  background-color: #F57170;
-}
+
 .c-aside {
   width: 300px;
   padding: 20px;
@@ -476,19 +473,11 @@ a {
   width: 16px;
   height: 16px;
   left: 0;
-  background-color: #F5F5F5;
+  background-color: #778899;
   border-radius: 50%;
   -webkit-border-radius: 50%;
 }
-.c-aside__event--birthday:before {
-  background-color: #FACC2E;
-}
-.c-aside__event--festivity:before {
-  background-color: #10DDC2;
-}
-.c-aside__event--important:before {
-  background-color: #F57170;
-}
+
 .c-event__creator {
   position: fixed;
   top: 50%;
