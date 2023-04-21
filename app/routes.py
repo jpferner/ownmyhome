@@ -2,7 +2,7 @@ import time
 from random import choice
 
 from flask import render_template, flash, redirect, url_for, request, jsonify
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user, AnonymousUserMixin
 from flask_wtf.csrf import validate_csrf
 
 import requests
@@ -418,6 +418,8 @@ def sign_up():
             add_properties(user.id)
             # Add checklist items for the new user
             add_checklist_items(user.id)
+            # Add calculator defaults to new users
+            add_calculator_info(user.id)
 
             flash('Account created!\n\nPlease use your credentials to log in.', category='success')
             return redirect(url_for('login'))
@@ -577,26 +579,83 @@ def reset_token(token):
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
+#@login_required
 def calculator():
     """
-        Renders the calculator.html template and handles POST requests. If the form data is valid, the function
-        will calculate and display the mortgage total on the page.
+        Renders the calculator.html template.
 
-        GET request: The function renders the calculator.html template with default values for the inputs.
+        GET request: The function renders the calculator.html template with default values for the inputs or logged-in
+        user data if available.
 
-        POST request: The function calculates the mortgage total using the user's input data and displays the
-        result on the calculator.html template.
+        POST request: Should never be sent to this function.
 
         Returns:
-            - If the request is a GET request: the rendered calculator.html template.
-            - If the request is a POST request: the rendered calculator.html template with the mortgage total displayed.
+            - If the request is a GET request: renders the calculator.html template with either user info or default
+            info depending on if they are logged in.
+            - If the request is a POST request: Redirects user to the home page.
     """
     if request.method == 'POST':
-        return render_template('calculator.html')
-    return render_template('calculator.html', HomeVal=500000, DownPay=150000,
-                           LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
-                           StartDate=date.today(), PropTax=2400, Income=60000, Credit=500, CarPay=350, StudentPay=400,
-                           HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350, MortTotal=0)
+        return redirect(url_for('index'))
+
+    if isinstance(current_user, AnonymousUserMixin):
+        return render_template('calculator.html', HomeVal=500000, DownPay=150000,
+                               LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
+                               PropTax=2400, Income=60000, Credit=500,
+                               CarPay=350, StudentPay=400,
+                               HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350)
+    else:
+        user = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
+        return render_template('calculator.html', HomeVal=user.home_val, DownPay=user.down_pay,
+                               LoanAmt=user.loan_amt, InterestRate=user.interest_rate, LoanTerm=user.loan_term,
+                               PropTax=user.property_tax, Income=user.income, Credit=user.credit_card_payments,
+                               CarPay=user.car_payments, StudentPay=user.student_payments,
+                               HomeInsurance=user.home_insurance, PrivateMortInsurance=user.pmi, HOA=user.monthly_hoa)
+
+
+def add_calculator_info(user_id):
+    """
+        Injects the initial calculator data into new user accounts.
+        Takes in the parameter user_id.
+    """
+    user_data = CalculatorUserInputs(
+        income=60000, home_val=500000, down_pay=150000,
+        loan_amt=350000, interest_rate=6.5, loan_term=30,
+        property_tax=2400, home_insurance=1000,  monthly_hoa=350,
+        pmi=0.5, credit_card_payments=500, car_payments=350,
+        student_payments=400, user_id=user_id
+    )
+    db.session.add(user_data)
+    db.session.commit()
+
+
+@app.route('/update_calculator_info', methods=['GET', 'POST'])
+def update_calculator_info():
+    """
+        Updates the database for any currently signed-in user.
+        Does nothing for users not logged-in.
+    """
+    if request.method == "POST":
+        if isinstance(current_user, AnonymousUserMixin):
+            return jsonify(success=False)
+        else:
+            user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
+
+            user_update.income = request.json["an_income"]
+            user_update.home_val = request.json["home"]
+            user_update.down_pay = request.json["down"]
+            user_update.loan_amt = request.json["loan"]
+            user_update.interest_rate = request.json["interest"]
+            user_update.loan_term = request.json["loanTerm"]
+            user_update.property_tax = request.json["prop"]
+            user_update.home_insurance = request.json["home_insurance"]
+            user_update.monthly_hoa = request.json["HOA"]
+            user_update.pmi = request.json["PMI"]
+            user_update.credit_card_payments = request.json["credit"]
+            user_update.car_payments = request.json["carPay"]
+            user_update.student_payments = request.json["studentPay"]
+
+            db.session.commit()
+            return jsonify(success=True)
 
 
 @app.route('/services', methods=['GET', 'POST'])
