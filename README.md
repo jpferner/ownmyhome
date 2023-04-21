@@ -43,4 +43,11 @@
 <li> Set up a virtual environment with this link [[https://docs.python.org/3/library/venv.html]]</li>
 <li>Use the requirements file to install required packages/libraries with pip</li>
 <li>Run app.py to start the application.</li>
+</ol><br>
+
+<h2> How to run white box testing for Mark Karels' and Andrew Court's tests </h2>
+<ol>
+<li>Open terminal in IDE or ensure proper path in Command Prompt/Windows Powershell window</li>
+<li>Run the following command: pytest --cov --cov-branch --cov-report html</li>
+<li>View the pytest html report to ensure each route being covered has 100% coverage</li>
 </ol>
