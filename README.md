@@ -32,7 +32,7 @@
        </ul>
 </ul>
 <br>
-
+[Tests](Tests)
 <h2> How to build/run this project </h2>
 <h3>This web application runs in python with Flask.</h3> 
 <h4>The version we recommend using is 3.10.10</h4>
@@ -42,4 +42,14 @@
 <li> Set up a virtual environment with this link [[https://docs.python.org/3/library/venv.html]]</li>
 <li>Use the requirements file to install required packages/libraries with pip</li>
 <li>Run app.py to start the application.</li>
+</ol>
+
+<h2> Running user tests </h2>
+<h3> Calendar page </h3>
+<ol>
+<li> User must have firefox binary installed </li>
+<li> Run Tests/calendar.py</li>
+<li> Add -u/--url localhost:5000 option if running from local build (will default to deployed server) </li>
+<li> Enter email and password of existing OwnMyHome account with no calendar events added</li>
+<li> Test program will run with no errors for a successful test </li>
 </ol>
