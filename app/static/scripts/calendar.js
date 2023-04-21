@@ -236,7 +236,12 @@ saveBtn.on("click", function() {
                 } else if (xhr.responseJSON.code === "INVALID_END_TIME") {
                     errorMessage = "End time is before the start time.";
                     console.log(errorMessage);
-                } else {
+                } else if (xhr.responseJSON.code === "TIME_PAST_OCCURRENCE") {
+                    errorMessage = "Event time has already passed.";
+                } else if (xhr.responseJSON.code === "NO_EVENT_NAME") {
+                    errorMessage = "Please enter a name for the event."
+                }
+                else {
                     errorMessage = "Unknown error occurred, please try again."
                 }
                 $("#event_form_error").addClass("isVisible");
@@ -264,16 +269,14 @@ function updateEventList() {
     events[currentDate].forEach(function (event) {
         $(".c-aside__eventList").append(
             "<div class='c-aside__event'>" +
-            event.name +
-            " <span> @ " +
-            moment(event.time, 'HH:mm:ss').format('h:mm A') + " - " + moment(event.endTime, 'HH:mm:ss').format('h:mm A') +
+            "<span class=c-aside__name>" + event.name + "</span>" +
+            "<span> @ " + moment(event.time, 'HH:mm:ss').format('h:mm A') + " - " + moment(event.endTime, 'HH:mm:ss').format('h:mm A') + "</span>" +
             "<p>" +
             event.notes +
             "</p>" +
-            "<a class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event <span class='fa fa-trash-o'></span></a>" +
-            "<a class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>edit event <span class='fa fa-trash-o'></span></a>" +
-
-            "</span> </div>"
+            "<a name='remove' class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event <span class='fa fa-trash-o'></span></a>" +
+            "<a name='edit' class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>edit event <span class='fa fa-trash-o'></span></a>" +
+            "</div>"
 
         );
 
