@@ -50,4 +50,5 @@
 <li>Open terminal in IDE or ensure proper path in Command Prompt/Windows Powershell window</li>
 <li>Run the following command: pytest --cov --cov-branch --cov-report html</li>
 <li>View the pytest html report to ensure each route being covered has 100% coverage</li>
+<li>Those routs should include home(), checklist(), add_checklist_items(), login(), sign_up(), logout(), send_password_reset_email(), reset_password_request(), reset_token(), services(), search(), get_page_token(), get_lat_lng_from_zip()</li>
 </ol>
