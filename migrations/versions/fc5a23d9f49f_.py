@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 02d5d2f1cf36
+Revision ID: fc5a23d9f49f
 Revises: 
-Create Date: 2023-04-06 12:37:27.559443
+Create Date: 2023-04-20 18:17:32.618243
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '02d5d2f1cf36'
+revision = 'fc5a23d9f49f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -27,6 +27,16 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
     )
+    op.create_table('calendar_events',
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('name', sa.String(length=100), nullable=False),
+    sa.Column('notes', sa.String(length=500), nullable=True),
+    sa.Column('time', sa.DateTime(), nullable=True),
+    sa.Column('end_time', sa.DateTime(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('id')
+    )
     op.create_table('checklist_items',
     sa.Column('status', sa.Boolean(), nullable=True),
     sa.Column('detail', sa.String(length=255), nullable=True),
@@ -36,7 +46,7 @@ def upgrade():
     sa.PrimaryKeyConstraint('order_no', 'user_id')
     )
     op.create_table('property',
-    sa.Column('propId', sa.Integer(), nullable=False),
+    sa.Column('propId', sa.Integer(), autoincrement=True, nullable=False),
     sa.Column('street', sa.String(length=100), nullable=True),
     sa.Column('city', sa.String(length=25), nullable=True),
     sa.Column('state', sa.String(length=2), nullable=True),
@@ -78,5 +88,6 @@ def downgrade():
 
     op.drop_table('property')
     op.drop_table('checklist_items')
+    op.drop_table('calendar_events')
     op.drop_table('users')
     # ### end Alembic commands ###
