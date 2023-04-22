@@ -2,12 +2,11 @@ import time
 from random import choice
 
 from flask import render_template, flash, redirect, url_for, request, jsonify
-from flask_login import login_user, login_required, logout_user, current_user
+from flask_login import login_user, login_required, logout_user, current_user, AnonymousUserMixin
 from flask_wtf.csrf import validate_csrf
 
 import requests
 
-from app import app
 
 from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
@@ -44,13 +43,13 @@ def home():
 
         # Query the next event on the calendar for the current user
         calendar = CalendarEvents.query.filter(
-            CalendarEvents.time > datetime.utcnow(),
+            CalendarEvents.time > datetime.now(),
             CalendarEvents.user_id == current_user.id
         ).order_by(CalendarEvents.time).first()
 
     all_properties = Property.query.all()
     random_property = choice(all_properties) if all_properties else None
-    current_time = datetime.utcnow()
+    current_time = datetime.now()
 
     return render_template('index.html', login_form=login_form, first_incomplete_item=first_incomplete_item,
                            random_property=random_property, calendar=calendar, current_time=current_time)
@@ -151,18 +150,12 @@ def checklist():
         user in the database to the new status provided in the JSON payload of the request. Returns a JSON response
         with a success key set to True.
 
-        If the request method is neither GET nor POST, redirects the user to the index page.
-
         Returns:
         The rendered checklist page HTML if the request method is GET.
         A JSON response with a success key set to True if the request method is POST.
-        A redirect response to the index page if the request method is neither GET nor POST.
     """
-    if request.method == 'GET':
-        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(ChecklistItems.order_no).all()
-        return render_template('checklist.html', items=items)
 
-    elif request.method == 'POST':
+    if request.method == 'POST':
         order_no = request.json['order_no']
         new_status = request.json['status']
 
@@ -174,7 +167,8 @@ def checklist():
         return jsonify(success=True)
 
     else:
-        return redirect(url_for('index'))
+        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(ChecklistItems.order_no).all()
+        return render_template('checklist.html', items=items)
 
 
 def add_checklist_items(user_id):
@@ -424,11 +418,14 @@ def sign_up():
             add_properties(user.id)
             # Add checklist items for the new user
             add_checklist_items(user.id)
+            # Add calculator defaults to new users
+            add_calculator_info(user.id)
 
-            flash('Account created! Please use your credentials to log in.', category='success')
+            flash('Account created!\n\nPlease use your credentials to log in.', category='success')
             return redirect(url_for('login'))
         else:  # redirect user to the sign-up page, so they can create a new account
-            flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            # flash('We\'re sorry. This email address already exists in our system.\n', category='error')
+            flash('Sign up unsuccessful.\n\n Please try again using a different email address ', category='error')
             return redirect(url_for('sign_up'))
 
     # current_users = Users.query.order_by(Users.id)  # query current db of Users
@@ -508,12 +505,26 @@ def reset_password_request():
         # if the user exists
         if user:
             send_password_reset_email(user)
-            flash('Password reset request has been sent.\nPlease check your email for instructions'
-                  ' on how how to reset your password.\n\n'
+            flash('Thank you for submitting your email address.\n\n'
+                  'If an account is associated with this email, a\n'
+                  'password reset link will be sent to your inbox shortly.\n\n'
+                  'Please check your email and follow the instructions\n'
+                  'to reset your password.\n\n'
                   'Important: Password reset link expires in 5 minutes.', category='success')
             return redirect(url_for('login'))
         else:
-            flash("We're sorry. There is no account associated with the email provided.", category='error')
+            # flash("We're sorry. There is no account associated with the email provided.", category='error')
+            # flash('Thank you for submitting your email address.\n\nIf an account is associated with this email,\n'
+            #       'a password reset link will be sent to your inbox shortly.\n\n'
+            #       ' Please check your email and follow the instructions\nto reset your password.\n\n'
+            #       'Important: Password reset link expires in 5 minutes.', category='success')
+            flash('Thank you for submitting your email address.\n\n'
+                  'If an account is associated with this email, a\n'
+                  'password reset link will be sent to your inbox shortly.\n\n'
+                  'Please check your email and follow the instructions\n'
+                  'to reset your password.\n\n'
+                  'Important: Password reset link expires in 5 minutes.', category='success')
+            return redirect(url_for('login'))
     return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form, )
 
 
@@ -568,26 +579,83 @@ def reset_token(token):
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
+#@login_required
 def calculator():
     """
-        Renders the calculator.html template and handles POST requests. If the form data is valid, the function
-        will calculate and display the mortgage total on the page.
+        Renders the calculator.html template.
 
-        GET request: The function renders the calculator.html template with default values for the inputs.
+        GET request: The function renders the calculator.html template with default values for the inputs or logged-in
+        user data if available.
 
-        POST request: The function calculates the mortgage total using the user's input data and displays the
-        result on the calculator.html template.
+        POST request: Should never be sent to this function.
 
         Returns:
-            - If the request is a GET request: the rendered calculator.html template.
-            - If the request is a POST request: the rendered calculator.html template with the mortgage total displayed.
+            - If the request is a GET request: renders the calculator.html template with either user info or default
+            info depending on if they are logged in.
+            - If the request is a POST request: Redirects user to the home page.
     """
     if request.method == 'POST':
-        return render_template('calculator.html')
-    return render_template('calculator.html', HomeVal=500000, DownPay=150000,
-                           LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
-                           StartDate=date.today(), PropTax=2400, Income=60000, Credit=500, CarPay=350, StudentPay=400,
-                           HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350, MortTotal=0)
+        return redirect(url_for('index'))
+
+    if isinstance(current_user, AnonymousUserMixin):
+        return render_template('calculator.html', HomeVal=500000, DownPay=150000,
+                               LoanAmt=350000, InterestRate=6.5, LoanTerm=30,
+                               PropTax=2400, Income=60000, Credit=500,
+                               CarPay=350, StudentPay=400,
+                               HomeInsurance=1000, PrivateMortInsurance=0.5, HOA=350)
+    else:
+        user = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
+        return render_template('calculator.html', HomeVal=user.home_val, DownPay=user.down_pay,
+                               LoanAmt=user.loan_amt, InterestRate=user.interest_rate, LoanTerm=user.loan_term,
+                               PropTax=user.property_tax, Income=user.income, Credit=user.credit_card_payments,
+                               CarPay=user.car_payments, StudentPay=user.student_payments,
+                               HomeInsurance=user.home_insurance, PrivateMortInsurance=user.pmi, HOA=user.monthly_hoa)
+
+
+def add_calculator_info(user_id):
+    """
+        Injects the initial calculator data into new user accounts.
+        Takes in the parameter user_id.
+    """
+    user_data = CalculatorUserInputs(
+        income=60000, home_val=500000, down_pay=150000,
+        loan_amt=350000, interest_rate=6.5, loan_term=30,
+        property_tax=2400, home_insurance=1000,  monthly_hoa=350,
+        pmi=0.5, credit_card_payments=500, car_payments=350,
+        student_payments=400, user_id=user_id
+    )
+    db.session.add(user_data)
+    db.session.commit()
+
+
+@app.route('/update_calculator_info', methods=['GET', 'POST'])
+def update_calculator_info():
+    """
+        Updates the database for any currently signed-in user.
+        Does nothing for users not logged-in.
+    """
+    if request.method == "POST":
+        if isinstance(current_user, AnonymousUserMixin):
+            return jsonify(success=False)
+        else:
+            user_update = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
+
+            user_update.income = request.json["an_income"]
+            user_update.home_val = request.json["home"]
+            user_update.down_pay = request.json["down"]
+            user_update.loan_amt = request.json["loan"]
+            user_update.interest_rate = request.json["interest"]
+            user_update.loan_term = request.json["loanTerm"]
+            user_update.property_tax = request.json["prop"]
+            user_update.home_insurance = request.json["home_insurance"]
+            user_update.monthly_hoa = request.json["HOA"]
+            user_update.pmi = request.json["PMI"]
+            user_update.credit_card_payments = request.json["credit"]
+            user_update.car_payments = request.json["carPay"]
+            user_update.student_payments = request.json["studentPay"]
+
+            db.session.commit()
+            return jsonify(success=True)
 
 
 @app.route('/services', methods=['GET', 'POST'])

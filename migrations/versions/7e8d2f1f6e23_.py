@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 70d665bd8bfa
+Revision ID: 7e8d2f1f6e23
 Revises: 
-Create Date: 2023-04-16 14:03:11.213069
+Create Date: 2023-04-21 14:39:11.045749
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '70d665bd8bfa'
+revision = '7e8d2f1f6e23'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,6 +26,24 @@ def upgrade():
     sa.Column('password_hash', sa.String(length=150), nullable=True),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('email')
+    )
+    op.create_table('calculator_user_inputs',
+    sa.Column('income', sa.Integer(), nullable=False),
+    sa.Column('home_val', sa.Integer(), nullable=True),
+    sa.Column('down_pay', sa.Integer(), nullable=True),
+    sa.Column('loan_amt', sa.Integer(), nullable=False),
+    sa.Column('interest_rate', sa.Numeric(precision=2, scale=2), nullable=False),
+    sa.Column('loan_term', sa.Integer(), nullable=False),
+    sa.Column('property_tax', sa.Integer(), nullable=True),
+    sa.Column('home_insurance', sa.Integer(), nullable=True),
+    sa.Column('monthly_hoa', sa.Integer(), nullable=True),
+    sa.Column('pmi', sa.Numeric(precision=2, scale=2), nullable=True),
+    sa.Column('credit_card_payments', sa.Integer(), nullable=True),
+    sa.Column('car_payments', sa.Integer(), nullable=True),
+    sa.Column('student_payments', sa.Integer(), nullable=True),
+    sa.Column('user_id', sa.Integer(), nullable=False),
+    sa.ForeignKeyConstraint(['user_id'], ['users.id'], ),
+    sa.PrimaryKeyConstraint('user_id')
     )
     op.create_table('calendar_events',
     sa.Column('id', sa.Integer(), nullable=False),
@@ -89,5 +107,6 @@ def downgrade():
     op.drop_table('property')
     op.drop_table('checklist_items')
     op.drop_table('calendar_events')
+    op.drop_table('calculator_user_inputs')
     op.drop_table('users')
     # ### end Alembic commands ###
