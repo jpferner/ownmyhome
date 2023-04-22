@@ -43,13 +43,13 @@ def home():
 
         # Query the next event on the calendar for the current user
         calendar = CalendarEvents.query.filter(
-            CalendarEvents.time > datetime.utcnow(),
+            CalendarEvents.time > datetime.now(),
             CalendarEvents.user_id == current_user.id
         ).order_by(CalendarEvents.time).first()
 
     all_properties = Property.query.all()
     random_property = choice(all_properties) if all_properties else None
-    current_time = datetime.utcnow()
+    current_time = datetime.now()
 
     return render_template('index.html', login_form=login_form, first_incomplete_item=first_incomplete_item,
                            random_property=random_property, calendar=calendar, current_time=current_time)
@@ -150,18 +150,12 @@ def checklist():
         user in the database to the new status provided in the JSON payload of the request. Returns a JSON response
         with a success key set to True.
 
-        If the request method is neither GET nor POST, redirects the user to the index page.
-
         Returns:
         The rendered checklist page HTML if the request method is GET.
         A JSON response with a success key set to True if the request method is POST.
-        A redirect response to the index page if the request method is neither GET nor POST.
     """
-    if request.method == 'GET':
-        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(ChecklistItems.order_no).all()
-        return render_template('checklist.html', items=items)
 
-    elif request.method == 'POST':
+    if request.method == 'POST':
         order_no = request.json['order_no']
         new_status = request.json['status']
 
@@ -173,7 +167,8 @@ def checklist():
         return jsonify(success=True)
 
     else:
-        return redirect(url_for('index'))
+        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(ChecklistItems.order_no).all()
+        return render_template('checklist.html', items=items)
 
 
 def add_checklist_items(user_id):
