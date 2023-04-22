@@ -1,11 +1,16 @@
 from flask_login import UserMixin
 from sqlalchemy import PrimaryKeyConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
+# from authlib.jose import jwt
+
+import jwt
 
 from app import db
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from app import db, app
+from flask import current_app
+
 
 
 class CalendarEvents(db.Model):
@@ -38,8 +43,10 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
-    email = db.Column(db.String(150), unique=True)  # no user can have an email that's already in db
+    email = db.Column(db.String(150), unique=True, name='unique_email')  # no user can have an email that's already in db
     password_hash = db.Column(db.String(150))  # hashed password
+    reset_password_token = db.Column(db.String(150), unique=True, name='unique_reset_password_token')
+    reset_password_token_expiration = db.Column(db.DateTime)
 
     favorite_properties = db.relationship('UserFavorite', back_populates='user')
 
@@ -87,28 +94,139 @@ class Users(db.Model, UserMixin):
         """
         return check_password_hash(self.password_hash, password)
 
-    def get_reset_token(self, expires_secs=300):
-        """
-        This method creates the token, using itsdangerous, that will verify
-        the person and account that will have their password reset
-        Args:
-            expires_secs: integer number of seconds for expiration
+    # def get_reset_token(self, expires_secs=300):
+    #     """
+    #     This method creates the token, using itsdangerous, that will verify
+    #     the person and account that will have their password reset
+    #     Args:
+    #         expires_secs: integer number of seconds for expiration
+    #
+    #     Returns: a signed string serialized with the internal serializer
+    #
+    #     """
+    #     serial = Serializer(app.config['SECRET_KEY'], expires_secs)
+    #     return serial.dumps({'user_id': self.id}).decode('utf-8')
+    #
+    # @staticmethod
+    # def verify_reset_token(token):
+    #     serial = Serializer(app.config['SECRET_KEY'])
+    #     try:
+    #         user_id = serial.loads(token)['user_id']
+    #     except:
+    #         return None
+    #     return Users.query.get(user_id)
 
-        Returns: a signed string serialized with the internal serializer
+    # def generate_reset_token(self, expires_in=600):
+    #     """
+    #     Generate a reset token for password reset.
+    #
+    #     Args:
+    #         expires_in: int, expiration time in seconds
+    #
+    #     Returns:
+    #         A reset token string
+    #     """
+    #     payload = {
+    #         'user_id': self.id,
+    #         'exp': datetime.utcnow() + timedelta(seconds=expires_in)
+    #     }
+    #     token = jwt.encode(payload, app.config['SECRET_KEY'])
+    #     return token
+    # @staticmethod
+    # def generate_password_reset_token(user, expires_in=3600):
+    #     """
+    #     Generate a JWT token for resetting the user's password.
+    #
+    #     Args:
+    #         expires_in: int, optional, the time (in seconds) after which the token will expire (default: 3600)
+    #
+    #     Returns:
+    #         A string representing the JWT token
+    #     """
+    #     now = datetime.utcnow()
+    #     payload = {
+    #         'reset_password': user.id,
+    #         'exp': now + timedelta(seconds=expires_in),
+    #         'iat': now
+    #     }
+    #     print(app.config.get('SECRET_KEY'))
+    #     return jwt.encode(payload, app.config.get('SECRET_KEY'))
 
-        """
-        serial = Serializer(app.config['SECRET_KEY'], expires_secs)
-        return serial.dumps({'user_id': self.id}).decode('utf-8')
+    def generate_password_reset_token(self, expires_in=600):
+        # payload = {
+        #     'reset_password': self.id,
+        #     'exp': datetime.utcnow() + timedelta(seconds=expires_in)
+        # }
+        # return jwt.encode(payload, app.config.get('SECRET_KEY'))
+        now = datetime.utcnow()
+        self.reset_password_token = jwt.encode(
+            {'reset_password': self.id, 'exp': now + timedelta(seconds=expires_in)},
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256'
+        )
+        self.reset_password_token_expiration = now + timedelta(seconds=expires_in)
+        db.session.commit()
+        return self.reset_password_token
+
+    # @staticmethod
+    # def verify_reset_token(token):
+    #     """
+    #     Verify the given reset token and return the user instance.
+    #
+    #     Args:
+    #         token: str, reset token string
+    #
+    #     Returns:
+    #         A user instance or None if token is invalid or expired
+    #     """
+    #     try:
+    #         payload = jwt.decode(token, current_app.config['SECRET_KEY'])
+    #         user_id = payload['user_id']
+    #         user = Users.query.get(user_id)
+    #         return user
+    #     except:
+    #         return None
 
     @staticmethod
-    def verify_reset_token(token):
-        serial = Serializer(app.config['SECRET_KEY'])
+    def verify_reset_password_token(token):
+        # try:
+        #     # payload = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])
+        #     id = jwt.decode(token, app.config.get('SECRET_KEY'))['reset_password']
+        # # except:
+        # #     return None
+        # # return Users.query.get(payload['sub'])
+        # except:
+        #     return
+        # return Users.query.get(id)
+
+        # try:
+        #     payload = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        # except:
+        #     return None
+        #     # Check if the reset_password key exists in the payload
+        # if 'reset_password' not in payload:
+        #     return None
+        # user = Users.query.get(payload['reset_password'])
+        # if user:
+        #     # Check if the token has expired
+        #     token_exp = payload['exp']
+        #     if datetime.utcnow() > datetime.fromtimestamp(token_exp):
+        #         return None
+        #     return user
+        # return None
+
         try:
-            user_id = serial.loads(token)['user_id']
+            id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
+            user = Users.query.get(id)
+            if not user:
+                return None
+            # check if the token has expired
+            token_exp = user.reset_password_token_expiration
+            if datetime.utcnow() > token_exp:
+                return None
+            return user
         except:
             return None
-        return Users.query.get(user_id)
-
 
 class Property(db.Model):
     """ Creates the property table and needed relationships"""

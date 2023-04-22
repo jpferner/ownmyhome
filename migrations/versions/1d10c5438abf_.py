@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: fc5a23d9f49f
+Revision ID: 1d10c5438abf
 Revises: 
-Create Date: 2023-04-20 18:17:32.618243
+Create Date: 2023-04-21 18:54:19.464186
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'fc5a23d9f49f'
+revision = '1d10c5438abf'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,10 +22,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=150), nullable=True),
     sa.Column('last_name', sa.String(length=150), nullable=True),
-    sa.Column('email', sa.String(length=150), nullable=True),
+    sa.Column('unique_email', sa.String(length=150), nullable=True),
     sa.Column('password_hash', sa.String(length=150), nullable=True),
+    sa.Column('unique_reset_password_token', sa.String(length=150), nullable=True),
+    sa.Column('reset_password_token_expiration', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.UniqueConstraint('unique_email'),
+    sa.UniqueConstraint('unique_reset_password_token')
     )
     op.create_table('calendar_events',
     sa.Column('id', sa.Integer(), nullable=False),
