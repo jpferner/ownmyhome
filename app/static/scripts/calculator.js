@@ -1,10 +1,10 @@
+const csrf_token = $('meta[name=csrf-token]').attr('content');
 /**
  * Validates all input fields and calls the calculation function if all fields are valid.
  * @param {Event} event - The event object representing the form submission.
  */
-function validateAll(event){
+$(document).submit(function(event){
     event.preventDefault()
-
     let check;
     let test = true;
 
@@ -37,8 +37,9 @@ function validateAll(event){
 
     if (test) {
         calculation()
+        updateUserDB()
     }
-}
+})
 
 /**
  * Updates the loan amount field based on the values of the home value and down payment fields.
@@ -51,13 +52,32 @@ function updateLoanAmt() {
         }
 
         /**
+         * Calls the calculation function on window load to prime outputs.
          * Attaches event listeners to the HomeVal and DownPay fields on window load.
          * These event listeners will call the updateLoanAmt function when their values change.
          */
         window.onload = function() {
+            calculation()
             document.getElementById("HomeVal").addEventListener("input", updateLoanAmt);
             document.getElementById("DownPay").addEventListener("input", updateLoanAmt);
+            document.getElementById("DownPay").addEventListener("input", validateDownPayment);
+
         };
+
+/**
+ * Validates that down payment is not greater than home value.
+ */
+function validateDownPayment() {
+    const homeVal = parseFloat(document.getElementById("HomeVal").value);
+    const downPay = parseFloat(document.getElementById("DownPay").value);
+    const downAlert = document.querySelector('input[id="DownPay"]');
+    if (downPay > homeVal) {
+        downAlert.setCustomValidity("Cannot be greater than home value.");
+        downAlert.reportValidity()
+    } else {
+        downAlert.setCustomValidity("")
+    }
+}
 
 /**
  * Validates a given input field and reports its validity status.
@@ -71,6 +91,36 @@ function validateInput(input) {
 }
 
 /**
+ * Sends validated data in JSON form to update database for logged-in users.
+ */
+function updateUserDB(){
+    const home = document.getElementById('HomeVal').value;
+    const down = document.getElementById('DownPay').value;
+    const loan = document.getElementById('LoanAmt').value;
+    const interest = document.getElementById('InterestRate').value;
+    const loanTerm = document.getElementById('LoanTerm').value;
+    const prop = document.getElementById('PropTax').value;
+    const an_income = document.getElementById('Income').value;
+    const credit = document.getElementById('Credit').value;
+    const carPay = document.getElementById('CarPay').value;
+    const studentPay = document.getElementById('StudentPay').value;
+    const PMI = document.getElementById('PrivateMortInsurance').value;
+    const home_insurance = document.getElementById('HomeInsurance').value;
+    const HOA = document.getElementById('HOA').value;
+
+    // Sends POST request to update user info in the database
+    $.ajax({
+    url: '/update_calculator_info',
+    type: 'POST',
+    contentType: "application/json",
+    headers: {'X-CSRFToken': csrf_token},
+    data: JSON.stringify({an_income: an_income, home: home, down: down, loan: loan, interest: interest,
+        loanTerm: loanTerm, prop: prop, credit: credit, carPay: carPay, studentPay: studentPay, PMI: PMI,
+        home_insurance: home_insurance, HOA: HOA})
+    })
+}
+
+/**
  * Performs mortgage calculations based on user input, updates the UI with calculated values.
  */
 function calculation(){
@@ -81,7 +131,6 @@ function calculation(){
     const interest = document.getElementById('InterestRate').value / 100;
     const loanTerm = document.getElementById('LoanTerm').value;
     const prop = document.getElementById('PropTax').value;
-    const loan_type = document.getElementById('LoanType').value;
     const an_income = document.getElementById('Income').value;
     const credit = document.getElementById('Credit').value;
     const carPay = document.getElementById('CarPay').value;
@@ -114,6 +163,9 @@ function calculation(){
     let debt_income_percent_mort = (total_mon_payment / mon_income) * 100
     let debt_income_mort_budget = mon_income - total_mon_payment
 
+    // Downpayment percent
+    let downpaypercent = (down / home) * 100
+
     document.getElementById('MonPayTotal').textContent=Number(total_mon_payment.toFixed(2)).toLocaleString()
     document.getElementById('MortMonTotal').textContent=Number(mort_Mon_Total.toFixed(2)).toLocaleString()
     document.getElementById('TotalMort').textContent=Number(total_mort.toFixed(2)).toLocaleString()
@@ -122,4 +174,6 @@ function calculation(){
     document.getElementById('DebtBudget').textContent=Number(debt_income_budget.toFixed(2)).toLocaleString()
     document.getElementById('DebtMort').textContent=Number(debt_income_percent_mort.toFixed(2)).toLocaleString()
     document.getElementById('DebtMortBudget').textContent=Number(debt_income_mort_budget.toFixed(2)).toLocaleString()
+    document.getElementById('DownPayPercent').textContent=Number(downpaypercent.toFixed(2)).toLocaleString()
+
 }

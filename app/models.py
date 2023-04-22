@@ -21,6 +21,23 @@ class CalendarEvents(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
+class CalculatorUserInputs(db.Model):
+    income = db.Column(db.Integer, nullable=False)
+    home_val = db.Column(db.Integer)
+    down_pay = db.Column(db.Integer)
+    loan_amt = db.Column(db.Integer, nullable=False)
+    interest_rate = db.Column(db.Numeric(2, 2), nullable=False)
+    loan_term = db.Column(db.Integer, nullable=False)
+    property_tax = db.Column(db.Integer)
+    home_insurance = db.Column(db.Integer)
+    monthly_hoa = db.Column(db.Integer)
+    pmi = db.Column(db.Numeric(2, 2))
+    credit_card_payments = db.Column(db.Integer)
+    car_payments = db.Column(db.Integer)
+    student_payments = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
+
+
 class ChecklistItems(db.Model):
     status = db.Column(db.Boolean, default=False)
     detail = db.Column(db.String(255))
