@@ -30,7 +30,7 @@ class SignUpForm(FlaskForm):
     email = StringField("Email:", render_kw={"placeholder": "Email"},
                         validators=[InputRequired(), Email('Valid email address required.'),
                                     Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
-                                           message="Invalid character in email address.")
+                                           message="Invalid or missing character(s) in email address.")
                                     ])
 
     confirm_email = StringField("Confirm Email:", render_kw={"placeholder": "Confirm email"},
@@ -79,7 +79,7 @@ class LoginForm(FlaskForm):
     email = StringField("Email:", render_kw={"placeholder": "Email"},
                         validators=[InputRequired(), Email('Valid email address required.'),
                                     Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
-                                           message="Invalid character in email address.")
+                                           message="Invalid or missing character(s) in email address.")
                                     ])
 
     # did not set password validators for login page; will flash message if invalid password
@@ -102,7 +102,7 @@ class ResetPasswordRequestForm(FlaskForm):
     email = StringField("Email:", render_kw={"placeholder": "Email"},
                         validators=[InputRequired(), Email('Valid email address required.'),
                                     Regexp("^[^\s\[\]<>/\\\\]+@[^\s\[\].<>/\\\\]+\.[^\s\[\].<>/\\\\]+$",
-                                           message="Invalid character in email address.")
+                                           message="Invalid or missing character(s) in email address.")
                                     ])
 
     submit = SubmitField('Reset Password')
