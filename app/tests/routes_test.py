@@ -1,28 +1,22 @@
 import json
 import re
-from unittest.mock import patch
 
 from flask import url_for
 import requests_mock
-from werkzeug.security import generate_password_hash
-from app import app, db, Users
-import pytest
+from app import app
 
 from app.models import ChecklistItems
 from app.routes import add_checklist_items, get_page_token
 
 
-from app.forms import LoginForm, ResetPasswordForm
+from app.forms import LoginForm
 from unittest.mock import patch
-
-from flask_mail import Mail, Message
 
 from werkzeug.security import generate_password_hash
 from app.models import Users
-from flask import current_app
+
 from app.forms import SignUpForm
 from app import db, create_app
-from datetime import datetime, timedelta
 import pytest
 
 @pytest.fixture
@@ -467,7 +461,7 @@ def client(ac_app):
     The test client is used to make requests to the app in tests.
 
     Args:
-        app: the app fixture
+        ac_app: the app fixture
 
     Returns: a test client instance for the Flask app
 
@@ -495,7 +489,7 @@ def test_signup_with_valid_data(client, ac_app):
     and displays a success message.
 
     :param client: Flask test client object
-    :param app: Flask application object
+    :param ac_app: Flask application object
     """
 
     with ac_app.app_context():
@@ -523,9 +517,8 @@ def test_signup_with_existing_email(client, ac_app):
     an error message.
 
     :param client: Flask test client object
-    :param app: Flask application object
+    :param ac_app: Flask application object
     """
-
 
     #  # Create a SignUpForm object and populate it with data that matches the existing user's email
     with ac_app.app_context():
