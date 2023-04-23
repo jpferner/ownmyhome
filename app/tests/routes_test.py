@@ -41,7 +41,8 @@ def test_home_page_displayed(test_client):
 def test_checklist_page_displayed(test_client):
     # Create a test user in the database
     hashed_password = generate_password_hash('test_password', "sha256")
-    test_user = Users(first_name='Test2', last_name='User2', email='testuser2@example.com', password_hash=hashed_password)
+    test_user = Users(first_name='Test2', last_name='User2', email='testuser2@example.com',
+                      password_hash=hashed_password)
     db.session.add(test_user)
     db.session.commit()
 
@@ -279,11 +280,11 @@ def test_checklist_update_status(test_client):
 
     # Assert that the response is OK (status code 200) and the 'success' key in the JSON response is True
     assert response.status_code == 200
-    assert response.json['success'] == True
+    assert response.json['success'] is True
 
     # Assert that the status of the test item has been updated in the database
     updated_item = ChecklistItems.query.filter_by(user_id=test_user.id, order_no=1).first()
-    assert updated_item.status == True
+    assert updated_item.status is True
 
     # Clean up the test item and test user
     db.session.delete(test_item)
@@ -539,6 +540,7 @@ def test_signup_with_existing_email(client, ac_app):
         assert response.status_code == 200  # 200 is the HTTP status code for redirect
         assert b'Sign up unsuccessful.\n\n Please try again using a different email address' in response.data
 
+
 def test_signup_with_invalid_first_name(client):
     # submit the signup form with an invalid first name
     response = client.post('/sign-up', data={
@@ -569,6 +571,7 @@ def test_signup_with_invalid_password(client):
     assert b'Password must have at least one uppercase character, \nat least one lowercase character, ' \
            b'\nat least one number,\n and at least one special character.' in response.data
 
+
 def test_signup_with_mismatched_emails(client):
     # submit the signup form with emails that do not match
     response = client.post('/sign-up', data={
@@ -583,6 +586,7 @@ def test_signup_with_mismatched_emails(client):
     print(response.data)
     # assert that the form validation error is shown to the user
     assert b'Emails do not match. Please try again.' in response.data
+
 
 def test_signup_without_accepting_tos(client):
     # submit the signup form with emails that do not match
@@ -600,6 +604,7 @@ def test_signup_without_accepting_tos(client):
     # assert that the form validation error is shown to the user
     assert b'This field is required.' in response.data
 
+
 # Andrew Court - Testing the Login Page Where Users Log In to Access Their Accounts
 def test_login_url(client):
     """
@@ -613,6 +618,7 @@ def test_login_url(client):
     """
     response = client.get('/login')
     assert response.status_code == 200
+
 
 def test_log_in_to_account_success(client, ac_app):
     """
@@ -634,6 +640,7 @@ def test_log_in_to_account_success(client, ac_app):
         # Check that the HTTP response status code is 200 OK and the success message is displayed
         assert response.status_code == 200
         assert b'Welcome, Max' in response.data
+
 
 def test_login_wrong_password(client, ac_app):
     """
@@ -658,6 +665,7 @@ def test_login_wrong_password(client, ac_app):
         assert response.status_code == 200
         assert b'Invalid Email and/or Password. Please try again.' in response.data
 
+
 def test_login_wrong_password_correct_email(client, ac_app):
     """
         Test function that checks for an error message when a user tries to log in to their account
@@ -680,6 +688,7 @@ def test_login_wrong_password_correct_email(client, ac_app):
         # Check that the HTTP response status code is 200 OK and the success message is displayed
         assert response.status_code == 200
         assert b'Invalid Email and/or Password. Please try again.' in response.data
+
 
 def test_login_user_does_not_exist(client, ac_app):
     """
@@ -752,6 +761,7 @@ def test_password_reset_page_url(client):
     print(f" THIS IS IT: {response.data}")
     assert response.status_code == 200
 
+
 def test_password_reset_request_invalid_email(client):
     """
         Test that a password reset request with an invalid email address returns an error message.
@@ -768,6 +778,7 @@ def test_password_reset_request_invalid_email(client):
     ), follow_redirects=True)
     assert response.status_code == 200
     assert b'Invalid or missing character(s) in email address.' in response.data
+
 
 def test_password_reset_request_success_and_redirects_to_login(client):
     """
@@ -789,6 +800,7 @@ def test_password_reset_request_success_and_redirects_to_login(client):
            b'with this email,\na password reset link will be sent to your inbox shortly.\n\n ' \
            b'Please check your email and follow the instructions\nto reset your password.\n\n' \
            b'Important: Password reset link expires in 10 minutes.' in response.data
+
 
 def test_password_reset_request_fail_user_not_in_database_and_redirects_to_login(client):
     """Test that a user is redirected to the login page and shown a password reset message if they try to submit a
@@ -841,6 +853,7 @@ def test_password_reset_valid_token_for_successful_password_change(client, ac_ap
         # Check that the response status code is 200 and response message indicates a failed reset password attempt
         assert response.status_code == 200
         assert b'Password reset successful! Please log into your account.' in response.data
+
 
 def test_password_reset_with_mismatch_passwords_on_change_password_page(client, ac_app):
     # Create a test user object and add the test user to the database
@@ -896,6 +909,7 @@ def test_password_reset_for_expired_token_for_failed_password_change_attempt(cli
         # Check that the response message indicates that the password reset failed
         assert b'The password reset link has expired. \n Please request a new one.' in response.data
 
+
 def test_password_reset_for_invalid_token_for_failed_password_change_attempt(client, ac_app):
     """Test that the password reset fails when using an invalid token.
 
@@ -928,4 +942,3 @@ def test_password_reset_for_invalid_token_for_failed_password_change_attempt(cli
     # Check that the response message indicates that the password reset failed as user is redirect to Reset
     # Password Request page
     assert b'The password reset link is invalid or has expired.\nPlease try again.' in response.data
-
