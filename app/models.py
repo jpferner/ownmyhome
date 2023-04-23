@@ -125,7 +125,8 @@ class Users(db.Model, UserMixin):
     def verify_reset_password_token(token):
         try:
             id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
-            user = Users.query.get(id)
+            # user = Users.query.get(id)  #Test triggered deprecation warning
+            user = db.session.query(Users).filter_by(id=id).first()
             if not user:
                 return None
             # check if the token has expired
