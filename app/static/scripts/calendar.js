@@ -1,13 +1,13 @@
 let container = document.querySelector(".container");
 
 //global variables
-var monthEl = $(".c-main");
-var dataCel = $(".c-cal__cel");
-var dateObj = new Date();
-var month = dateObj.getMonth() + 1;
-var day = dateObj.getDate();
-var year = dateObj.getFullYear();
-var monthText = [
+const monthEl = $(".c-main");
+const dataCel = $(".c-cal__cel");
+const dateObj = new Date();
+const month = dateObj.getMonth() + 1;
+let day = dateObj.getDate();
+let year = dateObj.getFullYear();
+const monthText = [
   "January",
   "February",
   "March",
@@ -19,27 +19,26 @@ var monthText = [
   "September",
   "October",
   "November",
-  "December"
+  "December",
 ];
-var indexMonth = month;
-var todayBtn = $(".c-today__btn");
-var addBtn = $(".js-event__add");
-var saveBtn = $(".js-event__save");
-var closeBtn = $(".js-event__close");
-var winCreator = $(".js-event__creator");
-var inputDate = $(this).data();
+let indexMonth = month;
+const todayBtn = $(".c-today__btn");
+const addBtn = $(".js-event__add");
+const saveBtn = $(".js-event__save");
+const closeBtn = $(".js-event__close");
+const winCreator = $(".js-event__creator");
+const inputDate = $(this).data();
 today = moment().format("YYYY-MM-DD");
-var events = {};
-var eventForm = {};
-var selectedDay = moment().format("YYYY-MM-DD");
-var currentEventId = 0;
-const csrf_token = $('meta[name=csrf-token]').attr('content');
-
+let events = {};
+let eventForm = {};
+let selectedDay = moment().format("YYYY-MM-DD");
+const currentEventId = 0;
+const csrf_token = $("meta[name=csrf-token]").attr("content");
 
 // ------ set default events -------
 
 $(document).ready(function () {
-    loadEvents();
+  loadEvents();
 });
 
 /**
@@ -48,53 +47,51 @@ $(document).ready(function () {
  * them in the events object. Finally, it calls updateEventList() to display the events.
  */
 function loadEvents() {
-     $.ajax({
-            url: '/calendar/events',
-            type: 'GET',
-            headers: {
-                'X-CSRFToken': csrf_token
-            },
-            success: function (response) {
-                events = {};
+  $.ajax({
+    url: "/calendar/events",
+    type: "GET",
+    headers: {
+      "X-CSRFToken": csrf_token,
+    },
+    success: function (response) {
+      events = {};
 
-                response.forEach(function (event) {
-                    var datetime = moment(event.time)
-                    var date = datetime.format("YYYY-MM-DD");
-                    var time = datetime.format("HH:mm:ss");
+      response.forEach(function (event) {
+        const datetime = moment(event.time);
+        const date = datetime.format("YYYY-MM-DD");
+        const time = datetime.format("HH:mm:ss");
 
-                    var endDatetime = moment(event.endTime);
-                    var endTime = endDatetime.format("HH:mm:ss");
+        const endDatetime = moment(event.endTime);
+        const endTime = endDatetime.format("HH:mm:ss");
 
-                    if (!(date in events)) {
-                        events[date] = [];
-
-                    }
-                    events[date].push({
-                        id: event.id,
-                        name: event.name,
-                        notes: event.notes,
-                        date: date,
-                        time: time,
-                        endTime: endTime
-                    });
-
-                });
-                console.log(response);
-                updateEventList();
-            }
+        if (!(date in events)) {
+          events[date] = [];
+        }
+        events[date].push({
+          id: event.id,
+          name: event.name,
+          notes: event.notes,
+          date: date,
+          time: time,
+          endTime: endTime,
         });
-
+      });
+      console.log(response);
+      updateEventList();
+    },
+  });
 }
 
 // ------ functions control -------
 
 //button of the current day
-todayBtn.on("click", function() {
+todayBtn.on("click", function () {
+  let step;
   if (month < indexMonth) {
-    var step = indexMonth % month;
+    step = indexMonth % month;
     movePrev(step, true);
   } else if (month > indexMonth) {
-    var step = month - indexMonth;
+    step = month - indexMonth;
     moveNext(step, true);
   }
   selectedDay = moment().format("YYYY-MM-DD");
@@ -103,19 +100,18 @@ todayBtn.on("click", function() {
   $(".c-aside__num").text(selectedDay.slice(8));
   $(".c-aside__month").text(monthText[month - 1]);
 
-  dataCel.each(function() {
-  if ($(this).data("day") === selectedDay) {
-    $(this).addClass("isSelected");
-    //fillEventSidebar($(this));
-  }
-  else {
-    $(this).removeClass("isSelected");
-  }
-});
+  dataCel.each(function () {
+    if ($(this).data("day") === selectedDay) {
+      $(this).addClass("isSelected");
+      //fillEventSidebar($(this));
+    } else {
+      $(this).removeClass("isSelected");
+    }
+  });
 });
 
 //highlight the cel of current day
-dataCel.each(function() {
+dataCel.each(function () {
   if ($(this).data("day") === today) {
     $(this).addClass("isToday");
     $(this).addClass("isSelected");
@@ -129,126 +125,118 @@ dataCel.each(function() {
  *  from the eventForm object.
  */
 function openForm() {
-
   $("#event_form_error").text("");
   $("#event_form_error").removeClass("isVisible");
-    winCreator.addClass("isVisible");
+  winCreator.addClass("isVisible");
   $("body").addClass("overlay");
   document.querySelector('input[name="date"]').value = eventForm.date;
   document.querySelector('input[name="name"]').value = eventForm.name;
   document.querySelector('textarea[name="notes"]').value = eventForm.notes;
   document.querySelector('input[name="time"]').value = eventForm.time;
   document.querySelector('input[name="end_time"]').value = eventForm.endTime;
-
 }
 
 //window event creator
-addBtn.on("click", function() {
-  dataCel.each(function() {
+addBtn.on("click", function () {
+  dataCel.each(function () {
     if ($(this).hasClass("isSelected")) {
       today = $(this).data("day");
-
     }
   });
 
   eventForm = {
-  id: undefined,
-  date: today,
-  notes: "",
-  name: "",
-  time: "",
-  endTime: ""
-  }
+    id: undefined,
+    date: today,
+    notes: "",
+    name: "",
+    time: "",
+    endTime: "",
+  };
 
   openForm();
-
 });
 
-closeBtn.on("click", function() {
+closeBtn.on("click", function () {
   winCreator.removeClass("isVisible");
   $("body").removeClass("overlay");
 });
-saveBtn.on("click", function() {
-  var inputName = $("input[name=name]").val();
-  var inputDate = $("input[name=date]").val();
-  var inputTime = $("input[name=time]").val();
-  var inputEndTime = $('input[name=end_time]').val();
-  var inputNotes = $("textarea[name=notes]").val();
+saveBtn.on("click", function () {
+  const inputName = $("input[name=name]").val();
+  const inputDate = $("input[name=date]").val();
+  const inputTime = $("input[name=time]").val();
+  const inputEndTime = $("input[name=end_time]").val();
+  const inputNotes = $("textarea[name=notes]").val();
 
   console.log(inputEndTime);
 
-
   $.ajax({
+    url:
+      eventForm.id !== undefined
+        ? "/calendar/events/" + eventForm.id
+        : "/calendar/events",
+    type: eventForm.id !== undefined ? "PUT" : "POST",
+    headers: {
+      "X-CSRFToken": csrf_token,
+    },
+    contentType: "application/json",
+    data: JSON.stringify({
+      name: inputName,
+      notes: inputNotes,
+      time: inputDate + "T" + inputTime + ".000000",
+      endTime: inputDate + "T" + inputEndTime + ".000000",
+    }),
+    success: function (response) {
+      if (eventForm.id !== undefined) {
+        events[eventForm.date] = events[eventForm.date].filter(function (
+          event
+        ) {
+          return event.id !== response.id;
+        });
+      }
+      const datetime = moment(response.time);
+      const date = datetime.format("YYYY-MM-DD");
+      const time = datetime.format("HH:mm:ss");
 
-            url: eventForm.id !== undefined ? "/calendar/events/" + eventForm.id : "/calendar/events",
-            type: eventForm.id !== undefined ? 'PUT' : 'POST',
-            headers: {
-                'X-CSRFToken': csrf_token
-            },
-            contentType: 'application/json',
-            data: JSON.stringify({
-                name: inputName,
-                notes: inputNotes,
-                time: inputDate + 'T' + inputTime + ".000000",
-                endTime: inputDate + 'T' + inputEndTime + ".000000"
-            }),
-            success: function (response) {
-                if (eventForm.id !== undefined) {
-                    events[eventForm.date] = events[eventForm.date].filter(function (event) {
-                        return event.id !== response.id;
-                    });
+      const endDatetime = moment(response.endTime);
+      const endTime = endDatetime.format("HH:mm:ss");
 
-                }
-                var datetime = moment(response.time);
-                var date = datetime.format("YYYY-MM-DD");
-                var time = datetime.format("HH:mm:ss");
+      if (!(date in events)) {
+        events[date] = [];
+      }
+      events[date].push({
+        id: response.id,
+        name: response.name,
+        notes: response.notes,
+        date: date,
+        time: time,
+        endTime: endTime,
+      });
+      updateEventList();
 
-                var endDatetime = moment(response.endTime);
-                var endTime = endDatetime.format("HH:mm:ss");
+      winCreator.removeClass("isVisible");
+      $("body").removeClass("overlay");
+      $("#addEvent")[0].reset();
+    },
 
-
-                if (!(date in events)) {
-                    events[date] = [];
-
-                }
-                events[date].push({
-                    id: response.id,
-                    name: response.name,
-                    notes: response.notes,
-                    date: date,
-                    time: time,
-                    endTime: endTime
-                });
-                updateEventList();
-
-                winCreator.removeClass("isVisible");
-                $("body").removeClass("overlay");
-                $("#addEvent")[0].reset();
-            },
-
-            error: function (xhr, status, error) {
-
-
-                console.log(xhr.responseJSON);
-                var errorMessage = "";
-                if (xhr.responseJSON.code === "OVERLAPPING_TIMES") {
-                    errorMessage = "Event times overlap with another event.";
-                } else if (xhr.responseJSON.code === "INVALID_END_TIME") {
-                    errorMessage = "End time is before the start time.";
-                    console.log(errorMessage);
-                } else if (xhr.responseJSON.code === "TIME_PAST_OCCURRENCE") {
-                    errorMessage = "Event time has already passed.";
-                } else if (xhr.responseJSON.code === "NO_EVENT_NAME") {
-                    errorMessage = "Please enter a name for the event."
-                }
-                else {
-                    errorMessage = "Unknown error occurred, please try again."
-                }
-                $("#event_form_error").addClass("isVisible");
-                $("#event_form_error").text(errorMessage);
-            }
+    error: function (xhr, status, error) {
+      console.log(xhr.responseJSON);
+      let errorMessage = "";
+      if (xhr.responseJSON.code === "OVERLAPPING_TIMES") {
+        errorMessage = "Event times overlap with another event.";
+      } else if (xhr.responseJSON.code === "INVALID_END_TIME") {
+        errorMessage = "End time is before the start time.";
+        console.log(errorMessage);
+      } else if (xhr.responseJSON.code === "TIME_PAST_OCCURRENCE") {
+        errorMessage = "Event time has already passed.";
+      } else if (xhr.responseJSON.code === "NO_EVENT_NAME") {
+        errorMessage = "Please enter a name for the event.";
+      } else {
+        errorMessage = "Unknown error occurred, please try again.";
+      }
+      $("#event_form_error").addClass("isVisible");
+      $("#event_form_error").text(errorMessage);
+    },
   });
-
 });
 
 /**
@@ -260,33 +248,41 @@ function updateEventList() {
   $(".c-aside__eventList").empty();
   const currentDate = selectedDay;
 
-
   if (currentDate in events) {
-    events[currentDate].sort(function(a, b) {
-        return a.time.localeCompare(b.time);
+    events[currentDate].sort(function (a, b) {
+      return a.time.localeCompare(b.time);
     });
 
     events[currentDate].forEach(function (event) {
-        $(".c-aside__eventList").append(
-            "<div class='c-aside__event'>" +
-            "<span class=c-aside__name>" + event.name + "</span>" +
-            "<span> @ " + moment(event.time, 'HH:mm:ss').format('h:mm A') + " - " + moment(event.endTime, 'HH:mm:ss').format('h:mm A') + "</span>" +
-            "<p>" +
-            event.notes +
-            "</p>" +
-            "<a name='remove' class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event <span class='fa fa-trash-o'></span></a>" +
-            "<a name='edit' class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>edit event <span class='fa fa-trash-o'></span></a>" +
-            "</div>"
-
-        );
-
-
-
+      $(".c-aside__eventList").append(
+        "<div class='c-aside__event'>" +
+          "<span class=c-aside__name>" +
+          event.name +
+          "</span>" +
+          "<span> @ " +
+          moment(event.time, "HH:mm:ss").format("h:mm A") +
+          " - " +
+          moment(event.endTime, "HH:mm:ss").format("h:mm A") +
+          "</span>" +
+          "<p>" +
+          event.notes +
+          "</p>" +
+          "<a name='remove' class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" +
+          currentDate +
+          "' data-id='" +
+          event.id +
+          "'>remove event <span class='fa fa-trash-o'></span></a>" +
+          "<a name='edit' class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" +
+          currentDate +
+          "' data-id='" +
+          event.id +
+          "'>edit event <span class='fa fa-trash-o'></span></a>" +
+          "</div>"
+      );
     });
     console.log(events[currentDate]);
   }
   console.log(currentDate);
-
 }
 
 /**
@@ -295,25 +291,22 @@ function updateEventList() {
  * @param element
  */
 function removeEvent(element) {
-    var eventId = parseInt(element.getAttribute("data-id"));
-    var eventDate = element.getAttribute("data-date");
+  const eventId = parseInt(element.getAttribute("data-id"));
+  const eventDate = element.getAttribute("data-date");
 
-    $.ajax({
-            url: '/calendar/events/' + eventId,
-            type: 'DELETE',
-            headers: {
-                'X-CSRFToken': csrf_token
-            },
-            success: function (response) {
-                events[eventDate] = events[eventDate].filter(function (event) {
-                    return event.id !== eventId;
-                });
-                updateEventList();
-            }
-        });
-
-
-
+  $.ajax({
+    url: "/calendar/events/" + eventId,
+    type: "DELETE",
+    headers: {
+      "X-CSRFToken": csrf_token,
+    },
+    success: function (response) {
+      events[eventDate] = events[eventDate].filter(function (event) {
+        return event.id !== eventId;
+      });
+      updateEventList();
+    },
+  });
 }
 
 /**
@@ -323,34 +316,30 @@ function removeEvent(element) {
  * @param element
  */
 function editEvent(element) {
-    var eventId = parseInt(element.getAttribute("data-id"));
-    var eventDate = element.getAttribute("data-date");
+  const eventId = parseInt(element.getAttribute("data-id"));
+  const eventDate = element.getAttribute("data-date");
 
-    events[eventDate].forEach(function (event) {
-        if (eventId === event.id) {
-            eventForm = {
-                id: event.id,
-                name: event.name,
-                notes: event.notes,
-                date: event.date,
-                time: event.time.substring(0, 5),
-                endTime: event.endTime.substring(0,5)
-            };
-        }
-    });
-    openForm();
+  events[eventDate].forEach(function (event) {
+    if (eventId === event.id) {
+      eventForm = {
+        id: event.id,
+        name: event.name,
+        notes: event.notes,
+        date: event.date,
+        time: event.time.substring(0, 5),
+        endTime: event.endTime.substring(0, 5),
+      };
+    }
+  });
+  openForm();
 }
 
-dataCel.on("click", function() {
-  var thisEl = $(this);
-  var thisDay = $(this)
-  .attr("data-day")
-  .slice(8);
-  var thisMonth = $(this)
-  .attr("data-day")
-  .slice(5, 7);
+dataCel.on("click", function () {
+  const thisEl = $(this);
+  const thisDay = $(this).attr("data-day").slice(8);
+  const thisMonth = $(this).attr("data-day").slice(5, 7);
 
-//  fillEventSidebar($(this));
+  //  fillEventSidebar($(this));
   selectedDay = year + "-" + thisMonth + "-" + thisDay;
 
   if (selectedDay < moment().format("YYYY-MM-DD")) {
@@ -368,7 +357,6 @@ dataCel.on("click", function() {
 
   dataCel.removeClass("isSelected");
   thisEl.addClass("isSelected");
-
 });
 
 /**
@@ -379,12 +367,12 @@ dataCel.on("click", function() {
  * @param indexNext
  */
 function moveNext(fakeClick, indexNext) {
-  for (var i = 0; i < fakeClick; i++) {
+  for (let i = 0; i < fakeClick; i++) {
     $(".c-main").css({
-      left: "-=100%"
+      left: "-=100%",
     });
     $(".c-paginator__month").css({
-      left: "-=100%"
+      left: "-=100%",
     });
     switch (true) {
       case indexNext:
@@ -402,12 +390,12 @@ function moveNext(fakeClick, indexNext) {
  * @param indexPrev
  */
 function movePrev(fakeClick, indexPrev) {
-  for (var i = 0; i < fakeClick; i++) {
+  for (let i = 0; i < fakeClick; i++) {
     $(".c-main").css({
-      left: "+=100%"
+      left: "+=100%",
     });
     $(".c-paginator__month").css({
-      left: "+=100%"
+      left: "+=100%",
     });
     switch (true) {
       case indexPrev:
@@ -431,13 +419,13 @@ function movePrev(fakeClick, indexPrev) {
 function buttonsPaginator(buttonId, mainClass, monthClass, next, prev) {
   switch (true) {
     case next:
-      $(buttonId).on("click", function() {
+      $(buttonId).on("click", function () {
         if (indexMonth >= 2) {
           $(mainClass).css({
-            left: "+=100%"
+            left: "+=100%",
           });
           $(monthClass).css({
-            left: "+=100%"
+            left: "+=100%",
           });
           indexMonth -= 1;
         }
@@ -445,13 +433,13 @@ function buttonsPaginator(buttonId, mainClass, monthClass, next, prev) {
       });
       break;
     case prev:
-      $(buttonId).on("click", function() {
+      $(buttonId).on("click", function () {
         if (indexMonth <= 11) {
           $(mainClass).css({
-            left: "-=100%"
+            left: "-=100%",
           });
           $(monthClass).css({
-            left: "-=100%"
+            left: "-=100%",
           });
           indexMonth += 1;
         }

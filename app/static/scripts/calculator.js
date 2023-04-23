@@ -47,8 +47,7 @@ $(document).submit(function(event){
 function updateLoanAmt() {
     const homeVal = parseFloat(document.getElementById("HomeVal").value);
     const downPay = parseFloat(document.getElementById("DownPay").value);
-    const loanAmt = homeVal - downPay;
-    document.getElementById("LoanAmt").value = loanAmt;
+    document.getElementById("LoanAmt").value = homeVal - downPay;
         }
 
         /**
@@ -163,8 +162,8 @@ function calculation(){
     let debt_income_percent_mort = (total_mon_payment / mon_income) * 100
     let debt_income_mort_budget = mon_income - total_mon_payment
 
-    // Downpayment percent
-    let downpaypercent = (down / home) * 100
+    // Down payment percent
+    let down_pay_percent = (down / home) * 100
 
     document.getElementById('MonPayTotal').textContent=Number(total_mon_payment.toFixed(2)).toLocaleString()
     document.getElementById('MortMonTotal').textContent=Number(mort_Mon_Total.toFixed(2)).toLocaleString()
@@ -174,6 +173,6 @@ function calculation(){
     document.getElementById('DebtBudget').textContent=Number(debt_income_budget.toFixed(2)).toLocaleString()
     document.getElementById('DebtMort').textContent=Number(debt_income_percent_mort.toFixed(2)).toLocaleString()
     document.getElementById('DebtMortBudget').textContent=Number(debt_income_mort_budget.toFixed(2)).toLocaleString()
-    document.getElementById('DownPayPercent').textContent=Number(downpaypercent.toFixed(2)).toLocaleString()
+    document.getElementById('DownPayPercent').textContent=Number(down_pay_percent.toFixed(2)).toLocaleString()
 
 }

@@ -1,6 +1,6 @@
 /**
  * Initialize a slideshow with randomized images.
- * @param {string} imagePath - The path to the images folder.
+ * @param {string} imagePath - The path to the images' folder.
  */
 function initSlideshow(imagePath) {
     // List of image file names
