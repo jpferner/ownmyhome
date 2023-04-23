@@ -3,7 +3,6 @@ from sqlalchemy import PrimaryKeyConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 
-
 # Import JWT library for creating and decoding JSON Web Tokens used for authentication
 import jwt
 
@@ -126,9 +125,9 @@ class Users(db.Model, UserMixin):
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
+            id_from_token = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
             # user = Users.query.get(id)  #Test triggered deprecation warning
-            user = db.session.query(Users).filter_by(id=id).first()
+            user = db.session.query(Users).filter_by(id=id_from_token).first()
             if not user:
                 return None
             # check if the token has expired
@@ -136,8 +135,9 @@ class Users(db.Model, UserMixin):
             if datetime.utcnow() > token_exp:
                 return None
             return user
-        except:
+        except jwt.exceptions.DecodeError:
             return None
+
 
 class Property(db.Model):
     """ Creates the property table and needed relationships"""

@@ -542,10 +542,15 @@ def change_password(token):
          the Change Password page is reloaded (while the token is valid).
 """
 
-    # Call the verify_reset_password_token method of the Users class in models.py
-    # verifies that the token is valid and returns corresponding user object if it is valid still
-    user = Users.verify_reset_password_token(token)
-    if not user:
+    try:
+        # Call the verify_reset_password_token method of the Users class in models.py
+        # verifies that the token is valid and returns corresponding user object if it is valid still
+        user = Users.verify_reset_password_token(token)
+    except jwt.exceptions.ExpiredSignatureError:
+        flash('The password reset link has expired. \n Please request a new one.', category='error')
+        return redirect(url_for('reset_password_request'))
+
+    if not user:  # token is invalid
         flash('The password reset link is invalid or has expired.\n'
               'Please try again.', category='error')
         return redirect(url_for('reset_password_request'))

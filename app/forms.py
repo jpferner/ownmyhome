@@ -116,9 +116,9 @@ class ResetPasswordForm(FlaskForm):
                                                      message='Password should be at least %(min)d characters long'),
                                               Regexp(
                                                   r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s])[^\s<>./\\#$]*$',
-                                                  message="Password must contain at least one uppercase, \n"
-                                                          "one lowercase, one number,\n and one special character \n"
-                                                          "excluding [< > / \\ %] and spaces.")
+                                                  message="Password must have at least one uppercase character, \n"
+                                                          "at least one lowercase character, \nat least one number,\n "
+                                                          "and at least one special character.")
                                               ], id='password_hash')
 
     # checkbox to show the user's password in plain text

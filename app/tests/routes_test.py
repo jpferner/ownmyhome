@@ -893,4 +893,38 @@ def test_password_reset_for_expired_token_for_failed_password_change_attempt(cli
         assert response.status_code == 200
 
         # Check that the response message indicates that the password reset failed
-        assert b'The password reset link is invalid or has expired.\nPlease try again.' in response.data
+        assert b'The password reset link has expired. \n Please request a new one.' in response.data
+
+def test_password_reset_for_invalid_token_for_failed_password_change_attempt(client, ac_app):
+    """Test that the password reset fails when using an invalid token.
+
+    The test generates an invalid token and attempts to reset the password using the invalid token.
+    It then verifies that the password reset fails and redirects the user back to the password reset
+    request page.
+
+    Args:
+        client: The Flask test client.
+        ac_app: The Flask application context.
+
+    Returns:
+        None.
+    """
+    # Generate an invalid token that will not match any user in the database
+    token = "invalid_token"
+
+    # Create a dictionary to hold the form data
+    form_data = {
+        'password_hash': 'Newpassword123!',
+        'confirm_password_hash': 'Newpassword123'
+    }
+
+    # Post the form data to the reset password endpoint with the invalid token
+    response = client.post(f'/change_password/{token}', data=form_data, follow_redirects=True)
+    print(response.data)
+    # Check that the response status code is 200
+    assert response.status_code == 200
+
+    # Check that the response message indicates that the password reset failed as user is redirect to Reset
+    # Password Request page
+    assert b'The password reset link is invalid or has expired.\nPlease try again.' in response.data
+
