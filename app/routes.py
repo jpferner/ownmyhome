@@ -6,21 +6,19 @@ from flask_login import login_user, login_required, logout_user, current_user, A
 from flask_wtf.csrf import validate_csrf
 
 import requests
-
+from google.auth import jwt
 
 from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
 from datetime import timedelta
 
 import bleach
-
 # required import for password reset
 from flask_mail import Message
 from app import mail
-
-
 from app import app
 from flask import current_app
+
 
 # Define routes
 @app.route("/")
@@ -516,6 +514,7 @@ def reset_password_request():
 
     return render_template('reset_password_request.html', title='Reset Password', form=form)
 
+
 @app.route('/change_password/<token>', methods=['GET', 'POST'])
 def change_password(token):
     """This function handles requests to the '/change_password/<token>' route. When a user follows a password
@@ -576,7 +575,6 @@ def change_password(token):
         flash('Password reset successful! Please log into your account.', category='success')
         return redirect(url_for('login'))
     return render_template('change_password.html', title='Reset Password', form=form)
-
 
 
 @app.route('/calculator', methods=['GET', 'POST'])

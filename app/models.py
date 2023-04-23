@@ -8,9 +8,7 @@ import jwt
 
 from flask import current_app
 
-
 from app import db, app
-
 
 
 class CalendarEvents(db.Model):
