@@ -451,8 +451,8 @@ def ac_app():
         db.session.delete(user)
         db.session.commit()
 
-        # Drop all tables
-        db.drop_all()
+        # # Drop all tables
+        # db.drop_all()
 
 
 @pytest.fixture
