@@ -10,7 +10,7 @@ import requests
 
 from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
-from datetime import date, timedelta
+from datetime import timedelta
 
 import bleach
 
@@ -222,20 +222,14 @@ def calendar():
     #
     # events = CalendarEvents.query.filter_by(user_id=current_user.id).all()
 
-
-
     return render_template('calendar.html', events=events)
+
 
 @app.route('/calendar/events', methods=['GET', 'POST'])
 @login_required
 def events():
 
-
-
     if request.method == 'POST':
-
-
-
         name = request.json['name']
         notes = request.json['notes']
         time = datetime.fromisoformat(request.json['time'])
@@ -260,8 +254,10 @@ def events():
         db.session.commit()
         return jsonify(map_events(new_event))
 
-    events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time > datetime.now()).all()
+    events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time > datetime.now()
+                                         ).all()
     return jsonify([map_events(event) for event in events])
+
 
 @app.route('/calendar/events/<id>', methods=['PUT', 'DELETE'])
 @login_required
@@ -280,13 +276,13 @@ def edit_remove_event(id):
 
         start_of_nextday = start_of_day + timedelta(days=1)
 
-        events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time >= start_of_day, CalendarEvents.time < start_of_nextday, CalendarEvents.id != id).all()
+        events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time >=
+                                             start_of_day, CalendarEvents.time < start_of_nextday, CalendarEvents.id !=
+                                             id).all()
 
         for event in events:
-            if (time < event.time and end_time > event.time) or (time > event.time and time < event.end_time):
+            if (time < event.time < end_time) or (event.time < time < event.end_time):
                 return jsonify({"code": "OVERLAPPING_TIMES"}), 400
-
-
 
         event = CalendarEvents.query.filter_by(id=id, user_id=current_user.id).first()
 
@@ -317,6 +313,7 @@ def map_events(event):
         "time": event.time.isoformat(),
         "endTime": event.end_time.isoformat()
     }
+
 
 # the Login Page
 @app.route('/login', methods=['GET', 'POST'])
@@ -579,7 +576,6 @@ def reset_token(token):
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
-#@login_required
 def calculator():
     """
         Renders the calculator.html template.
