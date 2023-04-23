@@ -82,12 +82,12 @@ class LoginForm(FlaskForm):
                                            message="Invalid or missing character(s) in email address.")
                                     ])
 
+    # did not set password validators for login page; will flash message if invalid password
     password_hash = PasswordField("Password:", render_kw={"placeholder": "Password"},
                                   validators=[InputRequired(),
-                                              Regexp(
-                                                  r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^ \t\r\n])[^\s<>\\/]*$",
-                                                  message="Password cannot contain ., <, >, /, \\, "
-                                                          "or spaces.")], id='password_hash')
+                                              Regexp(r"^[^\s\[\.<>/\\\\]*$",
+                                                     message="Password cannot contain ., <, >, /, \\, "
+                                                             "or spaces.")], id='password_hash')
 
     # checkbox to show the user's password in plain text
     show_password = BooleanField('Show password', id='check')

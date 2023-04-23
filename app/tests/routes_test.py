@@ -534,8 +534,6 @@ def test_signup_with_existing_email(client, ac_app):
         # Send a POST request to the sign-up route with the form data and follow the redirect
         response = client.post('/sign-up', data=form.data, follow_redirects=True)
 
-        print(response.data)
-
         # Check that the HTTP response status code is 200 OK and the success message is displayed
         assert response.status_code == 200  # 200 is the HTTP status code for redirect
         assert b'Sign up unsuccessful.\n\n Please try again using a different email address' in response.data
@@ -566,9 +564,9 @@ def test_signup_with_invalid_password(client):
         'confirm_password_hash': 'Testing12<3!',
         'accept_tos': True}, follow_redirects=True)
 
-    print(response.data)
     # assert that the form validation error is shown to the user
-    assert b'Password cannot contain ., &lt;, &gt;, /, \\, or spaces.' in response.data
+    assert b'Password must have at least one uppercase character, \nat least one lowercase character, ' \
+           b'\nat least one number,\n and at least one special character.' in response.data
 
 def test_signup_with_mismatched_emails(client):
     # submit the signup form with emails that do not match
