@@ -7,8 +7,10 @@ from datetime import datetime, timedelta
 # Import JWT library for creating and decoding JSON Web Tokens used for authentication
 import jwt
 
-from app import db
 from flask import current_app
+
+
+from app import db, app
 
 
 

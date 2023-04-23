@@ -46,11 +46,12 @@ class SignUpForm(FlaskForm):
                                               Length(min=8,
                                                      message='Password should be at least %(min)d characters long'),
                                               Regexp(
-                                                  r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^ \t\r\n])[^\s<>\\/]*$",
+                                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s])[^\s<>./\\#$]*$',
                                                   message="Password must have at least one uppercase character, \n"
                                                           "at least one lowercase character, \nat least one number,\n "
                                                           "and at least one special character.")
                                               ], id='password_hash')
+    r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$"
 
     # checkbox to show the user's password in plain text
     show_password = BooleanField('Show password', id='check')
@@ -114,7 +115,7 @@ class ResetPasswordForm(FlaskForm):
                                               Length(min=8,
                                                      message='Password should be at least %(min)d characters long'),
                                               Regexp(
-                                                  r"^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^ \t\r\n])[^\s<>\\/]*$",
+                                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s])[^\s<>./\\#$]*$',
                                                   message="Password must contain at least one uppercase, \n"
                                                           "one lowercase, one number,\n and one special character \n"
                                                           "excluding [< > / \\ %] and spaces.")

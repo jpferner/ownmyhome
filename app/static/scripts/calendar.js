@@ -1,38 +1,38 @@
 let container = document.querySelector(".container");
 
 //global variables
-var monthEl = $(".c-main");
-var dataCel = $(".c-cal__cel");
-var dateObj = new Date();
-var month = dateObj.getMonth() + 1;
-var day = dateObj.getDate();
-var year = dateObj.getFullYear();
-var monthText = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December"
+const monthEl = $(".c-main");
+const dataCel = $(".c-cal__cel");
+const dateObj = new Date();
+const month = dateObj.getMonth() + 1;
+let day = dateObj.getDate();
+let year = dateObj.getFullYear();
+const monthText = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
 ];
-var indexMonth = month;
-var todayBtn = $(".c-today__btn");
-var addBtn = $(".js-event__add");
-var saveBtn = $(".js-event__save");
-var closeBtn = $(".js-event__close");
-var winCreator = $(".js-event__creator");
-var inputDate = $(this).data();
+let indexMonth = month;
+const todayBtn = $(".c-today__btn");
+const addBtn = $(".js-event__add");
+const saveBtn = $(".js-event__save");
+const closeBtn = $(".js-event__close");
+const winCreator = $(".js-event__creator");
+const inputDate = $(this).data();
 today = moment().format("YYYY-MM-DD");
-var events = {};
-var eventForm = {};
-var selectedDay = moment().format("YYYY-MM-DD");
-var currentEventId = 0;
+let events = {};
+let eventForm = {};
+let selectedDay = moment().format("YYYY-MM-DD");
+const currentEventId = 0;
 const csrf_token = $('meta[name=csrf-token]').attr('content');
 
 
@@ -58,12 +58,12 @@ function loadEvents() {
                 events = {};
 
                 response.forEach(function (event) {
-                    var datetime = moment(event.time)
-                    var date = datetime.format("YYYY-MM-DD");
-                    var time = datetime.format("HH:mm:ss");
+                    const datetime = moment(event.time);
+                    const date = datetime.format("YYYY-MM-DD");
+                    const time = datetime.format("HH:mm:ss");
 
-                    var endDatetime = moment(event.endTime);
-                    var endTime = endDatetime.format("HH:mm:ss");
+                    const endDatetime = moment(event.endTime);
+                    const endTime = endDatetime.format("HH:mm:ss");
 
                     if (!(date in events)) {
                         events[date] = [];
@@ -90,12 +90,13 @@ function loadEvents() {
 
 //button of the current day
 todayBtn.on("click", function() {
-  if (month < indexMonth) {
-    var step = indexMonth % month;
-    movePrev(step, true);
+  let step;
+    if (month < indexMonth) {
+        step = indexMonth % month;
+        movePrev(step, true);
   } else if (month > indexMonth) {
-    var step = month - indexMonth;
-    moveNext(step, true);
+        step = month - indexMonth;
+        moveNext(step, true);
   }
   selectedDay = moment().format("YYYY-MM-DD");
   updateEventList();
@@ -169,14 +170,13 @@ closeBtn.on("click", function() {
   $("body").removeClass("overlay");
 });
 saveBtn.on("click", function() {
-  var inputName = $("input[name=name]").val();
-  var inputDate = $("input[name=date]").val();
-  var inputTime = $("input[name=time]").val();
-  var inputEndTime = $('input[name=end_time]').val();
-  var inputNotes = $("textarea[name=notes]").val();
+    const inputName = $("input[name=name]").val();
+    const inputDate = $("input[name=date]").val();
+    const inputTime = $("input[name=time]").val();
+    const inputEndTime = $('input[name=end_time]').val();
+    const inputNotes = $("textarea[name=notes]").val();
 
-  console.log(inputEndTime);
-
+    console.log(inputEndTime);
 
   $.ajax({
 
@@ -199,13 +199,12 @@ saveBtn.on("click", function() {
                     });
 
                 }
-                var datetime = moment(response.time);
-                var date = datetime.format("YYYY-MM-DD");
-                var time = datetime.format("HH:mm:ss");
+                const datetime = moment(response.time);
+                const date = datetime.format("YYYY-MM-DD");
+                const time = datetime.format("HH:mm:ss");
 
-                var endDatetime = moment(response.endTime);
-                var endTime = endDatetime.format("HH:mm:ss");
-
+                const endDatetime = moment(response.endTime);
+                const endTime = endDatetime.format("HH:mm:ss");
 
                 if (!(date in events)) {
                     events[date] = [];
@@ -227,10 +226,8 @@ saveBtn.on("click", function() {
             },
 
             error: function (xhr, status, error) {
-
-
                 console.log(xhr.responseJSON);
-                var errorMessage = "";
+                let errorMessage = "";
                 if (xhr.responseJSON.code === "OVERLAPPING_TIMES") {
                     errorMessage = "Event times overlap with another event.";
                 } else if (xhr.responseJSON.code === "INVALID_END_TIME") {
@@ -243,7 +240,6 @@ saveBtn.on("click", function() {
                 $("#event_form_error").text(errorMessage);
             }
   });
-
 });
 
 /**
@@ -272,18 +268,12 @@ function updateEventList() {
             "</p>" +
             "<a class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>remove event <span class='fa fa-trash-o'></span></a>" +
             "<a class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" + currentDate + "' data-id='" + event.id + "'>edit event <span class='fa fa-trash-o'></span></a>" +
-
             "</span> </div>"
-
         );
-
-
-
     });
     console.log(events[currentDate]);
   }
   console.log(currentDate);
-
 }
 
 /**
@@ -292,8 +282,8 @@ function updateEventList() {
  * @param element
  */
 function removeEvent(element) {
-    var eventId = parseInt(element.getAttribute("data-id"));
-    var eventDate = element.getAttribute("data-date");
+    const eventId = parseInt(element.getAttribute("data-id"));
+    const eventDate = element.getAttribute("data-date");
 
     $.ajax({
             url: '/calendar/events/' + eventId,
@@ -308,9 +298,6 @@ function removeEvent(element) {
                 updateEventList();
             }
         });
-
-
-
 }
 
 /**
@@ -320,8 +307,8 @@ function removeEvent(element) {
  * @param element
  */
 function editEvent(element) {
-    var eventId = parseInt(element.getAttribute("data-id"));
-    var eventDate = element.getAttribute("data-date");
+    const eventId = parseInt(element.getAttribute("data-id"));
+    const eventDate = element.getAttribute("data-date");
 
     events[eventDate].forEach(function (event) {
         if (eventId === event.id) {
@@ -339,17 +326,16 @@ function editEvent(element) {
 }
 
 dataCel.on("click", function() {
-  var thisEl = $(this);
-  var thisDay = $(this)
-  .attr("data-day")
-  .slice(8);
-  var thisMonth = $(this)
-  .attr("data-day")
-  .slice(5, 7);
+    const thisEl = $(this);
+    const thisDay = $(this)
+        .attr("data-day")
+        .slice(8);
+    const thisMonth = $(this)
+        .attr("data-day")
+        .slice(5, 7);
 
 //  fillEventSidebar($(this));
   selectedDay = year + "-" + thisMonth + "-" + thisDay;
-
   if (selectedDay < today) {
     $(".js-event__add").hide();
     $(".js-event__remove").hide();
@@ -376,7 +362,7 @@ dataCel.on("click", function() {
  * @param indexNext
  */
 function moveNext(fakeClick, indexNext) {
-  for (var i = 0; i < fakeClick; i++) {
+  for (let i = 0; i < fakeClick; i++) {
     $(".c-main").css({
       left: "-=100%"
     });
@@ -399,7 +385,7 @@ function moveNext(fakeClick, indexNext) {
  * @param indexPrev
  */
 function movePrev(fakeClick, indexPrev) {
-  for (var i = 0; i < fakeClick; i++) {
+  for (let i = 0; i < fakeClick; i++) {
     $(".c-main").css({
       left: "+=100%"
     });
