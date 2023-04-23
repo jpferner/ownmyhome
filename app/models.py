@@ -3,7 +3,6 @@ from sqlalchemy import PrimaryKeyConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
-from app import db
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from app import db, app
 
