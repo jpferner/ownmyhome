@@ -19,6 +19,7 @@ from app.forms import SignUpForm
 from app import db, create_app
 import pytest
 
+
 @pytest.fixture
 def test_client():
     app.config['TESTING'] = True

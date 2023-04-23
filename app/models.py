@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
 
 # Import JWT library for creating and decoding JSON Web Tokens used for authentication
-import jwt
+import jwt as jwt
 
 from flask import current_app
 
