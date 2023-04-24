@@ -37,7 +37,7 @@
             <span class="c-paginator__year">2023</span>
         </div>
         <div class="c-sort">
-            <a class="o-btn c-today__btn" href="javascript:">TODAY</a>
+            <a class="o-btn c-today__btn" href="javascript:;">TODAY</a>
         </div>
     </div>
 </div>
@@ -47,15 +47,13 @@
   // fill the month table with column headings
 function day_title(day_name) {
     document.write("<div class='c-cal__col'>" + day_name + "</div>");
-  }
-  // fills the month table with numbers
-function fill_table(month, month_length, indexMonth) {
-    day = 1;
-    // begin the new month table
-    document.write("<div class='c-main c-main-" + indexMonth + "'>");
-    //document.write("<b>"+month+" "+year+"</b>")
+}
 
-    // column headings
+function fill_table(month, month_length, indexMonth) {
+    let i;
+    day = 1;
+    document.write("<div class='c-main c-main-" + indexMonth + "'>");
+
     document.write("<div class='c-cal__row'>");
     day_title("Sun");
     day_title("Mon");
@@ -66,96 +64,61 @@ function fill_table(month, month_length, indexMonth) {
     day_title("Sat");
     document.write("</div>");
 
-    // pad cells before first day of month
     document.write("<div class='c-cal__row'>");
-    for (var i = 1; i < start_day; i++) {
-      if (start_day > 7) {
-      } else {
-        document.write("<div class='c-cal__cel__padding'></div>");
-      }
+    for (i = 1; i < start_day; i++) {
+        if (start_day <= 7) {
+            document.write("<div class='c-cal__cel'></div>");
+        }
     }
 
-    // fills the month table with numbers
-    function fill_table(month, month_length, indexMonth) {
-        let i;
-        day = 1;
-        // begin the new month table
-        document.write("<div class='c-main c-main-" + indexMonth + "'>");
-        //document.write("<b>"+month+" "+year+"</b>")
+    for (i = start_day; i < 8; i++) {
+        document.write(
+            "<div data-day='" + year + "-" +
+            indexMonth +
+            "-0" +
+            day +
+            "' class='c-cal__cel'><p>" +
+            day +
+            "</p></div>"
+        );
+        day++;
+    }
+    document.write("</div>");
 
-        // column headings
+    while (day <= month_length) {
         document.write("<div class='c-cal__row'>");
-        day_title("Sun");
-        day_title("Mon");
-        day_title("Tue");
-        day_title("Wed");
-        day_title("Thu");
-        day_title("Fri");
-        day_title("Sat");
-        document.write("</div>");
-
-        // pad cells before first day of month
-        document.write("<div class='c-cal__row'>");
-        for (i = 1; i < start_day; i++) {
-            if (start_day > 7) {
+        for (i = 1; i <= 7 && day <= month_length; i++) {
+            if (day >= 1 && day <= 9) {
+                document.write(
+                    "<div data-day='" + year + "-" +
+                    indexMonth +
+                    "-0" +
+                    day +
+                    "' class='c-cal__cel'><p>" +
+                    day +
+                    "</p></div>"
+                );
+                day++;
             } else {
-                document.write("<div class='c-cal__cel'></div>");
+                document.write(
+                    "<div data-day='" + year + "-" +
+                    indexMonth +
+                    "-" +
+                    day +
+                    "' class='c-cal__cel'><p>" +
+                    day +
+                    "</p></div>"
+                );
+                day++;
             }
         }
-
-        // fill the first week of days
-        for (i = start_day; i < 8; i++) {
-            document.write(
-                "<div data-day='" + year + "-" +
-                indexMonth +
-                "-0" +
-                day +
-                "'class='c-cal__cel'><p>" +
-                day +
-                "</p></div>"
-            );
-            day++;
-        }
         document.write("</div>");
-
-        // fill the remaining weeks
-        while (day <= month_length) {
-            document.write("<div class='c-cal__row'>");
-            for (i = 1; i <= 7 && day <= month_length; i++) {
-                if (day >= 1 && day <= 9) {
-                    document.write(
-                        "<div data-day='" + year + "-" +
-                        indexMonth +
-                        "-0" +
-                        day +
-                        "'class='c-cal__cel'><p>" +
-                        day +
-                        "</p></div>"
-                    );
-                    day++;
-                } else {
-                    document.write(
-                        "<div data-day='" + year + "-" +
-                        indexMonth +
-                        "-" +
-                        day +
-                        "' class='c-cal__cel'><p>" +
-                        day +
-                        "</p></div>"
-                    );
-                    day++;
-                }
-            }
-            document.write("</div>");
-            // the first day of the next month
-            start_day = i;
-        }
-
-        document.write("</div>");
+        start_day = i;
     }
+    document.write("</div>");
+}
 
 </script>
-​
 <div class="wrapper">
     <a class="c-add o-btn js-event__add" name="add" href="javascript:;">add event <span class="fa fa-plus"></span></a>
     <div class="add-btn-wrapper">
@@ -164,7 +127,7 @@ function fill_table(month, month_length, indexMonth) {
     <div class="c-calendar">
 
         <div class="c-calendar__style c-aside">
-            <a class="c-add o-btn js-event__add" href="javascript:">add event <span class="fa fa-plus"></span></a>
+            <a class="c-add o-btn js-event__add" href="javascript:;">add event <span class="fa fa-plus"></span></a>
             <div class="c-aside__day">
                 <span class="c-aside__num"></span> <span class="c-aside__month"></span>
             </div>
@@ -174,8 +137,6 @@ function fill_table(month, month_length, indexMonth) {
         </div>
         <div class="c-cal__container c-calendar__style">
             <script>
-
-
                 // first day of the week of the new year
                 today = new Date("January 1, " + year);
                 start_day = today.getDay() + 1;
