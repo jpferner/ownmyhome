@@ -50,8 +50,7 @@
 <h3> Calendar page </h3>
 <ol>
 <li> User must have firefox binary installed </li>
-<li> Run Tests/calendar.py</li>
-<li> Add -u/--url localhost:5000 option if running from local build (will default to deployed server) </li>
+<li> Run `python Tests/calendar.py <url for testing>`</li>
 <li> Enter email and password of existing OwnMyHome account with no calendar events added</li>
 <li> Test program will run with no errors for a successful test </li>
 </ol>
