@@ -50,7 +50,11 @@
 <h3> Calendar page </h3>
 <ol>
 <li> User must have firefox binary installed </li>
+<<<<<<< HEAD
 <li> Run `python Tests/calendar.py (url for testing)`</li>
+=======
+<li> Run `python Tests/calendar.py (url for testing)`</li>
+>>>>>>> f783d8a94b6b985dbf57e123b220c043a081b9e4
 <li> Enter email and password of existing OwnMyHome account with no calendar events added</li>
 <li> Test program will run with no errors for a successful test </li>
 </ol>

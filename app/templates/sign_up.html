@@ -77,6 +77,14 @@
 
         {% endif %}
 
+    <!-- Error Message for Confirm Password field -->
+        {% if form.accept_tos.errors %}
+            {% for error in form.accept_tos.errors %}
+                <pre class="error">{{ error }}</pre>
+            {% endfor %}
+
+        {% endif %}
+
         <form method="POST">
             {{ form.hidden_tag() }}  <!-- creates CSRF token -->
 
