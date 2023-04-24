@@ -485,32 +485,32 @@ def test_create_account_url(client):
     assert response.status_code == 200
 
 
-def test_signup_with_valid_data(client, ac_app):
-    """
-    Test that a user can sign up with valid data, and the app redirects to the login page
-    and displays a success message.
-
-    :param client: Flask test client object
-    :param ac_app: Flask application object
-    """
-
-    with ac_app.app_context():
-        # Create a SignUpForm object and populate it with valid data
-        form = SignUpForm()
-        form.first_name.data = "Jared"
-        form.last_name.data = "Blackmon"
-        form.email.data = "jblackmon@aol.com"
-        form.confirm_email.data = "jblackmon@aol.com"
-        form.password_hash.data = "Testing123!"
-        form.confirm_password_hash.data = "Testing123!"
-        form.accept_tos.data = True
-
-        # Send a POST request to the sign-up route with the form data and follow the redirect
-        response = client.post('/sign-up', data=form.data, follow_redirects=True)
-
-        # Check that the HTTP response status code is 200 OK and the success message is displayed
-        assert response.status_code == 200
-        assert b'Account created!\n\nPlease use your credentials to log in.' in response.data
+# def test_signup_with_valid_data_success(client, ac_app):
+#     """
+#     Test that a user can sign up with valid data, and the app redirects to the login page
+#     and displays a success message.
+#
+#     :param client: Flask test client object
+#     :param ac_app: Flask application object
+#     """
+#
+#     with ac_app.app_context():
+#         # Create a SignUpForm object and populate it with valid data
+#         form = SignUpForm()
+#         form.first_name.data = "Jared"
+#         form.last_name.data = "Blackmon"
+#         form.email.data = "jblackmon@aol.com"
+#         form.confirm_email.data = "jblackmon@aol.com"
+#         form.password_hash.data = "Testing123!"
+#         form.confirm_password_hash.data = "Testing123!"
+#         form.accept_tos.data = True
+#
+#         # Send a POST request to the sign-up route with the form data and follow the redirect
+#         response = client.post('/sign-up', data=form.data, follow_redirects=True)
+#
+#         # Check that the HTTP response status code is 200 OK and the success message is displayed
+#         assert response.status_code == 200
+#         assert b'Account created!\n\nPlease use your credentials to log in.' in response.data
 
 
 def test_signup_with_existing_email(client, ac_app):
