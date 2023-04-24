@@ -30,7 +30,7 @@ class CalculatorUserInputs(db.Model):
     property_tax = db.Column(db.Integer)
     home_insurance = db.Column(db.Integer)
     monthly_hoa = db.Column(db.Integer)
-    pmi = db.Column(db.Numeric(3, 2))
+    pmi = db.Column(db.Numeric(5, 2))
     credit_card_payments = db.Column(db.Integer)
     car_payments = db.Column(db.Integer)
     student_payments = db.Column(db.Integer)
