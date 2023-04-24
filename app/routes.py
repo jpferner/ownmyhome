@@ -6,17 +6,18 @@ from flask_login import login_user, login_required, logout_user, current_user, A
 from flask_wtf.csrf import validate_csrf
 
 import requests
-
+from google.auth import jwt
 
 from app.forms import SignUpForm, LoginForm, ResetPasswordRequestForm, ResetPasswordForm
 from app.models import *
 from datetime import timedelta
 
 import bleach
-
 # required import for password reset
 from flask_mail import Message
 from app import mail
+from app import app
+from flask import current_app
 
 
 # Define routes
@@ -235,6 +236,9 @@ def events():
         time = datetime.fromisoformat(request.json['time'])
         end_time = datetime.fromisoformat(request.json['endTime'])
 
+        if name == '':
+            return jsonify({"code": "NO_EVENT_NAME"}), 400
+
         if end_time < time:
             return jsonify({"code": "INVALID_END_TIME"}), 400
 
@@ -245,8 +249,14 @@ def events():
                                              CalendarEvents.time < start_of_nextday).all()
 
         for event in events:
-            if (time < event.time and end_time > event.time) or (time > event.time and time < event.end_time):
+            if (time <= event.time and end_time > event.time) or (end_time >= event.end_time and time < event.end_time):
                 return jsonify({"code": "OVERLAPPING_TIMES"}), 400
+
+        if time < datetime.now():
+            return jsonify({"code": "TIME_PAST_OCCURRENCE"}), 400
+
+        name = bleach.clean(name, strip=True)
+        notes = bleach.clean(notes, strip=True)
 
         new_event = CalendarEvents(name=name, notes=notes, time=time, end_time=end_time, user_id=current_user.id)
 
@@ -269,6 +279,9 @@ def edit_remove_event(id):
         time = datetime.fromisoformat(request.json['time'])
         end_time = datetime.fromisoformat(request.json['endTime'])
 
+        if name == '':
+            return jsonify({"code": "NO_EVENT_NAME"}), 400
+
         if end_time < time:
             return jsonify({"code": "INVALID_END_TIME"}), 400
 
@@ -284,12 +297,13 @@ def edit_remove_event(id):
             if (time < event.time < end_time) or (event.time < time < event.end_time):
                 return jsonify({"code": "OVERLAPPING_TIMES"}), 400
 
+        if time < datetime.now():
+            return jsonify({"code": "TIME_PAST_OCCURRENCE"}), 400
+
         event = CalendarEvents.query.filter_by(id=id, user_id=current_user.id).first()
 
-        event.name = name
-        event.notes = notes
-        event.time = time
-        event.end_time = end_time
+        event.name = bleach.clean(name, strip=True)
+        event.notes = bleach.clean(notes, strip=True)
 
         db.session.commit()
 
@@ -444,114 +458,116 @@ def logout():
         Returns: A redirect to the home page.
     """
     logout_user()
-    flash("You have successfully logged out!", category='logout')
+    flash("You have successfully logged out!", category='success')
     return redirect(url_for('login'))
 
 
 def send_password_reset_email(user):
-    """
-           Sends the password reset email to user that includes the link for a new password.
+    """Sends a password reset email to the user's email address.
 
-           If the form data is valid, the user is sent a password reset email.
-           If the form data is invalid, an error message is flashed and the user is redirected back to
-           the Password Reset Request page.
+        Args:
+            user (Users): A Users object representing the user who requested a password reset.
 
-           Returns:
-               None
-    """
+        Returns:
+            None
 
-    token = user.get_reset_token()
-    message = Message('Password Reset Request',
-                      sender=app.config['MAIL_USERNAME'],
-                      recipients=[user.email])
+        Raises:
+            None
+        """
 
-    # _external=True will send an absolute URL
-    message.body = f"""To reset your password, please follow this link:"
-                   
-                   {url_for('reset_token', token=token, _external=True)}
-                   
+    # Generate the password reset link that includes the JWT token
+    token = Users.generate_password_reset_token(user)
+
+    # Generate the password reset link that includes the JWT token. _external=True sends absolute URL
+    reset_url = url_for('change_password', token=token, _external=True)
+
+    # Send the email
+    msg = Message(subject="Password Reset Request", sender=current_app.config['MAIL_USERNAME'], recipients=[user.email])
+    # msg.body = f"Click the following link to reset your password: {reset_url}"
+    msg.body = f"""To reset your password, please follow the link below:
+
+                   {reset_url}
+
                    If you ignore this email, no changes will be made regarding your account.
-                   Thank you!
+                   
+                   Thank you and have a wonderful day!
                    """
-    mail.send(message)
+    mail.send(msg)
 
 
-@app.route('/reset_password', methods=['GET', 'POST'])
+@app.route('/reset_password_request', methods=['GET', 'POST'])
 def reset_password_request():
     """
-           Renders the Password Rest Request page of the website and handles
-           password reset request submissions.
+    Route for requesting a password reset link. If a valid email address is provided,
+    a password reset link will be sent to the associated account's email address.
 
-           If the form data is valid, the send_password_reset_email is called and the user
-           is sent a password reset email with a link. The user is shown a successful message
-           and redirected to the login page.
-           If the form data is invalid, an error message is flashed and the user is redirected back to the
-           password reset page
+    If the form is submitted, the email is checked against the database of registered users.
+    If an associated account is found, a password reset email is sent to the user. If no associated
+    account is found, no email is sent and a success message is displayed.
 
-           Returns:
-               - If the request is a GET request: The rendered password reset request page HTML.
-               - If the request is a POST request and the form data is valid: A redirect to the login page and
-               password reset email is sent.
-               - If the request is a POST request and the form data is invalid: The rendered password reset request HTML
-               with error messages.
+    Returns:
+        If the form is submitted, redirects the user to the login page and displays a success message.
+        Otherwise, renders the reset_password_request.html template with the title 'Reset Password'
+        and the ResetPasswordRequestForm.
     """
-    password_reset_form = ResetPasswordRequestForm()
-    if password_reset_form.validate_on_submit():
-        user = Users.query.filter_by(email=password_reset_form.email.data.lower()).first()
 
-        # if the user exists
+    form = ResetPasswordRequestForm()
+    if form.validate_on_submit():
+        user = Users.query.filter_by(email=form.email.data.lower()).first()
+
         if user:
+            # print(f"user: {user}")
             send_password_reset_email(user)
-            flash('Thank you for submitting your email address.\n\n'
-                  'If an account is associated with this email, a\n'
-                  'password reset link will be sent to your inbox shortly.\n\n'
-                  'Please check your email and follow the instructions\n'
-                  'to reset your password.\n\n'
-                  'Important: Password reset link expires in 5 minutes.', category='success')
-            return redirect(url_for('login'))
-        else:
-            # flash("We're sorry. There is no account associated with the email provided.", category='error')
-            # flash('Thank you for submitting your email address.\n\nIf an account is associated with this email,\n'
-            #       'a password reset link will be sent to your inbox shortly.\n\n'
-            #       ' Please check your email and follow the instructions\nto reset your password.\n\n'
-            #       'Important: Password reset link expires in 5 minutes.', category='success')
-            flash('Thank you for submitting your email address.\n\n'
-                  'If an account is associated with this email, a\n'
-                  'password reset link will be sent to your inbox shortly.\n\n'
-                  'Please check your email and follow the instructions\n'
-                  'to reset your password.\n\n'
-                  'Important: Password reset link expires in 5 minutes.', category='success')
-            return redirect(url_for('login'))
-    return render_template('reset_password_request.html', title='Password Reset Request', form=password_reset_form, )
+        # flash('Check your email for the instructions to reset your password')
+        flash('Thank you for submitting your email address.\n\nIf an account is associated with this email,\n'
+              'a password reset link will be sent to your inbox shortly.\n\n'
+              ' Please check your email and follow the instructions\nto reset your password.\n\n'
+              'Important: Password reset link expires in 10 minutes.', category='success')
+        return redirect(url_for('login'))
+
+    return render_template('reset_password_request.html', title='Reset Password', form=form)
 
 
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_token(token):
-    """
-           Renders the change password page of the website and handles user password submissions.
-           Also, responsible for generating a valid token for the password reset link.
+@app.route('/change_password/<token>', methods=['GET', 'POST'])
+def change_password(token):
+    """This function handles requests to the '/change_password/<token>' route. When a user follows a password
+    reset link sent to them via email, they will be directed to this route with the reset token
+    included in the URL.
 
-           If the token is valid, the user clicks the reset link and  is redirected to the change password page.
-           If the token is expired, an error message is flashed and the user is redirected back to the
-            password reset request page.
+    Handles the password reset process by verifying the reset token, rendering a password reset form,
+    and updating the user's password in the database if the form submission is successful
 
-           Returns:
-               - If the request is a GET request: The rendered change password page HTML.
-               - If the request is a POST request and the token is valid: A redirect to the Change Password
-               page where the user is prompted to change their password.
-               - If the request is a POST request and the form data is valid: A redirect to the login page and
-               user is prompted to log in.
-               - If the request is a POST request and the token is invalid: An error message is shown and the
-                user is redirect to the Password Reset Request page
-               - If the request is a POST request and the form data is invalid: User is shown an error message and
-               the Change Password page is reloaded (while the token is valid).
-    """
 
-    user = Users.verify_reset_token(token)
-    if user is None:  # redirect the user to the request password reset page
-        flash("Invalid or expired token. Please try again.")
+     If the token is valid, the user clicks the reset link and  is redirected to the change password page.
+     If the token is expired, an error message is flashed and the user is redirected back to the
+      password reset request page.
+
+     Returns:
+         - If the request is a GET request: The rendered change password page HTML.
+         - If the request is a POST request and the token is valid: A redirect to the Change Password
+         page where the user is prompted to change their password.
+         - If the request is a POST request and the form data is valid: A redirect to the login page and
+         user is prompted to log in.
+         - If the request is a POST request and the token is invalid: An error message is shown and the
+          user is redirected to the Password Reset Request page
+         - If the request is a POST request and the form data is invalid: User is shown an error message and
+         the Change Password page is reloaded (while the token is valid).
+"""
+
+    try:
+        # Call the verify_reset_password_token method of the Users class in models.py
+        # verifies that the token is valid and returns corresponding user object if it is valid still
+        user = Users.verify_reset_password_token(token)
+    except jwt.exceptions.ExpiredSignatureError:
+        flash('The password reset link has expired. \n Please request a new one.', category='error')
         return redirect(url_for('reset_password_request'))
 
+    if not user:  # token is invalid
+        flash('The password reset link is invalid or has expired.\n'
+              'Please try again.', category='error')
+        return redirect(url_for('reset_password_request'))
+
+    # create a ResetPasswordForm object and if token is valid, pass it to the template 'change_password.html'
     form = ResetPasswordForm()
     if form.validate_on_submit():
         # sanitize/clean all fields on the sign-up form before storing in database
@@ -569,10 +585,9 @@ def reset_token(token):
 
         # commit the password change to the database
         db.session.commit()
-        flash('Password change successful! Please log into your account.', category='success')
-
+        flash('Password reset successful! Please log into your account.', category='success')
         return redirect(url_for('login'))
-    return render_template('change_password.html', title="Reset Password", form=form)
+    return render_template('change_password.html', title='Reset Password', form=form)
 
 
 @app.route('/calculator', methods=['GET', 'POST'])
