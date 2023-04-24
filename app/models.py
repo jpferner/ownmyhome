@@ -1,9 +1,13 @@
 from flask_login import UserMixin
 from sqlalchemy import PrimaryKeyConstraint
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, timedelta
 
-from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
+# Import JWT library for creating and decoding JSON Web Tokens used for authentication
+import jwt as jwt
+
+from flask import current_app
+
 from app import db, app
 
 
@@ -54,8 +58,10 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
-    email = db.Column(db.String(150), unique=True)  # no user can have an email that's already in db
+    email = db.Column(db.String(150), unique=True, name='unique_email')  # no user can have an email already in the db
     password_hash = db.Column(db.String(150))  # hashed password
+    reset_password_token = db.Column(db.String(150), unique=True, name='unique_reset_password_token')
+    reset_password_token_expiration = db.Column(db.DateTime)
 
     favorite_properties = db.relationship('UserFavorite', back_populates='user')
 
@@ -103,27 +109,32 @@ class Users(db.Model, UserMixin):
         """
         return check_password_hash(self.password_hash, password)
 
-    def get_reset_token(self, expires_secs=300):
-        """
-        This method creates the token, using itsdangerous, that will verify
-        the person and account that will have their password reset
-        Args:
-            expires_secs: integer number of seconds for expiration
-
-        Returns: a signed string serialized with the internal serializer
-
-        """
-        serial = Serializer(app.config['SECRET_KEY'], expires_secs)
-        return serial.dumps({'user_id': self.id}).decode('utf-8')
+    def generate_password_reset_token(self, expires_in=600):
+        now = datetime.utcnow()
+        self.reset_password_token = jwt.encode(
+            {'reset_password': self.id, 'exp': now + timedelta(seconds=expires_in)},
+            current_app.config['SECRET_KEY'],
+            algorithm='HS256'
+        )
+        self.reset_password_token_expiration = now + timedelta(seconds=expires_in)
+        db.session.commit()
+        return self.reset_password_token
 
     @staticmethod
-    def verify_reset_token(token):
-        serial = Serializer(app.config['SECRET_KEY'])
+    def verify_reset_password_token(token):
         try:
-            user_id = serial.loads(token)['user_id']
-        except:
+            id_from_token = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
+            # user = Users.query.get(id)  #Test triggered deprecation warning
+            user = db.session.query(Users).filter_by(id=id_from_token).first()
+            if not user:
+                return None
+            # check if the token has expired
+            token_exp = user.reset_password_token_expiration
+            if datetime.utcnow() > token_exp:
+                return None
+            return user
+        except jwt.exceptions.DecodeError:
             return None
-        return Users.query.get(user_id)
 
 
 class Property(db.Model):

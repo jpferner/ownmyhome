@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 7e8d2f1f6e23
+Revision ID: a88e0d0acaa7
 Revises: 
-Create Date: 2023-04-21 14:39:11.045749
+Create Date: 2023-04-23 18:27:45.781683
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '7e8d2f1f6e23'
+revision = 'a88e0d0acaa7'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -22,10 +22,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('first_name', sa.String(length=150), nullable=True),
     sa.Column('last_name', sa.String(length=150), nullable=True),
-    sa.Column('email', sa.String(length=150), nullable=True),
+    sa.Column('unique_email', sa.String(length=150), nullable=True),
     sa.Column('password_hash', sa.String(length=150), nullable=True),
+    sa.Column('unique_reset_password_token', sa.String(length=150), nullable=True),
+    sa.Column('reset_password_token_expiration', sa.DateTime(), nullable=True),
     sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('email')
+    sa.UniqueConstraint('unique_email'),
+    sa.UniqueConstraint('unique_reset_password_token')
     )
     op.create_table('calculator_user_inputs',
     sa.Column('income', sa.Integer(), nullable=False),
