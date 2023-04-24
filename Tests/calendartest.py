@@ -339,8 +339,8 @@ if __name__ == '__main__':
     #                     help='email for existing OwnMyHome account')
     # parser.add_argument('-p', '--password', metavar='password', required=True,
     #                     help='password for existing OwnMyHome account')
-    parser.add_argument('-u', '--url', metavar='url', required=False, default="http://flask-ownmyhome.herokuapp.com/",
-                        help='option to specify url for server')
+    parser.add_argument('url', metavar='url',
+                        help='url used for local testing (e.g. localhost:5000)')
     args = parser.parse_args()
     main(args.url)
 
