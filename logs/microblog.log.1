@@ -1,0 +1,96 @@
+2023-04-21 14:35:56,771 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 14:38:16,322 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 14:53:41,995 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 14:54:27,931 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:03:33,716 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:05:44,023 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:06:16,824 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:07:29,758 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:13:02,361 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:13:38,187 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:14:12,013 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 15:15:34,542 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 16:28:29,549 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 16:28:48,333 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 16:30:35,341 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-21 16:30:47,215 ERROR: Exception on /reset_password_request [POST] [in /Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py:1741]
+Traceback (most recent call last):
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/routes.py", line 479, in reset_password_request
+    reset_token = generate_reset_token(password_reset_form.email.data, app.config['SECRET_KEY'], app.config['RESET_TOKEN_EXPIRATION'])
+  File "/Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/routes.py", line 467, in generate_reset_token
+    token = jwe.serialize_compact(header, payload, secret_key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7516/jwe.py", line 109, in serialize_compact
+    wrapped = alg.wrap(enc, protected, key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7518/jwe_algs.py", line 115, in wrap
+    return self.wrap_cek(cek, key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7518/jwe_algs.py", line 106, in wrap_cek
+    self._check_key(op_key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7518/jwe_algs.py", line 101, in _check_key
+    raise ValueError(
+ValueError: A key of size 256 bits is required.
+2023-04-21 17:52:13,548 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:89]
+2023-04-21 17:52:27,259 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:89]
+2023-04-21 17:52:39,729 ERROR: Exception on /reset_password_request [POST] [in /Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py:1741]
+Traceback (most recent call last):
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/routes.py", line 487, in reset_password_request
+    reset_token = generate_reset_token(user.email, app.config['RESET_TOKEN_EXPIRATION'])
+  File "/Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/routes.py", line 471, in generate_reset_token
+    token = jwe.serialize_compact(header, payload, secret_key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7516/jwe.py", line 109, in serialize_compact
+    wrapped = alg.wrap(enc, protected, key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7518/jwe_algs.py", line 115, in wrap
+    return self.wrap_cek(cek, key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7518/jwe_algs.py", line 106, in wrap_cek
+    self._check_key(op_key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7518/jwe_algs.py", line 101, in _check_key
+    raise ValueError(
+ValueError: A key of size 128 bits is required.
+2023-04-21 17:56:43,789 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:89]
+2023-04-21 17:56:57,312 ERROR: Exception on /reset_password_request [POST] [in /Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py:1741]
+Traceback (most recent call last):
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 2525, in wsgi_app
+    response = self.full_dispatch_request()
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1822, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1820, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/flask/app.py", line 1796, in dispatch_request
+    return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)
+  File "/Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/routes.py", line 487, in reset_password_request
+    reset_token = generate_reset_token(user.email, app.config['RESET_TOKEN_EXPIRATION'])
+  File "/Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/routes.py", line 471, in generate_reset_token
+    token = jwe.serialize_compact(header, payload, secret_key)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/jose/rfc7516/jwe.py", line 127, in serialize_compact
+    msg = to_bytes(payload)
+  File "/Users/andrewcourt/PycharmProjects/venv/venv_csc450/lib/python3.10/site-packages/authlib/common/encoding.py", line 15, in to_bytes
+    return bytes(x)
+TypeError: 'str' object cannot be interpreted as an integer
+2023-04-22 12:59:07,339 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 13:44:43,520 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 13:52:24,223 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 14:40:23,045 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 14:41:23,848 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 14:43:43,884 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 14:45:50,715 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 14:52:56,609 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 14:54:34,177 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 15:01:46,949 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 15:02:36,255 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 15:12:14,342 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
+2023-04-22 15:12:44,416 INFO: Microblog startup [in /Users/andrewcourt/PycharmProjects/csc450-sp23-project-team6/app/__init__.py:84]
