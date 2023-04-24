@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 8158db40883a
+Revision ID: bc14de06df9f
 Revises: 
-Create Date: 2023-04-23 21:06:31.427512
+Create Date: 2023-04-23 21:28:07.874860
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8158db40883a'
+revision = 'bc14de06df9f'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,12 +35,12 @@ def upgrade():
     sa.Column('home_val', sa.Integer(), nullable=True),
     sa.Column('down_pay', sa.Integer(), nullable=True),
     sa.Column('loan_amt', sa.Integer(), nullable=False),
-    sa.Column('interest_rate', sa.Numeric(precision=2, scale=2), nullable=False),
+    sa.Column('interest_rate', sa.Numeric(precision=4, scale=2), nullable=False),
     sa.Column('loan_term', sa.Integer(), nullable=False),
     sa.Column('property_tax', sa.Integer(), nullable=True),
     sa.Column('home_insurance', sa.Integer(), nullable=True),
     sa.Column('monthly_hoa', sa.Integer(), nullable=True),
-    sa.Column('pmi', sa.Numeric(precision=2, scale=2), nullable=True),
+    sa.Column('pmi', sa.Numeric(precision=5, scale=2), nullable=True),
     sa.Column('credit_card_payments', sa.Integer(), nullable=True),
     sa.Column('car_payments', sa.Integer(), nullable=True),
     sa.Column('student_payments', sa.Integer(), nullable=True),
