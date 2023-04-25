@@ -236,6 +236,9 @@ def events():
         time = datetime.fromisoformat(request.json['time'])
         end_time = datetime.fromisoformat(request.json['endTime'])
 
+        if name == '':
+            return jsonify({"code": "NO_EVENT_NAME"}), 400
+
         if end_time < time:
             return jsonify({"code": "INVALID_END_TIME"}), 400
 
@@ -246,8 +249,14 @@ def events():
                                              CalendarEvents.time < start_of_nextday).all()
 
         for event in events:
-            if (time < event.time and end_time > event.time) or (time > event.time and time < event.end_time):
+            if (time <= event.time and end_time > event.time) or (end_time >= event.end_time and time < event.end_time):
                 return jsonify({"code": "OVERLAPPING_TIMES"}), 400
+
+        if time < datetime.now():
+            return jsonify({"code": "TIME_PAST_OCCURRENCE"}), 400
+
+        name = bleach.clean(name, strip=True)
+        notes = bleach.clean(notes, strip=True)
 
         new_event = CalendarEvents(name=name, notes=notes, time=time, end_time=end_time, user_id=current_user.id)
 
@@ -270,6 +279,9 @@ def edit_remove_event(id):
         time = datetime.fromisoformat(request.json['time'])
         end_time = datetime.fromisoformat(request.json['endTime'])
 
+        if name == '':
+            return jsonify({"code": "NO_EVENT_NAME"}), 400
+
         if end_time < time:
             return jsonify({"code": "INVALID_END_TIME"}), 400
 
@@ -285,12 +297,13 @@ def edit_remove_event(id):
             if (time < event.time < end_time) or (event.time < time < event.end_time):
                 return jsonify({"code": "OVERLAPPING_TIMES"}), 400
 
+        if time < datetime.now():
+            return jsonify({"code": "TIME_PAST_OCCURRENCE"}), 400
+
         event = CalendarEvents.query.filter_by(id=id, user_id=current_user.id).first()
 
-        event.name = name
-        event.notes = notes
-        event.time = time
-        event.end_time = end_time
+        event.name = bleach.clean(name, strip=True)
+        event.notes = bleach.clean(notes, strip=True)
 
         db.session.commit()
 
