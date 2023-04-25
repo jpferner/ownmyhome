@@ -107,7 +107,8 @@ def test_sign_up(test_client):
 def test_successful_login(test_client):
     # create a test user in the database
     hashed_password = generate_password_hash('test_password', "sha256")
-    test_user = Users(first_name='Test', last_name='User', email='testuser@example.com', password_hash=hashed_password)
+    test_user = Users(first_name='Test', last_name='User', email='testuser@example.com',
+                      password_hash=hashed_password)
     db.session.add(test_user)
     db.session.commit()
 
