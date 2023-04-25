@@ -8,7 +8,7 @@ import jwt as jwt
 
 from flask import current_app
 
-from app import db, app
+from app import db
 
 
 class CalendarEvents(db.Model):
@@ -25,12 +25,12 @@ class CalculatorUserInputs(db.Model):
     home_val = db.Column(db.Integer)
     down_pay = db.Column(db.Integer)
     loan_amt = db.Column(db.Integer, nullable=False)
-    interest_rate = db.Column(db.Numeric(2, 2), nullable=False)
+    interest_rate = db.Column(db.Numeric(4, 2), nullable=False)
     loan_term = db.Column(db.Integer, nullable=False)
     property_tax = db.Column(db.Integer)
     home_insurance = db.Column(db.Integer)
     monthly_hoa = db.Column(db.Integer)
-    pmi = db.Column(db.Numeric(2, 2))
+    pmi = db.Column(db.Numeric(5, 2))
     credit_card_payments = db.Column(db.Integer)
     car_payments = db.Column(db.Integer)
     student_payments = db.Column(db.Integer)
@@ -58,9 +58,11 @@ class Users(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(150))
     last_name = db.Column(db.String(150))
-    email = db.Column(db.String(150), unique=True, name='unique_email')  # no user can have an email already in the db
+    email = db.Column(db.String(150), unique=True, name='unique_email')
+    # no user can have an email already in the db
     password_hash = db.Column(db.String(150))  # hashed password
-    reset_password_token = db.Column(db.String(150), unique=True, name='unique_reset_password_token')
+    reset_password_token = db.Column(db.String(150), unique=True, name='unique_reset_password_token'
+                                     )
     reset_password_token_expiration = db.Column(db.DateTime)
 
     favorite_properties = db.relationship('UserFavorite', back_populates='user')
@@ -99,8 +101,9 @@ class Users(db.Model, UserMixin):
 
     def verify_password(self, password):
         """
-        Takes the users plaintext password and will use it to pass to the check_password_hash function to
-        check the user entered password (at login) against the hashed password value stored in the database
+        Takes the users plaintext password and will use it to pass to the check_password_hash
+        function to check the user entered password (at login) against the hashed password value
+        stored in the database
         Args:
             password: the plaintext password to compare against the hash.
 
@@ -123,7 +126,8 @@ class Users(db.Model, UserMixin):
     @staticmethod
     def verify_reset_password_token(token):
         try:
-            id_from_token = jwt.decode(token, current_app.config['SECRET_KEY'], algorithms=['HS256'])['reset_password']
+            id_from_token = jwt.decode(token, current_app.config['SECRET_KEY'],
+                                       algorithms=['HS256'])['reset_password']
             # user = Users.query.get(id)  #Test triggered deprecation warning
             user = db.session.query(Users).filter_by(id=id_from_token).first()
             if not user:

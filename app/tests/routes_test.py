@@ -107,7 +107,8 @@ def test_sign_up(test_client):
 def test_successful_login(test_client):
     # create a test user in the database
     hashed_password = generate_password_hash('test_password', "sha256")
-    test_user = Users(first_name='Test', last_name='User', email='testuser@example.com', password_hash=hashed_password)
+    test_user = Users(first_name='Test', last_name='User', email='testuser@example.com',
+                      password_hash=hashed_password)
     db.session.add(test_user)
     db.session.commit()
 
@@ -154,7 +155,8 @@ def test_checklist_items_added(test_client):
     # assert that the login was successful and redirected to the home page
     assert response.status_code == 200
     # Check if the checklist items are added to the database
-    items = ChecklistItems.query.filter_by(user_id=test_user.id).order_by(ChecklistItems.order_no).all()
+    items = ChecklistItems.query.filter_by(
+        user_id=test_user.id).order_by(ChecklistItems.order_no).all()
     assert len(items) == 5
     # Clean up the checklist items for the test user
     ChecklistItems.query.filter_by(user_id=test_user.id).delete()
@@ -244,7 +246,8 @@ def test_checklist_redirect(test_client):
         password_hash='test_password'
     ), follow_redirects=True)
 
-    # Send a non-GET, non-POST request to the `/checklist` route and check if it returns a 405 Method Not Allowed status
+    # Send a non-GET, non-POST request to the `/checklist` route and check if it returns a
+    # 405 Method Not Allowed status
     response = test_client.put('/checklist')
     assert response.status_code == 405
 
@@ -262,7 +265,8 @@ def test_checklist_update_status(test_client):
     db.session.commit()
 
     # Add a checklist item for the test user
-    test_item = ChecklistItems(order_no=1, status=False, detail="Test checklist item", user_id=test_user.id)
+    test_item = ChecklistItems(order_no=1, status=False, detail="Test checklist item",
+                               user_id=test_user.id)
     db.session.add(test_item)
     db.session.commit()
 
@@ -278,7 +282,8 @@ def test_checklist_update_status(test_client):
         'status': True
     }, content_type='application/json')
 
-    # Assert that the response is OK (status code 200) and the 'success' key in the JSON response is True
+    # Assert that the response is OK (status code 200) and the 'success' key in the
+    # JSON response is True
     assert response.status_code == 200
     assert response.json['success'] is True
 
@@ -347,7 +352,8 @@ def test_search_invalid_zip(test_client):
             "results": []
         }
         geocode_url = "https://maps.googleapis.com/maps/api/geocode/json"
-        m.get(f"{geocode_url}?address=00000&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU", json=invalid_zip_response)
+        m.get(f"{geocode_url}?address=00000&key=AIzaSyBlz0-Xrd-UmDgkjHXFmVv_NAFBqTh11YU",
+              json=invalid_zip_response)
 
         # Send a GET request to the `/search` route with an invalid zip code
         response = test_client.get('/search', query_string=dict(query="test", zip="00000"))
@@ -390,7 +396,8 @@ def test_search_pagination(test_client):
         m.register_uri('GET', places_url, json=places_response)
 
         # Send a GET request to the `/search` route with a start_index greater than 1
-        response = test_client.get('/search', query_string=dict(query="test", zip="94103", start=21))
+        response = test_client.get('/search', query_string=dict(query="test", zip="94103",
+                                                                start=21))
 
         # Assert that the response is OK (status code 200)
         assert response.status_code == 200
@@ -538,7 +545,8 @@ def test_signup_with_existing_email(client, ac_app):
 
         # Check that the HTTP response status code is 200 OK and the success message is displayed
         assert response.status_code == 200  # 200 is the HTTP status code for redirect
-        assert b'Sign up unsuccessful.\n\n Please try again using a different email address' in response.data
+        assert b'Sign up unsuccessful.\n\n Please try again using a different email address' \
+               in response.data
 
 
 def test_signup_with_invalid_first_name(client):
@@ -568,7 +576,8 @@ def test_signup_with_invalid_password(client):
         'accept_tos': True}, follow_redirects=True)
 
     # assert that the form validation error is shown to the user
-    assert b'Password must have at least one uppercase character, \nat least one lowercase character, ' \
+    assert b'Password must have at least one uppercase character, ' \
+           b'\nat least one lowercase character, ' \
            b'\nat least one number,\n and at least one special character.' in response.data
 
 
@@ -743,7 +752,8 @@ def test_logout(client, ac_app):
         assert b'You have successfully logged out!' in response.data
 
 
-# Andrew Court - Testing the Password Reset Functionality Where Users Access the Password Reset Request Page,
+# Andrew Court - Testing the Password Reset Functionality Where Users Access the Password
+# Reset Request Page,
 # Are Sent Password Reset Links, and Access the Change Password Page
 def test_password_reset_page_url(client):
     """
@@ -765,7 +775,8 @@ def test_password_reset_page_url(client):
 def test_password_reset_request_invalid_email(client):
     """
         Test that a password reset request with an invalid email address returns an error message.
-        For this particular test, the user enters an email address that is not in the expected valid format.
+        For this particular test, the user enters an email address that is not in the expected
+        valid format.
 
         Args:
             client: Flask test client object.
@@ -782,7 +793,8 @@ def test_password_reset_request_invalid_email(client):
 
 def test_password_reset_request_success_and_redirects_to_login(client):
     """
-        Test that a password reset request is successfully submitted for a valid email in the database,
+        Test that a password reset request is successfully submitted for a valid email in the
+        database,
         and that the user is redirected to the login page with the expected success message.
 
         Args:
@@ -803,13 +815,17 @@ def test_password_reset_request_success_and_redirects_to_login(client):
 
 
 def test_password_reset_request_fail_user_not_in_database_and_redirects_to_login(client):
-    """Test that a user is redirected to the login page and shown a password reset message if they try to submit a
-        password reset request, but the email is not associated with an account in our database. For security reasons,
-        the user is still redirected to the login page and shown the same message someone with an account in our
+    """Test that a user is redirected to the login page and shown a password reset message if they
+    try to submit a
+        password reset request, but the email is not associated with an account in our database.
+         For security reasons,
+        the user is still redirected to the login page and shown the same message someone with an
+        account in our
         database would be shown
 
         Args:
-            client: Flask test client object that is used to simulate HTTP requests to the application.
+            client: Flask test client object that is used to simulate HTTP requests to the
+            application.
 
         Returns:
             None
@@ -850,7 +866,8 @@ def test_password_reset_valid_token_for_successful_password_change(client, ac_ap
 
         response = client.post(f'/change_password/{token}', data=form_data, follow_redirects=True)
 
-        # Check that the response status code is 200 and response message indicates a failed reset password attempt
+        # Check that the response status code is 200 and response message indicates a failed
+        # reset password attempt
         assert response.status_code == 200
         assert b'Password reset successful! Please log into your account.' in response.data
 
@@ -878,7 +895,8 @@ def test_password_reset_for_expired_token_for_failed_password_change_attempt(cli
         this test to be expired.
 
         The test creates a user object and generates a password reset token that is already expired.
-        It then attempts to reset the password using the expired token and verifies that the password
+        It then attempts to reset the password using the expired token and verifies that the
+        password
         reset fails and returns the appropriate error message.
 
         Args:
@@ -939,6 +957,7 @@ def test_password_reset_for_invalid_token_for_failed_password_change_attempt(cli
     # Check that the response status code is 200
     assert response.status_code == 200
 
-    # Check that the response message indicates that the password reset failed as user is redirect to Reset
+    # Check that the response message indicates that the password reset failed as user
+    # is redirect to Reset
     # Password Request page
     assert b'The password reset link is invalid or has expired.\nPlease try again.' in response.data
