@@ -37,13 +37,14 @@ def home():
     login_form = LoginForm()
 
     first_incomplete_item = None
-    calendar = None
+    calendar1 = None
     if current_user.is_authenticated:
-        first_incomplete_item = ChecklistItems.query.filter_by(user_id=current_user.id, status=False).order_by(
+        first_incomplete_item = ChecklistItems.query.filter_by(user_id=current_user.id,
+                                                               status=False).order_by(
             ChecklistItems.order_no).first()
 
         # Query the next event on the calendar for the current user
-        calendar = CalendarEvents.query.filter(
+        calendar1 = CalendarEvents.query.filter(
             CalendarEvents.time > datetime.now(),
             CalendarEvents.user_id == current_user.id
         ).order_by(CalendarEvents.time).first()
@@ -52,8 +53,10 @@ def home():
     random_property = choice(all_properties) if all_properties else None
     current_time = datetime.now()
 
-    return render_template('index.html', login_form=login_form, first_incomplete_item=first_incomplete_item,
-                           random_property=random_property, calendar=calendar, current_time=current_time)
+    return render_template('index.html', login_form=login_form,
+                           first_incomplete_item=first_incomplete_item,
+                           random_property=random_property, calendar=calendar1,
+                           current_time=current_time)
 
 
 @app.route('/index', methods=['GET', 'POST'])
@@ -91,8 +94,8 @@ def properties():
 
 def add_properties(user_id):
     """
-        This function injects the data for the properties when a new user is created using a for loop.
-        It takes in the parameter user_id.
+        This function injects the data for the properties when a new user is created using a for
+        loop. It takes in the parameter user_id.
     """
     properties_data = [
         {'street': '1007 Orange St', 'city': 'Wilmington', 'state': 'NC', 'zcode': 28401,
@@ -144,12 +147,13 @@ def checklist():
     """
         Renders the checklist page of the website.
 
-        If the request method is GET, fetches all the checklist items for the current user from the database, orders
-        them by their order_no, and renders the checklist page with the items passed as an argument to the template.
+        If the request method is GET, fetches all the checklist items for the current user from the
+        database, orders them by their order_no, and renders the checklist page with the items
+        passed as an argument to the template.
 
-        If the request method is POST, updates the status of the checklist item with the given order_no for the current
-        user in the database to the new status provided in the JSON payload of the request. Returns a JSON response
-        with a success key set to True.
+        If the request method is POST, updates the status of the checklist item with the given
+        order_no for the current user in the database to the new status provided in the JSON
+        payload of the request. Returns a JSON response with a success key set to True.
 
         Returns:
         The rendered checklist page HTML if the request method is GET.
@@ -168,7 +172,8 @@ def checklist():
         return jsonify(success=True)
 
     else:
-        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(ChecklistItems.order_no).all()
+        items = ChecklistItems.query.filter_by(user_id=current_user.id).order_by(
+            ChecklistItems.order_no).all()
         return render_template('checklist.html', items=items)
 
 
@@ -183,15 +188,16 @@ def add_checklist_items(user_id):
             None
     """
     steps = [
-        "Do you know what your current credit score is? Check out our services tab above to see what options are "
-        "available to you.",
-        "Do you have your home picked out? Check out our properties tab to see what homes are available within your "
-        "search parameters.",
-        "Do you know what type of financing is available to you? Check out our services tab above to see what options "
-        "are available to you.",
-        "Do you know how much home you can afford? Check out our calculator tab to find out the right price for you.",
-        "Do you understand your current debt to income ratio and what that means, Check out our calculator tab to "
-        "find out more.",
+        "Do you know what your current credit score is? Check out our services tab above to see "
+        "what options are available to you.",
+        "Do you have your home picked out? Check out our properties tab to see what homes are "
+        "available within your search parameters.",
+        "Do you know what type of financing is available to you? Check out our services tab above "
+        "to see what options are available to you.",
+        "Do you know how much home you can afford? Check out our calculator tab to find out the"
+        "right price for you.",
+        "Do you understand your current debt to income ratio and what that means, Check out our "
+        "calculator tab to find out more.",
     ]
 
     for i, step in enumerate(steps, start=1):
@@ -233,40 +239,41 @@ def events():
     if request.method == 'POST':
         name = request.json['name']
         notes = request.json['notes']
-        time = datetime.fromisoformat(request.json['time'])
+        time1 = datetime.fromisoformat(request.json['time'])
         end_time = datetime.fromisoformat(request.json['endTime'])
 
         if name == '':
             return jsonify({"code": "NO_EVENT_NAME"}), 400
 
-        if end_time < time:
+        if end_time < time1:
             return jsonify({"code": "INVALID_END_TIME"}), 400
 
-        start_of_day = datetime(time.year, time.month, time.day)
+        start_of_day = datetime(time1.year, time1.month, time1.day)
         start_of_nextday = start_of_day + timedelta(days=1)
-        events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id,
-                                             CalendarEvents.time >= start_of_day,
-                                             CalendarEvents.time < start_of_nextday).all()
+        events1 = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id,
+                                              CalendarEvents.time >= start_of_day,
+                                              CalendarEvents.time < start_of_nextday).all()
 
-        for event in events:
-            if (time <= event.time and end_time > event.time) or (end_time >= event.end_time and time < event.end_time):
+        for event in events1:
+            if (time1 <= event.time < end_time) or (end_time >= event.end_time > time1):
                 return jsonify({"code": "OVERLAPPING_TIMES"}), 400
 
-        if time < datetime.now():
+        if time1 < datetime.now():
             return jsonify({"code": "TIME_PAST_OCCURRENCE"}), 400
 
         name = bleach.clean(name, strip=True)
         notes = bleach.clean(notes, strip=True)
 
-        new_event = CalendarEvents(name=name, notes=notes, time=time, end_time=end_time, user_id=current_user.id)
+        new_event = CalendarEvents(name=name, notes=notes, time=time1, end_time=end_time,
+                                   user_id=current_user.id)
 
         db.session.add(new_event)
         db.session.commit()
         return jsonify(map_events(new_event))
 
-    events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time > datetime.now()
-                                         ).all()
-    return jsonify([map_events(event) for event in events])
+    events1 = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id,
+                                          CalendarEvents.time > datetime.now()).all()
+    return jsonify([map_events(event) for event in events1])
 
 
 @app.route('/calendar/events/<id>', methods=['PUT', 'DELETE'])
@@ -276,28 +283,29 @@ def edit_remove_event(id):
     if request.method == 'PUT':
         name = request.json['name']
         notes = request.json['notes']
-        time = datetime.fromisoformat(request.json['time'])
+        time2 = datetime.fromisoformat(request.json['time'])
         end_time = datetime.fromisoformat(request.json['endTime'])
 
         if name == '':
             return jsonify({"code": "NO_EVENT_NAME"}), 400
 
-        if end_time < time:
+        if end_time < time2:
             return jsonify({"code": "INVALID_END_TIME"}), 400
 
-        start_of_day = datetime(time.year, time.month, time.day)
+        start_of_day = datetime(time2.year, time2.month, time2.day)
 
         start_of_nextday = start_of_day + timedelta(days=1)
 
-        events = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id, CalendarEvents.time >=
-                                             start_of_day, CalendarEvents.time < start_of_nextday, CalendarEvents.id !=
-                                             id).all()
+        events2 = CalendarEvents.query.filter(CalendarEvents.user_id == current_user.id,
+                                              CalendarEvents.time >= start_of_day,
+                                              CalendarEvents.time < start_of_nextday,
+                                              CalendarEvents.id != id).all()
 
-        for event in events:
-            if (time < event.time < end_time) or (event.time < time < event.end_time):
+        for event in events2:
+            if (time2 < event.time < end_time) or (event.time < time2 < event.end_time):
                 return jsonify({"code": "OVERLAPPING_TIMES"}), 400
 
-        if time < datetime.now():
+        if time2 < datetime.now():
             return jsonify({"code": "TIME_PAST_OCCURRENCE"}), 400
 
         event = CalendarEvents.query.filter_by(id=id, user_id=current_user.id).first()
@@ -336,13 +344,15 @@ def login():
        Renders the login page of the website and handles user login form submissions.
 
        If the form data is valid, the user is logged in and redirected to the home page.
-       If the form data is invalid, an error message is flashed and the user is redirected back to the login page.
+       If the form data is invalid, an error message is flashed and the user is redirected back to
+        the login page.
 
        Returns:
            - If the request is a GET request: The rendered login page HTML.
-           - If the request is a POST request and the form data is valid: A redirect to the home page.
-           - If the request is a POST request and the form data is invalid: The rendered login page HTML with
-           error messages.
+           - If the request is a POST request and the form data is valid: A redirect to the home
+           page.
+           - If the request is a POST request and the form data is invalid: The rendered login
+           page HTML with error messages.
     """
     # if request.method == 'POST':
     #     return redirect(url_for('index'))
@@ -382,13 +392,15 @@ def login():
 def sign_up():
     """
         Renders the sign-up page of the website and handles POST requests.
-        If the form data is valid, the function will create a new user and add them to the database. It will then add
-        checklist items for the new user, flash a success message and redirect them to the login page.
-        If the form data is invalid, the function will flash an error message and redirect them to the sign-up page.
+        If the form data is valid, the function will create a new user and add them to the database.
+        It will then add checklist items for the new user, flash a success message and redirect them
+         to the login page. If the form data is invalid, the function will flash an error message
+         and redirect them to the sign-up page.
 
         Returns:
         - If the request is a GET request: the rendered sign_up.html template.
-        - If the request is a POST request: either a redirect to the login page with a success message or a redirect
+        - If the request is a POST request: either a redirect to the login page with a success
+        message or a redirect
         to the sign-up page with error messages, depending on the validity of the form data.
     """
     # name = None
@@ -403,7 +415,8 @@ def sign_up():
         signup_form.email.data = bleach.clean(signup_form.email.data, strip=True)
         signup_form.confirm_email.data = bleach.clean(signup_form.confirm_email.data, strip=True)
         signup_form.password_hash.data = bleach.clean(signup_form.password_hash.data, strip=True)
-        signup_form.confirm_password_hash.data = bleach.clean(signup_form.confirm_password_hash.data, strip=True)
+        signup_form.confirm_password_hash.data = \
+            bleach.clean(signup_form.confirm_password_hash.data, strip=True)
 
         # strip all whitespace from beginning and end of the sting
         signup_form.first_name.data = signup_form.first_name.data.strip()
@@ -421,8 +434,10 @@ def sign_up():
         user = Users.query.filter_by(email=signup_form.email.data).first()
         if user is None:
             # Create a new user and the user to the database
-            user = Users(first_name=signup_form.first_name.data, last_name=signup_form.last_name.data,
-                         email=signup_form.email.data, password_hash=hashed_password)
+            user = Users(first_name=signup_form.first_name.data,
+                         last_name=signup_form.last_name.data,
+                         email=signup_form.email.data,
+                         password_hash=hashed_password)
             db.session.add(user)
             db.session.commit()
 
@@ -435,8 +450,10 @@ def sign_up():
             flash('Account created!\n\nPlease use your credentials to log in.', category='success')
             return redirect(url_for('login'))
         else:  # redirect user to the sign-up page, so they can create a new account
-            # flash('We\'re sorry. This email address already exists in our system.\n', category='error')
-            flash('Sign up unsuccessful.\n\n Please try again using a different email address ', category='error')
+            # flash('We\'re sorry. This email address already exists in our system.\n',
+            # category='error')
+            flash('Sign up unsuccessful.\n\n Please try again using a different email address ',
+                  category='error')
             return redirect(url_for('sign_up'))
 
     # current_users = Users.query.order_by(Users.id)  # query current db of Users
@@ -452,8 +469,8 @@ def sign_up():
 @login_required  # user must be logged in to logout
 def logout():
     """
-        Logs the user out by calling the logout_user() function and flashes a success message to the user
-        before redirecting to the home page.
+        Logs the user out by calling the logout_user() function and flashes a success message to
+        the user before redirecting to the home page.
 
         Returns: A redirect to the home page.
     """
@@ -478,11 +495,13 @@ def send_password_reset_email(user):
     # Generate the password reset link that includes the JWT token
     token = Users.generate_password_reset_token(user)
 
-    # Generate the password reset link that includes the JWT token. _external=True sends absolute URL
+    # Generate the password reset link that includes the JWT token.
+    # _external=True sends absolute URL
     reset_url = url_for('change_password', token=token, _external=True)
 
     # Send the email
-    msg = Message(subject="Password Reset Request", sender=current_app.config['MAIL_USERNAME'], recipients=[user.email])
+    msg = Message(subject="Password Reset Request", sender=current_app.config['MAIL_USERNAME'],
+                  recipients=[user.email])
     # msg.body = f"Click the following link to reset your password: {reset_url}"
     msg.body = f"""To reset your password, please follow the link below:
 
@@ -503,10 +522,11 @@ def reset_password_request():
 
     If the form is submitted, the email is checked against the database of registered users.
     If an associated account is found, a password reset email is sent to the user. If no associated
-    account is found, no email is sent and a success message is displayed.
+    account is found, if no email is sent and a success message is displayed.
 
     Returns:
-        If the form is submitted, redirects the user to the login page and displays a success message.
+        If the form is submitted, redirects the user to the login page and displays a success
+        message.
         Otherwise, renders the reset_password_request.html template with the title 'Reset Password'
         and the ResetPasswordRequestForm.
     """
@@ -519,7 +539,8 @@ def reset_password_request():
             # print(f"user: {user}")
             send_password_reset_email(user)
         # flash('Check your email for the instructions to reset your password')
-        flash('Thank you for submitting your email address.\n\nIf an account is associated with this email,\n'
+        flash('Thank you for submitting your email address.\n\nIf an account is associated with '
+              'this email,\n'
               'a password reset link will be sent to your inbox shortly.\n\n'
               ' Please check your email and follow the instructions\nto reset your password.\n\n'
               'Important: Password reset link expires in 10 minutes.', category='success')
@@ -530,33 +551,34 @@ def reset_password_request():
 
 @app.route('/change_password/<token>', methods=['GET', 'POST'])
 def change_password(token):
-    """This function handles requests to the '/change_password/<token>' route. When a user follows a password
-    reset link sent to them via email, they will be directed to this route with the reset token
-    included in the URL.
+    """This function handles requests to the '/change_password/<token>' route. When a user follows
+    a password reset link sent to them via email, they will be directed to this route with the reset
+    token included in the URL.
 
-    Handles the password reset process by verifying the reset token, rendering a password reset form,
-    and updating the user's password in the database if the form submission is successful
+    Handles the password reset process by verifying the reset token, rendering a password reset
+    form, and updating the user's password in the database if the form submission is successful
 
 
-     If the token is valid, the user clicks the reset link and  is redirected to the change password page.
-     If the token is expired, an error message is flashed and the user is redirected back to the
-      password reset request page.
+     If the token is valid, the user clicks the reset link and  is redirected to the change password
+     page. If the token is expired, an error message is flashed and the user is redirected back to
+     the password reset request page.
 
      Returns:
          - If the request is a GET request: The rendered change password page HTML.
-         - If the request is a POST request and the token is valid: A redirect to the Change Password
-         page where the user is prompted to change their password.
-         - If the request is a POST request and the form data is valid: A redirect to the login page and
-         user is prompted to log in.
-         - If the request is a POST request and the token is invalid: An error message is shown and the
-          user is redirected to the Password Reset Request page
-         - If the request is a POST request and the form data is invalid: User is shown an error message and
-         the Change Password page is reloaded (while the token is valid).
+         - If the request is a POST request and the token is valid: A redirect to the Change
+         Password page where the user is prompted to change their password.
+         - If the request is a POST request and the form data is valid: A redirect to the login page
+         and user is prompted to log in.
+         - If the request is a POST request and the token is invalid: An error message is shown and
+         the user is redirected to the Password Reset Request page
+         - If the request is a POST request and the form data is invalid: User is shown an error
+         message and the Change Password page is reloaded (while the token is valid).
 """
 
     try:
         # Call the verify_reset_password_token method of the Users class in models.py
-        # verifies that the token is valid and returns corresponding user object if it is valid still
+        # verifies that the token is valid and returns corresponding user object if it is valid
+        # still
         user = Users.verify_reset_password_token(token)
     except jwt.exceptions.ExpiredSignatureError:
         flash('The password reset link has expired. \n Please request a new one.', category='error')
@@ -567,7 +589,8 @@ def change_password(token):
               'Please try again.', category='error')
         return redirect(url_for('reset_password_request'))
 
-    # create a ResetPasswordForm object and if token is valid, pass it to the template 'change_password.html'
+    # create a ResetPasswordForm object and if token is valid, pass it to the template
+    # 'change_password.html'
     form = ResetPasswordForm()
     if form.validate_on_submit():
         # sanitize/clean all fields on the sign-up form before storing in database
@@ -595,14 +618,14 @@ def calculator():
     """
         Renders the calculator.html template.
 
-        GET request: The function renders the calculator.html template with default values for the inputs or logged-in
-        user data if available.
+        GET request: The function renders the calculator.html template with default values for the
+        inputs or logged-in user data if available.
 
         POST request: Should never be sent to this function.
 
         Returns:
-            - If the request is a GET request: renders the calculator.html template with either user info or default
-            info depending on if they are logged in.
+            - If the request is a GET request: renders the calculator.html template with either user
+             info or default info depending on if they are logged in.
             - If the request is a POST request: Redirects user to the home page.
     """
     if request.method == 'POST':
@@ -617,10 +640,13 @@ def calculator():
     else:
         user = CalculatorUserInputs.query.filter_by(user_id=current_user.id).first()
         return render_template('calculator.html', HomeVal=user.home_val, DownPay=user.down_pay,
-                               LoanAmt=user.loan_amt, InterestRate=user.interest_rate, LoanTerm=user.loan_term,
-                               PropTax=user.property_tax, Income=user.income, Credit=user.credit_card_payments,
+                               LoanAmt=user.loan_amt, InterestRate=user.interest_rate,
+                               LoanTerm=user.loan_term,
+                               PropTax=user.property_tax, Income=user.income,
+                               Credit=user.credit_card_payments,
                                CarPay=user.car_payments, StudentPay=user.student_payments,
-                               HomeInsurance=user.home_insurance, PrivateMortInsurance=user.pmi, HOA=user.monthly_hoa)
+                               HomeInsurance=user.home_insurance, PrivateMortInsurance=user.pmi,
+                               HOA=user.monthly_hoa)
 
 
 def add_calculator_info(user_id):
@@ -687,8 +713,8 @@ def services():
 @app.route('/search', methods=['GET'])
 def search():
     """
-        Renders the search results page of the website, using the Google Places API to search for locations
-        based on a user-provided query and zip code.
+        Renders the search results page of the website, using the Google Places API to search for
+        locations based on a user-provided query and zip code.
 
         Returns: A JSON object containing search results and the total number of results.
     """
@@ -717,7 +743,8 @@ def search():
                 "title": item["name"],
                 "link": item["formatted_address"],
                 "snippet": item.get("formatted_phone_number", ""),
-                "photo_reference": item["photos"][0]["photo_reference"] if "photos" in item else None,
+                "photo_reference": item["photos"][0]["photo_reference"]
+                if "photos" in item else None,
                 "lat": item["geometry"]["location"]["lat"],
                 "lng": item["geometry"]["location"]["lng"],
                 "maps_link": f"https://www.google.com/maps/place/?q=place_id:{item['place_id']}"
@@ -734,15 +761,20 @@ def search():
 
 def get_page_token(offset, url, params):
     """
-        Given an offset, url, and parameters for a Google Places API request, retrieves the page token associated with
-        the corresponding page of results. Page tokens are used by the API to allow pagination of results, and each page
-        token corresponds to a specific set of 20 results. This function iterates through the pages of results until it
-        reaches the page corresponding to the given offset, and returns the page token associated with that page.
+        Given an offset, url, and parameters for a Google Places API request, retrieves the page
+        token associated with
+        the corresponding page of results. Page tokens are used by the API to allow pagination of
+        results, and each page
+        token corresponds to a specific set of 20 results. This function iterates through the pages
+        of results until it
+        reaches the page corresponding to the given offset, and returns the page token associated
+        with that page.
 
         Args:
             offset (int): The 1-based index of the page of results to retrieve the page token for.
             url (str): The URL of the Google Places API endpoint to send the request to.
-            params (dict): The parameters to include in the request, including any search parameters and API key.
+            params (dict): The parameters to include in the request, including any search parameters
+            and API key.
 
         Returns:
             str: The page token for the specified page of results, or None if no such page exists.
@@ -754,21 +786,25 @@ def get_page_token(offset, url, params):
             params["pagetoken"] = data["next_page_token"]
         else:
             break
-        time.sleep(2)  # Google Places API requires a short delay between requests for the next page token
+        time.sleep(2)
+        # Google Places API requires a short delay between requests for the next page token
     return params.get("pagetoken")
 
 
 def get_lat_lng_from_zip(zip_code):
     """
-        Given a zip code, sends a request to the Google Geocoding API to get the latitude and longitude of the location
+        Given a zip code, sends a request to the Google Geocoding API to get the latitude and
+        longitude of the location
         associated with the zip code.
 
         Args:
             zip_code (str): A string representing a zip code.
 
         Returns:
-            tuple: A tuple containing the latitude and longitude of the location associated with the given zip code.
-                If the zip code is invalid or the Google Geocoding API does not return a valid response, the function
+            tuple: A tuple containing the latitude and longitude of the location associated with
+            the given zip code.
+                If the zip code is invalid or the Google Geocoding API does not return a valid
+                response, the function
                 returns a tuple of None values.
     """
     geocode_url = f"https://maps.googleapis.com/maps/api/geocode/json?address=" \
@@ -789,11 +825,13 @@ def update_favorites():
         Expects the following POST parameters:
             - csrf_token: A CSRF token to protect against cross-site request forgery attacks.
             - propId: The ID of the property to update.
-            - checked: A string representation of a boolean value indicating whether the property should
+            - checked: A string representation of a boolean value indicating whether the property
+            should
             be favorite or not.
 
         Returns:
-            - A JSON object containing the rendered HTML for the updated properties table and favorites table.
+            - A JSON object containing the rendered HTML for the updated properties table and
+            favorites table.
     """
     csrf_token = request.form['csrf_token']
     validate_csrf(csrf_token)
@@ -807,7 +845,8 @@ def update_favorites():
     # Update the favorite status of the property
     if checked:
         favorite = UserFavorite(user_id=current_user.id, property_id=propId)
-        existing_favorite = UserFavorite.query.filter_by(user_id=current_user.id, property_id=propId).first()
+        existing_favorite = UserFavorite.query.filter_by(user_id=current_user.id,
+                                                         property_id=propId).first()
         if not existing_favorite:
             db.session.add(favorite)
             print('1')
@@ -825,10 +864,11 @@ def update_favorites():
     favorite_props = [uf.property for uf in user_favorites]
 
     # Render the templates
-    props_table = render_template('props_table.html', props=Property.query.all(), favorite_props=favorite_props)
-    favorites_table = render_template('favorites_table.html', favorite_props=favorite_props)
+    props_table = render_template('props_table.html', props=Property.query.all(),
+                                  favorite_props=favorite_props)
+    favorites_table1 = render_template('favorites_table.html', favorite_props=favorite_props)
 
-    return jsonify(props=props_table, favorites=favorites_table)
+    return jsonify(props=props_table, favorites=favorites_table1)
 
 
 @app.route('/favorites_table')
