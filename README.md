@@ -60,6 +60,7 @@
 <li> Install required packages using the pip requirements file</li>
 <li> Activate your virtual environment in command prompt</li>
 <li> Run the project using flask run </li>
+<li> Create user with email test@gmail.com and password Test123! It is necessary for this user to be in the database</li>
 <li> From another command prompt with venv activated from Tests/Dhollock run python test_website.py</li>
 <li> Test should open a web browser and run automatically displaying ok in command prompt</li>
 </ol>

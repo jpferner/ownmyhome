@@ -17,7 +17,7 @@ class TestWebsite(unittest.TestCase):
         login_button = driver.find_element(By.CSS_SELECTOR, "input.submit-field")
 
         email_input.send_keys("test@gmail.com")
-        password_input.send_keys("Testilc!")
+        password_input.send_keys("Test123!")
         login_button.click()
         print("Clicked login button")
 
