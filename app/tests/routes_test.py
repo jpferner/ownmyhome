@@ -17,6 +17,8 @@ from app.models import Users
 
 from app.forms import SignUpForm
 from app import db, create_app
+
+from app import app as omh_test_app
 import pytest
 
 
