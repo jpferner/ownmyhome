@@ -964,6 +964,38 @@ def test_password_reset_for_invalid_token_for_failed_password_change_attempt(cli
     assert b'The password reset link is invalid or has expired.\nPlease try again.' in response.data
 
 
+def test_calculator_page_displayed(test_client):
+    response = test_client.get('/calculator')
+    assert response.status_code == 200
+    assert b'<label for="Income" class="calc-label">Annual Income:</label>' in response.data
+
+
+def test_calculator_loggedin(test_client):
+    # Create a test user in the database
+    user = Users(first_name='Cheese', last_name='McNabb', email='chester@hotmail.com',
+                 password_hash=generate_password_hash("test_password", "sha256"))
+    db.session.add(user)
+    db.session.commit()
+
+    add_calculator_info(user.id)
+
+    # Login with test user
+    test_client.post('/login', data=dict(
+        email='chester@hotmail.com',
+        password_hash='test_password'
+    ), follow_redirects=True)
+
+    response = test_client.get('/calculator')
+    assert response.status_code == 200
+    assert b'<label for="Income" class="calc-label">Annual Income:</label>' in response.data
+
+    user = Users.query.filter_by(email='chester@hotmail.com').first()
+    CalculatorUserInputs.query.filter_by(user_id=user.id).delete()
+    db.session.commit()
+    db.session.delete(user)
+    db.session.commit()
+
+
 def test_add_calculator_info(test_client):
     # Create a test user in the database
     user = Users(first_name='Cheese', last_name='McNabb', email='chester@hotmail.com',
