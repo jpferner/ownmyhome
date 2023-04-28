@@ -1,84 +1,70 @@
+.calc-form {
+    display: flex;
+    flex-wrap: wrap;
+}
 
-.calculator {
-    background-color: white;
-    width: 30%;
-    border: 1px solid teal;
-    margin: auto;
-    text-align: left;
+.calc-input-box {
+    background-color: #F0F0F0;
+    padding: 10px;
+    margin: 10px;
+    flex: 1 1 calc(50% - 20px);
+    box-sizing: border-box;
 }
-.outputs {
-    background-color: white;
-    width: 25%;
-    border: 2px solid teal;
-    margin: auto;
-    text-align: center;
-}
-.unit {
-    margin-left: 5px;
-}
-.info {
-    border: 1px solid teal;
-}
-td {
-    padding: 2%;
-    width: 20%;
 
+.calc-output-box {
+    padding: 10px;
+    margin: 10px;
+    flex: 1 1 calc(50% - 20px);
+    box-sizing: border-box;
 }
+
+.calc-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.calc-button-row {
+    padding: 3%;
+    background-color: teal;
+}
+.calc-label {
+    flex-basis: 30%;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.input {
+    flex: 1;
+    padding: 5px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 3px;
+    font-size: 16px;
+}
+
 .calculateButton {
     display: block;
-    margin: auto;
-    border: 1px solid;
-    background-color: white;
-    color: teal;
-    width: 160px;
-    height: 35px;
+    margin: 0 auto;
+    padding: 10px 20px;
+    background-color: dodgerblue;
+    color: white;
+    border: 1px solid black;
+    border-radius: 3px;
+    font-size: 16px;
+    cursor: pointer;
 }
 
-@media screen and (max-width: 1800px) {
-    .calc-form{}
-    .calculator{width: 30%}
-    .outputs{width: 30%}
+@media screen and (max-width: 1040px) {
+.calc-form {
+    flex-direction: column;
 }
 
-@media screen and (max-width: 1525px) {
-    .calc-form{}
-    .calculator{width:35%}
-    .outputs{width: 35%}
+.calc-input-box, .calc-output-box {
+    flex-basis: 100%;
 }
 
-@media screen and (max-width: 1325px) {
-    .calc-form{}
-    .calculator{width:40%}
-    .outputs{width: 40%}
-}
-
-@media screen and (max-width: 1190px) {
-    .calc-form{}
-    .calculator{width:50%}
-    .outputs{width: 50%}
-}
-@media screen and (max-width: 1000px) {
-    .calc-form{}
-    .calculator{width:60%}
-    .outputs{width: 60%}
-}
-@media screen and (max-width: 870px) {
-    .calc-form{}
-    .calculator{width:70%}
-    .outputs{width: 70%}
-}
-@media screen and (max-width: 770px) {
-    .calc-form{}
-    .calculator{width:80%}
-    .outputs{width: 80%}
-}
-@media screen and (max-width: 700px) {
-    .calc-form{}
-    .calculator{width:90%}
-    .outputs{width: 90%}
-}
-@media screen and (max-width: 650px) {
-    .calc-form{}
-    .calculator{width:100%}
-    .outputs{width: 100%}
-}
+.calc-label {
+    flex-basis: 100%;
+    margin-right: 0;
+    margin-bottom: 5px;
+}}
