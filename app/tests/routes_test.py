@@ -3,12 +3,11 @@ import re
 
 from flask import url_for
 import requests_mock
-from flask_login import AnonymousUserMixin
 
 from app import app
 
 from app.models import ChecklistItems, CalculatorUserInputs
-from app.routes import add_checklist_items, get_page_token, add_calculator_info, calculator
+from app.routes import add_checklist_items, get_page_token, add_calculator_info
 
 from app.forms import LoginForm
 from unittest.mock import patch
