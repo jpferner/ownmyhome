@@ -3,11 +3,12 @@ import re
 
 from flask import url_for
 import requests_mock
+from flask_login import AnonymousUserMixin
+
 from app import app
 
-from app.models import ChecklistItems
-from app.routes import add_checklist_items, get_page_token
-
+from app.models import ChecklistItems, CalculatorUserInputs
+from app.routes import add_checklist_items, get_page_token, add_calculator_info, calculator
 
 from app.forms import LoginForm
 from unittest.mock import patch
@@ -961,3 +962,97 @@ def test_password_reset_for_invalid_token_for_failed_password_change_attempt(cli
     # is redirect to Reset
     # Password Request page
     assert b'The password reset link is invalid or has expired.\nPlease try again.' in response.data
+
+
+def test_add_calculator_info(test_client):
+    # Create a test user in the database
+    user = Users(first_name='Cheese', last_name='McNabb', email='chester@hotmail.com',
+                 password_hash=generate_password_hash("test_password", "sha256"))
+    db.session.add(user)
+    db.session.commit()
+
+    add_calculator_info(user.id)
+
+    user_data = CalculatorUserInputs.query.filter_by(user_id=user.id).first()
+
+    assert user_data.income == 60000
+    assert user_data.home_val == 500000
+    assert user_data.down_pay == 150000
+    assert user_data.loan_amt == 350000
+    assert user_data.interest_rate == 6.5
+    assert user_data.loan_term == 30
+    assert user_data.property_tax == 2400
+    assert user_data.home_insurance == 1000
+    assert user_data.monthly_hoa == 350
+    assert user_data.pmi == 0.5
+    assert user_data.credit_card_payments == 500
+    assert user_data.car_payments == 350
+    assert user_data.student_payments == 400
+
+    user = Users.query.filter_by(email='chester@hotmail.com').first()
+    CalculatorUserInputs.query.filter_by(user_id=user.id).delete()
+    db.session.commit()
+    db.session.delete(user)
+    db.session.commit()
+
+
+def test_anonymous_update_calculator_info(test_client):
+    response = test_client.post('/update_calculator_info', json={"an_income": 75000, "home": 600000, "down": 180000,
+                                                                 "loan": 420000, "interest": 5.75, "loanTerm": 15,
+                                                                 "prop": 3500, "home_insurance": 1200, "HOA": 400,
+                                                                 "PMI": 0.25, "credit": 800, "carPay": 250,
+                                                                 "studentPay": 300
+                                                                 })
+
+    assert response.status_code == 200
+    assert response.json['success'] == False
+
+
+def test_update_caculator_info(test_client):
+
+    # Create a test user in the database
+    user = Users(first_name='Cheese', last_name='McNabb', email='chester@hotmail.com',
+                 password_hash=generate_password_hash("test_password", "sha256"))
+    db.session.add(user)
+    db.session.commit()
+
+    add_calculator_info(user.id)
+
+    # Login with test user
+    test_client.post('/login', data=dict(
+        email='chester@hotmail.com',
+        password_hash='test_password'
+    ), follow_redirects=True)
+
+    response = test_client.post('/update_calculator_info', json={"an_income": 75000, "home": 600000, "down": 180000,
+                                                                 "loan": 420000, "interest": 5.75, "loanTerm": 15,
+                                                                 "prop": 3500, "home_insurance": 1200, "HOA": 400,
+                                                                 "PMI": 0.25, "credit": 800, "carPay": 250,
+                                                                 "studentPay": 300
+                                                                 })
+
+    # Check that the response is successful
+    assert response.status_code == 200
+    assert response.json['success'] == True
+
+    # Check that the user data has been updated in the database
+    user_data = CalculatorUserInputs.query.filter_by(user_id=user.id).first()
+    assert user_data.income == 75000
+    assert user_data.home_val == 600000
+    assert user_data.down_pay == 180000
+    assert user_data.loan_amt == 420000
+    assert user_data.interest_rate == 5.75
+    assert user_data.loan_term == 15
+    assert user_data.property_tax == 3500
+    assert user_data.home_insurance == 1200
+    assert user_data.monthly_hoa == 400
+    assert user_data.pmi == 0.25
+    assert user_data.credit_card_payments == 800
+    assert user_data.car_payments == 250
+    assert user_data.student_payments == 300
+
+    user = Users.query.filter_by(email='chester@hotmail.com').first()
+    CalculatorUserInputs.query.filter_by(user_id=user.id).delete()
+    db.session.commit()
+    db.session.delete(user)
+    db.session.commit()
