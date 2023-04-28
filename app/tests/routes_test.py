@@ -17,6 +17,8 @@ from app.models import Users
 
 from app.forms import SignUpForm
 from app import db, create_app
+
+from app import app as omh_test_app
 import pytest
 
 
@@ -961,3 +963,67 @@ def test_password_reset_for_invalid_token_for_failed_password_change_attempt(cli
     # is redirect to Reset
     # Password Request page
     assert b'The password reset link is invalid or has expired.\nPlease try again.' in response.data
+
+@pytest.fixture(scope='module')
+def app_fixture():
+    omh_test_app.config['TESTING'] = True
+    omh_test_app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///testing.db'
+    omh_test_app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    omh_test_app.config['WTF_CSRF_ENABLED'] = False  # Disable CSRF protection during testing
+
+    with omh_test_app.app_context():
+        db.create_all()
+
+        yield omh_test_app
+
+        db.session.remove()
+
+
+@pytest.fixture(scope='module')
+def client_fixture(app_fixture):
+    return app_fixture.test_client()
+
+def test_sign_up_is_successful_then_delete_new_user(client_fixture):
+    # Test a new user sign up with valid credentials
+    sign_up_form_data = {
+        'first_name': 'Jackson',
+        'last_name': 'Taylor',
+        'email': 'taylorj@example.com',
+        'confirm_email': 'taylorj@example.com',
+        'password_hash': 'Testing123!',
+        'confirm_password_hash': 'Testing123!',
+        'accept_tos': True
+    }
+
+    response = client_fixture.post('/sign-up', data=sign_up_form_data, follow_redirects=True)
+
+    user = Users(first_name='first_name', last_name='last_name', email='email',
+                 password_hash='password_hash')
+
+    print(response.data)
+    assert response.status_code == 200
+    assert b'Account created!' in response.data
+    assert b'Please use your credentials to log in.' in response.data
+
+    # Check that the user has been added to the database and has properties, calculator, and checklist items
+    user = Users.query.filter_by(email='taylorj@example.com').first()
+    assert user is not None
+    assert user.properties is not None
+    assert user.checklist_items is not None
+    assert user.calculator_inputs is not None
+
+
+    for properties in user.properties:
+        db.session.delete(properties)
+        db.session.commit()
+
+    for items in user.checklist_items:
+        db.session.delete(items)
+        db.session.commit()
+
+    for each_input in user.calculator_inputs:
+        db.session.delete(each_input)
+        db.session.commit()
+
+    db.session.delete(user)
+    db.session.commit()

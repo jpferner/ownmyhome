@@ -36,6 +36,8 @@ class CalculatorUserInputs(db.Model):
     student_payments = db.Column(db.Integer)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key=True)
 
+    # Relationship with the Users table
+    user = db.relationship('Users', backref=db.backref('calculator_inputs', lazy=True))
 
 class ChecklistItems(db.Model):
     status = db.Column(db.Boolean, default=False)
