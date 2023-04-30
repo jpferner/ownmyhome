@@ -8,114 +8,131 @@
     </div>
 </section>
 
-<aside>
-    <form class="calc-form" method="POST">
-        <table class="calculator">
-            <tr class="info">
-                <td><label for="Income">Annual Income:</label></td>
-                <td><input type="number" id="Income" placeholder="60000" value="{{ Income }}" min="1" required
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="HomeVal">Home Value:</label></td>
-                <td><input type="number" id="HomeVal" placeholder="500000" value="{{ HomeVal }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="DownPay">Down Payment:</label></td>
-                <td><input type="number" id="DownPay" placeholder="80000" value="{{ DownPay }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="LoanAmt">Loan Amount:</label></td>
-                <td><input type="number" id="LoanAmt" placeholder="350000" value="{{ LoanAmt }}" min="1" readonly></td>
-            </tr>
-            <tr class="info">
-                <td><label for="InterestRate">Interest Rate:</label></td>
-                <td><input type="number" id="InterestRate" step=any placeholder="6.5" value="{{ InterestRate }}"
-                           min="0.1" max="50" required oninput="validateInput(this)"
-                           onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="LoanTerm">Loan Term:</label></td>
-                <td><input type="number" id="LoanTerm" placeholder="30" value="{{ LoanTerm }}" min="1" max="50" required
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="PropTax">Property Tax:</label></td>
-                <td><input type="number" id="PropTax" placeholder="2400" value="{{ PropTax }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-                <td>$/yr</td>
-            </tr>
-            <tr class="info">
-                <td><label for="HomeInsurance">Home Insurance:</label></td>
-                <td><input type="number" id="HomeInsurance" placeholder="2400" value="{{ HomeInsurance }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-                <td>$/yr</td>
-            </tr>
-            <tr class="info">
-                <td><label for="HOA">Monthly HOA:</label></td>
-                <td><input type="number" id="HOA" placeholder="350" value="{{ HOA }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="PrivateMortInsurance">PMI:</label></td>
-                <td><input type="number" id="PrivateMortInsurance" placeholder="0.5" value="{{ PrivateMortInsurance }}"
-                           min="0" max="50" step=any oninput="validateInput(this)"
-                           onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="Credit">Monthly Credit Card Payments:</label></td>
-                <td><input type="number" id="Credit" placeholder="500" value="{{ Credit }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="CarPay">Monthly Car Payment:</label></td>
-                <td><input type="number" id="CarPay" placeholder="350" value="{{ CarPay }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr class="info">
-                <td><label for="StudentPay">Monthly Student Loan:</label></td>
-                <td><input type="number" id="StudentPay" placeholder="400" value="{{ StudentPay }}" min="0"
-                           oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"></td>
-            </tr>
-            <tr >
-                <td colspan="3">
-                    <button class="calculateButton" type="submit"> Calculate </button>
-                </td>
-            </tr>
-        </table>
-        <table class="outputs">
-            <tr>
-                <td>Monthly Payments Total: $<label id="MonPayTotal">{{ MortTotal }}</label></td>
-            </tr>
-            <tr>
-                <td>Monthly Mortgage: $<label id="MortMonTotal">{{ MortTotal }}</label></td>
-            </tr>
-            <tr>
-                <td>Down Payment %: <label id="DownPayPercent">{{ MortTotal }}</label>%</td>
-            </tr>
-            <tr>
-                <td>Total Mortgage: $<label id="TotalMort">{{ MortTotal }}</label></td>
-            </tr>
-            <tr>
-                <td>Total Interest: $<label id="TotalInterest">{{ MortTotal }}</label></td>
-            </tr>
-            <tr>
-                <td>Debt to Income Ratio: <label id="Debt">{{ MortTotal }}</label>%</td>
-            </tr>
-            <tr>
-                <td>Monthly Income after Debt: $<label id="DebtBudget">{{ MortTotal }}</label></td>
-            </tr>
-            <tr>
-                <td>Debt to Income Ratio with Mortgage: <label id="DebtMort">{{ MortTotal }}</label>%</td>
-            </tr>
-            <tr>
-                <td>Monthly Income after Debt and Mortgage: $<label id="DebtMortBudget">{{ MortTotal }}</label></td>
-            </tr>
-        </table>
-    </form>
-</aside>
+<form class="calc-form">
+    <div class="calc-input-box">
+        <div class="calc-row">
+            <label for="Income" class="calc-label">Annual Income:</label>
+            <input type="number" id="Income" placeholder="60000" value="{{ Income }}" min="1" required
+                   oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $
+        </div>
+        <div class="calc-row">
+            <label for="HomeVal" class="calc-label">Home Value:</label>
+            <input type="number" id="HomeVal" placeholder="500000" value="{{ HomeVal }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $
+        </div>
+        <div class="calc-row">
+            <label for="DownPay" class="calc-label">Down Payment:</label>
+            <input type="number" id="DownPay" placeholder="80000" value="{{ DownPay }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $
+        </div>
+        <div class="calc-row">
+            <label for="LoanAmt" class="calc-label">Loan Amount:</label>
+            <input type="number" id="LoanAmt" placeholder="350000" value="{{ LoanAmt }}" min="1" readonly> $
+        </div>
+        <div class="calc-row">
+            <label for="InterestRate" class="calc-label">Interest Rate:</label>
+            <input type="number" id="InterestRate" step=any placeholder="6.5" value="{{ InterestRate }}"
+                       min="0.1" max="50" required oninput="validateInput(this)"
+                       onblur="if(!this.value) this.value='0';"> %
+        </div>
+        <div class="calc-row">
+            <label for="LoanTerm" class="calc-label">Loan Term:</label>
+            <input type="number" id="LoanTerm" placeholder="30" value="{{ LoanTerm }}" min="1" max="50" required
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> years
+        </div>
+        <div class="calc-row">
+            <label for="PropTax" class="calc-label">Property Tax:</label>
+            <input type="number" id="PropTax" placeholder="2400" value="{{ PropTax }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $/yr
+        </div>
+        <div class="calc-row">
+            <label for="HomeInsurance" class="calc-label">Home Insurance:</label>
+            <input type="number" id="HomeInsurance" placeholder="2400" value="{{ HomeInsurance }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $/yr
+        </div>
+        <div class="calc-row">
+            <label for="HOA" class="calc-label">Monthly HOA:</label>
+            <input type="number" id="HOA" placeholder="350" value="{{ HOA }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $
+        </div>
+        <div class="calc-row">
+            <label for="PrivateMortInsurance" class="calc-label">PMI:</label>
+            <input type="number" id="PrivateMortInsurance" placeholder="0.5" value="{{ PrivateMortInsurance }}"
+                       min="0" max="50" step=any oninput="validateInput(this)"
+                       onblur="if(!this.value) this.value='0';"> %
+        </div>
+        <div class="calc-row">
+            <label for="Credit" class="calc-label">Monthly Credit Card Payments:</label>
+            <input type="number" id="Credit" placeholder="500" value="{{ Credit }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $
+        </div>
+        <div class="calc-row">
+            <label for="CarPay" class="calc-label">Monthly Car Payment:</label>
+            <input type="number" id="CarPay" placeholder="350" value="{{ CarPay }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $
+        </div>
+        <div class="calc-row">
+            <label for="StudentPay" class="calc-label">Monthly Student Loan:</label>
+            <input type="number" id="StudentPay" placeholder="400" value="{{ StudentPay }}" min="0"
+                       oninput="validateInput(this)" onblur="if(!this.value) this.value='0';"> $
+        </div>
+        <div class="calc-button-row">
+            <button class="calculateButton" type="submit"> Calculate </button>
+        </div>
+    </div>
+
+    <div class="calc-output-box">
+        <div class="calc-summary-row">
+            <p>Repayment Summary</p>
+        </div>
+        <div class="calc-output-row">
+            <div class="calc-output-item">
+                <p><b>Monthly Payments Total:</b> $</p>
+                <label id="MonPayTotal"></label>
+            </div>
+            <div class="calc-output-item">
+                <p><b>Monthly Mortgage:</b> $</p>
+                <label id="MortMonTotal"></label>
+            </div>
+        </div>
+        <div class="calc-output-row">
+            <div class="calc-output-item">
+                <p class="space"><b>Down Payment %: </b> </p>
+                <label id="DownPayPercent"></label>%
+            </div>
+            <div class="calc-output-item">
+                <p><b>Total Mortgage:</b> $</p>
+                <label id="TotalMort"></label>
+            </div>
+        </div>
+        <div class="calc-output-row">
+            <div class="calc-output-item">
+                <p><b>Total Interest:</b> $</p>
+                <label id="TotalInterest"></label>
+            </div>
+            <div class="calc-output-item">
+                <p class="space"><b>Debt to Income Ratio:</b> </p>
+                <div id="Debt"></div>%
+            </div>
+        </div>
+        <div class="calc-output-row">
+            <div class="calc-output-item">
+                <p><b>Monthly Income after Debt:</b> $</p>
+                <label id="DebtBudget"></label>
+            </div>
+            <div class="calc-output-item">
+                <p class="space"><b>Debt to Income Ratio with Mortgage:</b> </p>
+                <label id="DebtMort"></label>%
+            </div>
+        </div>
+        <div class="calc-output-row">
+            <div class="calc-output-item">
+                <p><b>Monthly Income after Debt and Mortgage:</b> $</p>
+                <label id="DebtMortBudget"></label>
+            </div>
+        </div>
+    </div>
+</form>
 
 {% include 'footer.html' %}
 
