@@ -71,12 +71,12 @@
 <h2> How to run black box testing for Jake Ferner's test </h2>
 <ol>
 <li> User must have firefox binary installed </li>
-<li> Run `python Tests/calendar.py (url for testing)`</li>
+<li> Run ```python Tests/calendar.py -u [url]```</li>
 <li> Enter email and password of existing OwnMyHome account with no calendar events added</li>
 <li> Test program will run with no errors for a successful test </li>
 </ol><br>
 
-<h2> How to run white box testing for Mark Karels' and Andrew Court's tests </h2>
+<h2> How to run white box testing for Mark Karel, Andrew Court, and Connor McNabb's tests </h2>
 <ol>
 <li>Open terminal in IDE or ensure proper path in Command Prompt/Windows Powershell window</li>
 <li>Run the following command: pytest --cov --cov-branch --cov-report html</li>

@@ -236,9 +236,6 @@ def test_event_error_checking(driver):
         save = driver.find_element(By.NAME, "save")
         save.click()
 
-        # print(driver.find_element(By.CSS_SELECTOR, "#event_form_error.isVisible").text)
-
-        # If form does not display errors thrown by backend, the test fails
         try:
             driver.find_element(By.CSS_SELECTOR, "#event_form_error.isVisible")
             driver.find_element(By.CSS_SELECTOR, ".c-event__creator.isVisible")
@@ -335,11 +332,7 @@ def fill_form(driver, event):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='System test for OwnMyHome calendar page\n'
                                                  'Existing account must be provided with no calendar events')
-    # parser.add_argument('-e', '--email', metavar='email', required=True,
-    #                     help='email for existing OwnMyHome account')
-    # parser.add_argument('-p', '--password', metavar='password', required=True,
-    #                     help='password for existing OwnMyHome account')
-    parser.add_argument('url', metavar='url',
+    parser.add_argument('-u', '--url', metavar='url',default='localhost:5000', required=False,
                         help='url used for local testing (e.g. localhost:5000)')
     args = parser.parse_args()
     main(args.url)
