@@ -48,6 +48,7 @@
 <li> Run the command flask db migrate</li>
 <li> Run the command flask run  to start the application</li>
 <li> Create an account on the website and you will have access to all features</li>
+<li> If an error is encountered sometimes it is necessary to run flask db upgrade and flask db migrate again</li>
 </ol>
 
 
@@ -64,6 +65,7 @@
 <li> Create user with email test@gmail.com and password Test123! It is necessary for this user to be in the database</li>
 <li> From another command prompt with venv activated from Tests/Dhollock run python test_website.py</li>
 <li> Test should open a web browser and run automatically displaying ok in command prompt</li>
+<li> This test covers logging in, using property search, filters, modal, and external links on the properties page </li>
 </ol>
 
 <h2> How to run black box testing for Jake Ferner's test </h2>
@@ -74,7 +76,7 @@
 <li> Test program will run with no errors for a successful test </li>
 </ol><br>
 
-<h2> How to run white box testing for Mark Karels' and Andrew Court's tests </h2>
+<h2> How to run white box testing for Mark Karel, Andrew Court, and Connor McNabb's tests </h2>
 <ol>
 <li>Open terminal in IDE or ensure proper path in Command Prompt/Windows Powershell window</li>
 <li>Run the following command: pytest --cov --cov-branch --cov-report html</li>
