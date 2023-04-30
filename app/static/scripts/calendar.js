@@ -76,7 +76,6 @@ function loadEvents() {
           endTime: endTime,
         });
       });
-      console.log(response);
       updateEventList();
     },
   });
@@ -108,6 +107,8 @@ todayBtn.on("click", function () {
       $(this).removeClass("isSelected");
     }
   });
+  $(".js-event__add").show();
+   $(".js-event__remove").show();
 });
 
 //highlight the cel of current day
@@ -167,8 +168,6 @@ saveBtn.on("click", function () {
   const inputEndTime = $("input[name=end_time]").val();
   const inputNotes = $("textarea[name=notes]").val();
 
-  console.log(inputEndTime);
-
   $.ajax({
     url:
       eventForm.id !== undefined
@@ -219,13 +218,11 @@ saveBtn.on("click", function () {
     },
 
     error: function (xhr, status, error) {
-      console.log(xhr.responseJSON);
       let errorMessage = "";
       if (xhr.responseJSON.code === "OVERLAPPING_TIMES") {
         errorMessage = "Event times overlap with another event.";
       } else if (xhr.responseJSON.code === "INVALID_END_TIME") {
         errorMessage = "End time is before the start time.";
-        console.log(errorMessage);
       } else if (xhr.responseJSON.code === "TIME_PAST_OCCURRENCE") {
         errorMessage = "Event time has already passed.";
       } else if (xhr.responseJSON.code === "NO_EVENT_NAME") {
@@ -267,22 +264,23 @@ function updateEventList() {
           "<p>" +
           event.notes +
           "</p>" +
-          "<a name='remove' class='c-add o-btn js-event__remove' onclick='removeEvent(this)' data-date='" +
+          "<div class='btn-group' role='group'>" +
+
+          "<button type='button' name='remove' class='btn btn-outline-primary' onclick='removeEvent(this)' data-date='" +
           currentDate +
           "' data-id='" +
           event.id +
-          "'>remove event <span class='fa fa-trash-o'></span></a>" +
-          "<a name='edit' class='c-add o-btn js-event__remove' onclick='editEvent(this)' data-date='" +
+          "'><span class='fa fa-trash-o'></span></button>" +
+          "<button type='button' name='edit' class='btn btn-outline-primary' onclick='editEvent(this)' data-date='" +
           currentDate +
           "' data-id='" +
           event.id +
-          "'>edit event <span class='fa fa-trash-o'></span></a>" +
+          "'><span class='fa fas fa-edit'></span></button>" +
+          "</div>" +
           "</div>"
       );
     });
-    console.log(events[currentDate]);
   }
-  console.log(currentDate);
 }
 
 /**

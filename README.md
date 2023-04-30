@@ -69,7 +69,7 @@
 <h2> How to run black box testing for Jake Ferner's test </h2>
 <ol>
 <li> User must have firefox binary installed </li>
-<li> Run `python Tests/calendar.py (url for testing)`</li>
+<li> Run ```python Tests/calendar.py -u [url]```</li>
 <li> Enter email and password of existing OwnMyHome account with no calendar events added</li>
 <li> Test program will run with no errors for a successful test </li>
 </ol><br>

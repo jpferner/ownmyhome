@@ -312,6 +312,8 @@ def edit_remove_event(id):
 
         event.name = bleach.clean(name, strip=True)
         event.notes = bleach.clean(notes, strip=True)
+        event.time = time2
+        event.end_time = end_time
 
         db.session.commit()
 
