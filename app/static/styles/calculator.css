@@ -36,6 +36,10 @@
 
 }
 
+.space {
+    padding-right: 4px;
+}
+
 .calc-button-row {
     padding: 3%;
     background-color: teal;
