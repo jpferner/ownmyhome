@@ -188,16 +188,45 @@ def add_checklist_items(user_id):
             None
     """
     steps = [
-        "Do you know what your current credit score is? Check out our services tab above to see "
-        "what options are available to you.",
-        "Do you have your home picked out? Check out our properties tab to see what homes are "
-        "available within your search parameters.",
-        "Do you know what type of financing is available to you? Check out our services tab above "
-        "to see what options are available to you.",
-        "Do you know how much home you can afford? Check out our calculator tab to find out the"
-        "right price for you.",
-        "Do you understand your current debt to income ratio and what that means, Check out our "
-        "calculator tab to find out more.",
+        "Check your credit score: Obtain a free copy of your credit report from one of the three "
+        "major credit bureaus and review it for accuracy. "
+        "Ensure your credit score is in good standing to qualify for favorable mortgage terms.",
+        "Determine your budget: Assess your financial situation, considering factors such as income"
+        ", expenses, debt, and potential future expenses. Use a mortgage calculator to determine"
+        " your affordability range.",
+        "Save for a down payment: Aim to save at least 20% of the home's purchase price to avoid "
+        "paying private mortgage insurance (PMI).",
+        "Research mortgage options: Familiarize yourself with various mortgage types (fixed-rate, "
+        "adjustable-rate, etc.) and their requirements, including loan terms and interest rates.",
+        "Get mortgage pre-approval: Apply for mortgage pre-approval to better understand your "
+        "borrowing capacity and demonstrate your financial readiness to sellers.",
+        "Find a real estate agent: Choose a reputable, experienced agent who understands your needs"
+        " and preferences, and who can guide you through the home-buying process.",
+        "Create a wish list: Identify your preferred location, property size, and features, as well"
+        " as any deal-breakers, to help guide your home search.",
+        "Search for homes: Attend open houses, view listings online, and work with your agent to "
+        "identify potential properties that meet your criteria.",
+        "Attend open houses and schedule showings: View homes in person to evaluate their "
+        "condition, layout, and neighborhood.",
+        "Research neighborhoods and schools: Investigate local amenities, crime rates, and school"
+        " rankings to ensure the community meets your needs.",
+        "Submit an offer: Work with your agent to determine a fair offer price, and submit a"
+        " written offer to the seller, along with your pre-approval letter and earnest money "
+        "deposit.",
+        "Negotiate: Be prepared to negotiate with the seller on the price, contingencies, "
+        "and closing timeline.",
+        "Schedule a home inspection: Hire a professional home inspector to evaluate the property's"
+        " condition and identify any potential issues.",
+        "Obtain homeowners insurance: Shop around for insurance coverage to protect your investment"
+        " and satisfy lender requirements.",
+        "Secure a mortgage: Finalize your loan application with your chosen lender, providing any "
+        "necessary documentation and locking in your interest rate.",
+        "Schedule a final walk-through: Inspect the property one last time before closing to ensure"
+        " all agreed-upon repairs have been made and no new issues have arisen.",
+        "Review closing documents: Carefully review the closing disclosure, loan estimate, and "
+        "other legal documents with your agent and attorney, if applicable.",
+        "Close on your new home: Attend the closing appointment to sign all necessary paperwork, "
+        "pay closing costs, and receive the keys to your new home."
     ]
 
     for i, step in enumerate(steps, start=1):
