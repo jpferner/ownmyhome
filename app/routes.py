@@ -189,7 +189,7 @@ def add_checklist_items(user_id):
     """
     steps = [
         "Check your credit score: Obtain a free copy of your credit report from one of the three "
-        "major credit bureaus (Equifax, Experian, or TransUnion) and review it for accuracy. "
+        "major credit bureaus and review it for accuracy. "
         "Ensure your credit score is in good standing to qualify for favorable mortgage terms.",
         "Determine your budget: Assess your financial situation, considering factors such as income"
         ", expenses, debt, and potential future expenses. Use a mortgage calculator to determine"
