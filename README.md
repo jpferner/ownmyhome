@@ -77,7 +77,7 @@
 <li> Test program will run with no errors for a successful test </li>
 </ol><br>
 
-<h2> How to run white box testing for Mark Karel, Andrew Court, and Connor McNabb's tests </h2>
+<h2> How to run white box testing for Mark Karels, Andrew Court, and Connor McNabb's tests </h2>
 <ol>
 <li>Open terminal in IDE or ensure proper path in Command Prompt/Windows Powershell window</li>
 <li>Run the following command: pytest --cov --cov-branch --cov-report html</li>
