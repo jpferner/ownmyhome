@@ -1,5 +1,6 @@
 [![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/t1dqGhBU)
 <h1> Own My Home </h1>
+<h2> Access At <a href='https://flask-ownmyhome.herokuapp.com'>Own My Home Webpage</a></h2>
 <p> Created by...</p>
 <ul>
   <li>David Hollock</li>
@@ -76,7 +77,7 @@
 <li> Test program will run with no errors for a successful test </li>
 </ol><br>
 
-<h2> How to run white box testing for Mark Karel, Andrew Court, and Connor McNabb's tests </h2>
+<h2> How to run white box testing for Mark Karels, Andrew Court, and Connor McNabb's tests </h2>
 <ol>
 <li>Open terminal in IDE or ensure proper path in Command Prompt/Windows Powershell window</li>
 <li>Run the following command: pytest --cov --cov-branch --cov-report html</li>
